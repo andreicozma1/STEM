@@ -24,10 +24,7 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -54,6 +51,7 @@ class Editor {
 	private Scene editor;
 	private ToolBar bar;
 	private Pane editorSpace;
+	private ScrollPane scrollPane;
 	private ToggleGroup toggleGroup;
 	private Machine currentMachine;
 	private EventHandler<MouseEvent> currentHandler;
@@ -90,8 +88,13 @@ class Editor {
 		BorderPane tapeArea = new BorderPane();
 		this.tapeArea = tapeArea;
 		editorSpace = new Pane();
+		editorSpace.setPrefSize(10000,10000);
 
-		pane.setCenter(editorSpace);
+		scrollPane = new ScrollPane();
+		scrollPane.setPannable(true);
+		scrollPane.setContent(editorSpace);
+
+		pane.setCenter(scrollPane);
 		pane.setBottom(tapeArea);
 		pane.setTop(initMenuBar(window, prev));
 
@@ -1699,6 +1702,8 @@ class Editor {
 			if(s.isStart()){
 				drawStartTriangle(s);
 			}
+
+			scrollPane.setPannable(true);
 		}
 	};
 
@@ -1709,6 +1714,8 @@ class Editor {
 	EventHandler<MouseEvent> stateClicked = new EventHandler<MouseEvent>() {
 		@Override
 		public void handle(MouseEvent e){
+			scrollPane.setPannable(false);
+
 			prevStateX = e.getSceneX();
 			prevStateY = e.getSceneY();
 		}
@@ -1752,8 +1759,8 @@ class Editor {
 
 				double newX = c.getCenterX() + offsetX;
 				double newY = c.getCenterY() + offsetY;
-				if((newX > circleRadius) && newX < (editor.getWidth() - circleRadius) 
-						&& (newY > circleRadius) && (newY < editor.getHeight() - (110
+				if((newX > circleRadius) && newX < (editorSpace.getPrefWidth() - circleRadius)
+						&& (newY > circleRadius) && (newY < editorSpace.getPrefHeight() - (110
 						 + circleRadius))) {
 
 						// set the coordinates for the circle
