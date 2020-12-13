@@ -55,6 +55,7 @@ class Editor {
 	private Scene editor;
 	private ToolBar bar;
 	private Pane editorSpace;
+	private ScrollPane scrollPane;
 	private ToggleGroup toggleGroup;
 	private Machine currentMachine;
 	private EventHandler<MouseEvent> currentHandler;
@@ -91,8 +92,13 @@ class Editor {
 		BorderPane tapeArea = new BorderPane();
 		this.tapeArea = tapeArea;
 		editorSpace = new Pane();
+		editorSpace.setPrefSize(10000,10000);
 
-		pane.setCenter(editorSpace);
+		scrollPane = new ScrollPane();
+		scrollPane.setPannable(true);
+		scrollPane.setContent(editorSpace);
+
+		pane.setCenter(scrollPane);
 		pane.setBottom(tapeArea);
 		pane.setTop(initMenuBar(window, prev));
 
