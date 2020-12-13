@@ -1762,8 +1762,8 @@ class Editor {
 
 				double newX = c.getCenterX() + offsetX;
 				double newY = c.getCenterY() + offsetY;
-				if((newX > circleRadius) && newX < (editor.getWidth() - circleRadius) 
-						&& (newY > circleRadius) && (newY < editor.getHeight() - (110
+				if((newX > circleRadius) && newX < (editorSpace.getPrefWidth() - circleRadius)
+						&& (newY > circleRadius) && (newY < editorSpace.getPrefHeight() - (110
 						 + circleRadius))) {
 
 						// set the coordinates for the circle
