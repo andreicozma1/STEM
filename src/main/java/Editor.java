@@ -40,7 +40,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.PrintWriter;
@@ -1579,7 +1578,7 @@ class Editor {
 				alert.setTitle("The machine has finished");
 
 				if (tester.didSucceed()) {
-					alert.setGraphic(new ImageView(this.getClass().getResource("checkmark.png").toString()));
+					alert.setGraphic(new ImageView(this.getClass().getResource("src/resources/checkmark.png").toString()));
 					alert.setHeaderText("The machine has finished successfully");
 				} else {
 					alert.setHeaderText("The machine has finished unsuccessfully");
