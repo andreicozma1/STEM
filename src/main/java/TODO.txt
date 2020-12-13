@@ -1,0 +1,6 @@
+List of implementations to work on (Current as of 4/6/18):
+
+1. Editor Dragging
+2. Editor resizing
+3. Mouse Cursor
+4. Testing
