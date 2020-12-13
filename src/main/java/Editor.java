@@ -68,7 +68,6 @@ class Editor {
 	private double prevStateX;
 	private double prevStateY;
 	private int currentStartRotation;
-	private Boolean clicked = false;
 
 	// used for rotating the start triangle
 	private static final int START_LEFT = 0;
@@ -1704,7 +1703,6 @@ class Editor {
 				drawStartTriangle(s);
 			}
 
-			clicked = false;
 			scrollPane.setPannable(true);
 		}
 	};
@@ -1716,7 +1714,6 @@ class Editor {
 	EventHandler<MouseEvent> stateClicked = new EventHandler<MouseEvent>() {
 		@Override
 		public void handle(MouseEvent e){
-			clicked = true;
 			scrollPane.setPannable(false);
 
 			prevStateX = e.getSceneX();
