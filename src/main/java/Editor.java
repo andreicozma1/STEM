@@ -24,10 +24,7 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -72,6 +69,7 @@ class Editor {
 	private double prevStateX;
 	private double prevStateY;
 	private int currentStartRotation;
+	private Boolean clicked = false;
 
 	// used for rotating the start triangle
 	private static final int START_LEFT = 0;
@@ -1706,6 +1704,9 @@ class Editor {
 			if(s.isStart()){
 				drawStartTriangle(s);
 			}
+
+			clicked = false;
+			scrollPane.setPannable(true);
 		}
 	};
 
@@ -1716,6 +1717,9 @@ class Editor {
 	EventHandler<MouseEvent> stateClicked = new EventHandler<MouseEvent>() {
 		@Override
 		public void handle(MouseEvent e){
+			clicked = true;
+			scrollPane.setPannable(false);
+
 			prevStateX = e.getSceneX();
 			prevStateY = e.getSceneY();
 		}
