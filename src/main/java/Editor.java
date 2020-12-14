@@ -256,7 +256,7 @@ class Editor {
 					keyEvent.consume();
 				}
 			}
-		}
+		};
 		window.addEventHandler(KeyEvent.KEY_RELEASED, keyHandler);
 
 
