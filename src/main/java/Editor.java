@@ -252,7 +252,8 @@ class Editor {
 			public void handle(KeyEvent keyEvent) {
 				System.out.println(keyEvent.getCode());
 				if (keyEvent.getCode() == KeyCode.ESCAPE) {
-					toggleGroup.selectToggle(null);
+					toggleGroup.getSelectedToggle().setSelected(false);
+					editorSpace.setCursor(Cursor.DEFAULT);
 					keyEvent.consume();
 				}
 			}
