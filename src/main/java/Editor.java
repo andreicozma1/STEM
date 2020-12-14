@@ -105,7 +105,10 @@ class Editor {
 
 		circleRadius = 20;
 		startTriangle = new Polygon();
+
 	}
+
+
 
 	// Call when exiting the Editor
 	private boolean deleteEditor(Stage window, Scene prev, Machine m){
@@ -243,6 +246,19 @@ class Editor {
 		editTransition.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		editTransition.setUserData("Edit Transition");
 		editTransition.setToggleGroup(toggleGroup);
+
+		EventHandler<KeyEvent> keyHandler = new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent keyEvent) {
+				System.out.println(keyEvent.getCode());
+				if (keyEvent.getCode() == KeyCode.ESCAPE) {
+					toggleGroup.selectToggle(null);
+					keyEvent.consume();
+				}
+			}
+		}
+		window.addEventHandler(KeyEvent.KEY_RELEASED, keyHandler);
+
 
 		// END TOGGLE BUTTONS
 
