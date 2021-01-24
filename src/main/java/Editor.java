@@ -91,11 +91,7 @@ class Editor {
 
 		scrollPane = new ZoomableScrollPane(editorSpace);
 
-		StackPane minimapPane = new StackPane();
-		minimapPane.setMaxHeight(50);
-		minimapPane.setMaxWidth(50);
-		minimapPane.setStyle("-fx-background-color: transparent;-fx-border-color: black;-fx-border-width:5px");
-
+		Pane minimapPane = new MinimapPane(editorSpace);
 
 		editorStackPane.getChildren().addAll(scrollPane, minimapPane);
 		editorStackPane.setAlignment(minimapPane, Pos.TOP_RIGHT);
