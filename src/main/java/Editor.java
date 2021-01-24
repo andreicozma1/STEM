@@ -20,6 +20,7 @@ import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -34,6 +35,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.PrintWriter;
@@ -44,11 +46,13 @@ import java.util.Collections;
 import java.util.Optional;
 
 class Editor {
-	private Stage window;
+	private final Stage window;
 	private Scene editor;
-	private ToolBar bar;
+	private ToolBar menuBar;
 	private Pane editorSpace;
-	private ScrollPane scrollPane;
+	private BorderPane parentPane;
+	private final ScrollPane scrollPane;
+	private StackPane editorStackPane;
 	private ToggleGroup toggleGroup;
 	private Machine currentMachine;
 	private EventHandler<MouseEvent> currentHandler;
@@ -58,9 +62,8 @@ class Editor {
 	private int stateNextVal = 0;
 	private int circleRadius;
 	private Polygon startTriangle;
-	private ContextMenu contextMenu = initContextMenu();
+	private ContextMenu contextMenu;
 	private String machineFile;
-	private BorderPane tapeArea;
 	private Text machineSpeed;
 	private double prevStateX;
 	private double prevStateY;
@@ -77,34 +80,47 @@ class Editor {
 		circleRadius = size;
 	}
 
-	Editor(Stage window, Scene prev){
-		this.window = window;
-		//setMenu(window);
-		//newMachine(window, prev);
-		BorderPane pane = new BorderPane();
-		BorderPane tapeArea = new BorderPane();
-		StackPane stackPane = new StackPane();
-		this.tapeArea = tapeArea;
+
+	Editor(Boolean shouldLoad){
+		window = new Stage();
+		parentPane = new BorderPane();
+		editorStackPane = new StackPane();
+
 		editorSpace = new Pane();
 		editorSpace.setPrefSize(10000,10000);
 
 		scrollPane = new ZoomableScrollPane(editorSpace);
 
-		pane.setCenter(scrollPane);
-		pane.setBottom(tapeArea);
-		pane.setTop(initMenuBar(window, prev));
+		StackPane minimapPane = new StackPane();
+		minimapPane.setMaxHeight(50);
+		minimapPane.setMaxWidth(50);
+		minimapPane.setStyle("-fx-background-color: transparent;-fx-border-color: black;-fx-border-width:5px");
 
-		editor = new Scene(pane, 500, 500);
 
-		pane.prefHeightProperty().bind(editor.heightProperty());
-		pane.prefWidthProperty().bind(editor.widthProperty());
+		editorStackPane.getChildren().addAll(scrollPane, minimapPane);
+		editorStackPane.setAlignment(minimapPane, Pos.TOP_RIGHT);
+		parentPane.setCenter(editorStackPane);
+
+		initMenuBar();
+		initContextMenu();
+
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+		editor = new Scene(parentPane, screenBounds.getWidth()/2, screenBounds.getHeight()/2);
+
+		window.setMinWidth(screenBounds.getWidth()/3);
+		window.setMinHeight(screenBounds.getHeight()/3);
 
 		circleRadius = 20;
 		startTriangle = new Polygon();
+
+		if(shouldLoad) loadMachine(); else newMachine();
+
+		window.setScene(editor);
+		window.show();
 	}
 
 	// Call when exiting the Editor
-	private boolean deleteEditor(Stage window, Scene prev, Machine m){
+	private boolean deleteEditor(){
 		System.out.println("If you see this you should be saving your machine");
 		if(machineFile.compareTo(currentMachine.toString()) != 0){
 			ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
@@ -132,8 +148,6 @@ class Editor {
 
 		window.setOnCloseRequest(null);
 
-		window.setScene(prev);
-
 		deletedValues.clear();
 
 		window.setMinWidth(300);
@@ -143,7 +157,7 @@ class Editor {
 
 		/* garbage collection to the rescue */
 		editor = null;
-		bar = null;
+		menuBar = null;
 		editorSpace = null;
 
 		currentMachine = null;
@@ -154,22 +168,18 @@ class Editor {
 		return true;
 	}
 
-	void setMenu(Stage window){
-		window.setTitle("Editor");
-		window.setMinWidth(550);
-		window.setMinHeight(550);
-		window.setScene(editor);
-	}
-
 	//   ___ _   _ ___ _____ ____
 	//  |_ _| \ | |_ _|_   _/ ___|
 	//   | ||  \| || |  | | \___ \
 	//   | || |\  || |  | |  ___) |
 	//  |___|_| \_|___| |_| |____/
 	//
-	private BorderPane initTapeDisplay(BorderPane tapeArea) {
+	private void initTapeDisplay() {
 		// StackPane to overlay elements
 		// GridPane to display the boxes and the characters BorderPane for buttons
+		BorderPane tapeBar = new BorderPane();
+		parentPane.setBottom(tapeBar);
+
 		GridPane tapeDisplay = new GridPane();
 		tapeDisplay.setAlignment(Pos.CENTER);
 
@@ -177,20 +187,20 @@ class Editor {
 		headDisplay.setAlignment(Pos.CENTER);
 
 		// Move tape view right button
-		Button shiftRight = new Button(">>>");
+		Button shiftRight = new Button(">>");
 		shiftRight.setPrefWidth(50);
 		shiftRight.setPrefHeight(30);
 
-		tapeArea.setPrefHeight(0);
+		tapeBar.setPrefHeight(0);
 		// Move tape view left button
-		Button shiftLeft = new Button("<<<");
+		Button shiftLeft = new Button("<<");
 		shiftLeft.setPrefWidth(50);
 		shiftLeft.setPrefHeight(30);
 
-		tapeArea.setTop(headDisplay);
-		tapeArea.setCenter(tapeDisplay);
-		tapeArea.setLeft(shiftLeft);
-		tapeArea.setRight(shiftRight);
+		tapeBar.setTop(headDisplay);
+		tapeBar.setCenter(tapeDisplay);
+		tapeBar.setLeft(shiftLeft);
+		tapeBar.setRight(shiftRight);
 		//tapeArea.setPrefHeight(headDisplay.getHeight() + tapeDisplay.getHeight());
 
 		shiftLeft.setOnMouseClicked((button) -> {
@@ -203,40 +213,32 @@ class Editor {
 			currentMachine.getTape().refreshTapeDisplay_noCenter();
 		});
 
-		currentMachine.getTape().setDisplay(tapeDisplay, headDisplay, tapeArea);
+		currentMachine.getTape().setDisplay(tapeDisplay, headDisplay, tapeBar);
+
 		System.out.println("I'm in here!");
-		return tapeArea;
 	}
 
 
 	/* This sets up the menu bar, but does NOT set the button actions */
-	private ToolBar initMenuBar(Stage window, Scene prev){
-		bar = new ToolBar();
+	private void initMenuBar(){
+		menuBar = new ToolBar();
+		parentPane.setTop(menuBar);
+
 		toggleGroup = new ToggleGroup();
-		ObjectExpression<Font> barTextTrack = Bindings.createObjectBinding(
-				() -> Font.font(Math.min(bar.getWidth() / 55, 18)), bar.widthProperty());
 
 		ToggleButton addState = new ToggleButton("Add State");
-		addState.fontProperty().bind(barTextTrack);
-		addState.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		addState.setUserData("Add State");
 		addState.setToggleGroup(toggleGroup);
 		
 		ToggleButton deleteState = new ToggleButton("Delete");
-		deleteState.fontProperty().bind(barTextTrack);
-		deleteState.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		deleteState.setUserData("Delete Value");
 		deleteState.setToggleGroup(toggleGroup);
 		
 		ToggleButton addTransition = new ToggleButton("Add Transition");
-		addTransition.fontProperty().bind(barTextTrack);
-		addTransition.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		addTransition.setUserData("Add Transition");
 		addTransition.setToggleGroup(toggleGroup);
 
 		ToggleButton editTransition = new ToggleButton("Edit Transition");
-		editTransition.fontProperty().bind(barTextTrack);
-		editTransition.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		editTransition.setUserData("Edit Transition");
 		editTransition.setToggleGroup(toggleGroup);
 
@@ -248,14 +250,10 @@ class Editor {
 		// Begin NON-Toggle buttons
 		
 		Button tapeButton = new Button("Edit Tape");
-		tapeButton.fontProperty().bind(barTextTrack);
-		tapeButton.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		tapeButton.setOnAction(e->editTape(window, currentMachine));
 
 		//New Reset Button
 		Button resetButton = new Button("Reset Tape");
-		resetButton.fontProperty().bind(barTextTrack);
-		resetButton.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		resetButton.setOnAction(e->resetTape(currentMachine));
 
 		// Run Machine with options for speed
@@ -283,8 +281,6 @@ class Editor {
 
 		SplitMenuButton runMachine = new SplitMenuButton(manualControl, slow, normal, fast, noDelay);
 		runMachine.setText("Run Machine");
-		runMachine.fontProperty().bind(barTextTrack);
-		runMachine.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		runMachine.setOnAction(e-> {	
 			if(currentMachine.getStartState() == null){
 				Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -321,8 +317,6 @@ class Editor {
 		/*	Button for rotating the start triangle. Just mod-increments the start rotation index, and calls the drawStartTriangle function
 		*/
 		Button rotateStartTri_button = new Button("Rotate Start Triangle");
-		rotateStartTri_button.fontProperty().bind(barTextTrack);
-		rotateStartTri_button.prefWidthProperty().bind(bar.widthProperty().divide(10));
 		rotateStartTri_button.setOnAction(event -> {
 			if(startTriangle != null && currentMachine.getStartState() != null){
 				currentMachine.setStartTriRotation((currentMachine.getStartTriRotation() + 1) % 4);
@@ -338,34 +332,23 @@ class Editor {
 		});
 
 		Button saveButton = new Button("Save");
-		saveButton.fontProperty().bind(barTextTrack);
-		saveButton.prefWidthProperty().bind(bar.widthProperty().divide(14));
 		saveButton.setOnAction(event -> saveMachine(window, currentMachine));
 
-		Button backButton = new Button("Back");
-		backButton.fontProperty().bind(barTextTrack);
-		backButton.prefWidthProperty().bind(bar.widthProperty().divide(14));
-		backButton.setOnAction(e->deleteEditor(window, prev, currentMachine));
-
 		// Add toggle buttons
-		bar.getItems().addAll(addState, addTransition, deleteState, editTransition);
+		menuBar.getItems().addAll(addState, addTransition, deleteState, editTransition);
 
 		// Add separator
-		bar.getItems().add(separator);
+		menuBar.getItems().add(separator);
 
 		// Add non-toggle buttons + Resetting Tape
-		bar.getItems().addAll(tapeButton, resetButton, runMachine, saveButton, backButton, rotateStartTri_button);
-
-		bar.setStyle("-fx-background-color: #dae4e3");
+		menuBar.getItems().addAll(tapeButton, resetButton, runMachine, saveButton, rotateStartTri_button);
 
 		// Cursor when over the bar will always be default cursor
-		bar.addEventFilter(MouseEvent.MOUSE_MOVED, event -> editor.setCursor(Cursor.DEFAULT));
-
-		return bar;
+		menuBar.addEventFilter(MouseEvent.MOUSE_MOVED, event -> editor.setCursor(Cursor.DEFAULT));
 	}
 
-	private ContextMenu initContextMenu(){
-		ContextMenu contextMenu = new ContextMenu();
+	private void initContextMenu(){
+		contextMenu = new ContextMenu();
 
 		MenuItem setStart = new MenuItem("Set Start");
 		setStart.setOnAction(event -> {
@@ -425,7 +408,7 @@ class Editor {
 			toggleGroup.selectToggle(null);
 			editorSpace.setCursor(Cursor.DEFAULT);
 
-			for (Node n : bar.getItems()) {
+			for (Node n : menuBar.getItems()) {
 				if (n instanceof ToggleButton || n instanceof Button || n instanceof SplitMenuButton)
 					n.setDisable(true);
 			}
@@ -472,7 +455,7 @@ class Editor {
 						redrawPaths(tl);
 					}
 
-					for (Node n : bar.getItems()) {
+					for (Node n : menuBar.getItems()) {
 						if (n instanceof ToggleButton || n instanceof Button || n instanceof SplitMenuButton)
 							n.setDisable(false);
 					}
@@ -620,7 +603,7 @@ class Editor {
 				}
 			}
 
-			for (Node n : bar.getItems()) {
+			for (Node n : menuBar.getItems()) {
 				if (n instanceof ToggleButton || n instanceof Button || n instanceof SplitMenuButton)
 					n.setDisable(true);
 			}
@@ -667,7 +650,7 @@ class Editor {
 						redrawPaths(tl);
 					}
 
-					for (Node n : bar.getItems()) {
+					for (Node n : menuBar.getItems()) {
 						if (n instanceof ToggleButton || n instanceof Button || n instanceof SplitMenuButton)
 							n.setDisable(false);
 					}
@@ -682,8 +665,6 @@ class Editor {
 		});
 
 		contextMenu.getItems().addAll(setStart, toggleAccept, moveState, copyState, setBreak, setColor);
-
-		return contextMenu;
 	}
 
 	//   __  __            _     _              ___       _ _
@@ -692,9 +673,9 @@ class Editor {
 	//  | |  | | (_| | (__| | | | | | | |  __/  | || | | | | |_\__ \
 	//  |_|  |_|\__,_|\___|_| |_|_|_| |_|\___| |___|_| |_|_|\__|___/
 	//
-	public void newMachine(Stage window, Scene prev){
+	public void newMachine(){
 		currentMachine = new Machine();
-		startMachine(window, prev);
+		startMachine();
 	}
 
 	public boolean saveMachine(Stage window, Machine m) {
@@ -708,7 +689,7 @@ class Editor {
 	//Where I store global tape given to us from the SaveLoad class's current tape
     ArrayList<Character> originalTape = new ArrayList<>();
 
-    public void loadMachine(Stage window, Scene prev){
+    public void loadMachine(){
 	    SaveLoad saveLoad = new SaveLoad();
 
 	    currentMachine = saveLoad.loadMachine(window);
@@ -722,16 +703,16 @@ class Editor {
 		redrawAllPaths();
 
 		//currentMachine.getTape().refreshTapeDisplay();
-		startMachine(window, prev);
+		startMachine();
 	}
 	
 	/* Called whenever a new machine is setup */
-	private void startMachine(Stage window, Scene prev){
-		initTapeDisplay(tapeArea);
+	private void startMachine(){
+		initTapeDisplay();
 		machineFile = currentMachine.toString();
 
 		window.setOnCloseRequest(we -> {
-			if(!deleteEditor(window, prev, currentMachine))
+			if(!deleteEditor())
 				we.consume();
 		});
 
@@ -1577,7 +1558,7 @@ class Editor {
 				alert.setTitle("The machine has finished");
 
 				if (tester.didSucceed()) {
-					alert.setGraphic(new ImageView(this.getClass().getResource("src/resources/checkmark.png").toString()));
+					alert.setGraphic(new ImageView(this.getClass().getResource("checkmark.png").toString()));
 					alert.setHeaderText("The machine has finished successfully");
 				} else {
 					alert.setHeaderText("The machine has finished unsuccessfully");
