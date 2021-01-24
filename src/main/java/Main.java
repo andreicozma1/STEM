@@ -46,7 +46,6 @@ public class Main extends Application {
 		window.setScene(menu);
 		window.getIcons().add(new Image("cartoonTuring.png"));
 		window.setTitle("STEM");
-		window.set
 		window.show();
 
 	}
