@@ -23,13 +23,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 	private Stage window;
 	private Scene menu;
 	private HelpMenu help;
-	private Editor editor;
+
 
 	/* Launch the app */
 	public static void main(String[] args) {
@@ -66,13 +67,13 @@ public class Main extends Application {
 		buttonLayout.setPadding(new Insets(20, 50, 20, 50));
 		buttonLayout.prefWidthProperty().bind(menuLayout.widthProperty());
 
-		Button newMachineButton = Styles.makeBtn("New Machine");
+		Button newMachineButton = makeBtn("New Machine");
 		newMachineButton.requestFocus();
 
-		Button loadMachineButton = Styles.makeBtn("Load Machine");
-		Button optionsButton = Styles.makeBtn("Options");
-		Button helpButton = Styles.makeBtn("Help");
-		Button quitButton = Styles.makeBtn("Quit");
+		Button loadMachineButton = makeBtn("Load Machine");
+		Button optionsButton = makeBtn("Options");
+		Button helpButton = makeBtn("Help");
+		Button quitButton = makeBtn("Quit");
 
 		/* Set layout. */
 		buttonLayout.getChildren().addAll(newMachineButton, loadMachineButton, optionsButton, helpButton, quitButton); //, closebutton.getCloseButton());
@@ -83,17 +84,11 @@ public class Main extends Application {
 		helpButton.setOnAction(e-> help.setMenu(window));
 		
 		newMachineButton.setOnAction(e-> {
-			editor = new Editor(window, menu);
-			editor.setMenu(window);
-			editor.newMachine(window, menu);
-			editor = null;
+			new Editor(false);
 		});
 
 		loadMachineButton.setOnAction(e-> {
-			editor = new Editor(window, menu);
-			editor.setMenu(window);
-			editor.loadMachine(window, menu);
-			editor = null;
+			new Editor(true);
 		});
 
 		quitButton.setOnAction(e-> {
@@ -101,5 +96,14 @@ public class Main extends Application {
 		});
 	}
 
+	static Button makeBtn(String title) {
+		Button btn = new Button(title);
+		btn.setPadding(new Insets(10, 20, 10, 20));
+		btn.setFont(Font.font(null, FontWeight.BOLD, 20));
+		btn.setStyle(Styles.IDLE_BUTTON_STYLE);
+		btn.setOnMouseEntered(e -> btn.setStyle(Styles.HOVERED_BUTTON_STYLE));
+		btn.setOnMouseExited(e -> btn.setStyle(Styles.IDLE_BUTTON_STYLE));
+		return btn;
+	}
 
 }
