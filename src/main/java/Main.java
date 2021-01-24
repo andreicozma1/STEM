@@ -19,6 +19,7 @@ import javafx.beans.binding.ObjectExpression;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -43,6 +44,7 @@ public class Main extends Application {
 		window.setMinHeight(400);
 		initMenu();
 		window.setScene(menu);
+		window.getIcons().add(new Image("UTK.png"));
 		window.setTitle("STEM");
 		window.show();
 
