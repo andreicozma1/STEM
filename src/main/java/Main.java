@@ -17,20 +17,20 @@ import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectExpression;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 	private Stage window;
 	private Scene menu;
-	private CloseButton closebutton;
 	private HelpMenu help;
 	private Editor editor;
-	
+
 	/* Launch the app */
 	public static void main(String[] args) {
 		launch(args);
@@ -39,72 +39,45 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception{
 		window = primaryStage;
-		window.setMinWidth(300);
-		window.setMinHeight(400);
+
 		initMenu();
 		window.setScene(menu);
 		window.setTitle("STEM");
 		window.show();
-
 	}
 	
 	private void initMenu(){
-		/* File menu option. */
-		Menu fileMenu = new Menu("File");
-		fileMenu.setStyle("-fx-font-size: 10px;");
-		fileMenu.getItems().add(new MenuItem("Close"));
-		
-		/* Help menu option */
-		Menu helpMenu = new Menu("Help");
-		helpMenu.setStyle("-fx-font-size: 10px;");
-		helpMenu.getItems().add(new MenuItem("About"));
-		MenuBar menuBar = new MenuBar();
-		
-		/* Add menu options */
-		menuBar.getMenus().addAll(fileMenu, helpMenu);
-		menuBar.setStyle("-fx-background-color: #dae4e3");
-		
+
+		BorderPane menuLayout = new BorderPane(); 				//outer Borderpane to hold menubar
+		menu = new Scene(menuLayout);
+
+		Image background = new Image("turingback.jpg");
+		BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true);
+		menuLayout.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, bSize)));
+
+		window.setWidth(background.getWidth());
+		window.setHeight(background.getHeight());
+
+		window.setResizable(false);
+
 		/* Contents of page. */
-		VBox buttonLayout = new VBox(20); 				//inner VBox to hold buttons
-		buttonLayout.setPadding(new Insets(0, 20, 20, 20));
+		VBox buttonLayout = new VBox(10); 				//inner VBox to hold buttons
+		buttonLayout.setAlignment(Pos.CENTER_LEFT);
+		buttonLayout.setPadding(new Insets(20, 50, 20, 50));
+		buttonLayout.prefWidthProperty().bind(menuLayout.widthProperty());
 
-		ObjectExpression<Font> fontTrack = Bindings.createObjectBinding(
-				() -> Font.font(buttonLayout.getWidth() / 25), buttonLayout.widthProperty());
-
-		Label label0 = new Label("Welcome to the Simple Turing machine EMulator!");
-		Label label1 = new Label("To begin, create a new machine.");
-
-		label0.fontProperty().bind(fontTrack);
-		label1.fontProperty().bind(fontTrack);
-
-		Button newMachineButton = new Button("New Machine");
-		newMachineButton.prefWidthProperty().bind(buttonLayout.widthProperty());
-		newMachineButton.prefHeightProperty().bind(buttonLayout.heightProperty());
-		newMachineButton.fontProperty().bind(fontTrack);
+		Button newMachineButton = Styles.makeBtn("New Machine");
 		newMachineButton.requestFocus();
 
-		Button loadMachineButton = new Button("Load Machine");
-		loadMachineButton.prefWidthProperty().bind(buttonLayout.widthProperty());
-		loadMachineButton.prefHeightProperty().bind(buttonLayout.heightProperty());
-		loadMachineButton.fontProperty().bind(fontTrack);
-
-		Button helpButton = new Button("Help");
-		helpButton.prefWidthProperty().bind(buttonLayout.widthProperty());
-		helpButton.prefHeightProperty().bind(buttonLayout.heightProperty());
-		helpButton.fontProperty().bind(fontTrack);
+		Button loadMachineButton = Styles.makeBtn("Load Machine");
+		Button optionsButton = Styles.makeBtn("Options");
+		Button helpButton = Styles.makeBtn("Help");
+		Button quitButton = Styles.makeBtn("Quit");
 
 		/* Set layout. */
-		BorderPane menuLayout = new BorderPane(); 				//outer Borderpane to hold menubar
-		menuLayout.setTop(menuBar);
-
-		//Delete this once help menu is better
-		helpButton.setDisable(true);
-
-		buttonLayout.getChildren().addAll(label0, label1, newMachineButton, loadMachineButton, helpButton); //, closebutton.getCloseButton());
-
+		buttonLayout.getChildren().addAll(newMachineButton, loadMachineButton, optionsButton, helpButton, quitButton); //, closebutton.getCloseButton());
 		menuLayout.setCenter(buttonLayout);
-		menu = new Scene(menuLayout, 300, 400);
-		
+
 		/* After menu is set up, create other scenes. */
 		help = new HelpMenu(window, menu);
 		helpButton.setOnAction(e-> help.setMenu(window));
@@ -123,5 +96,10 @@ public class Main extends Application {
 			editor = null;
 		});
 
+		quitButton.setOnAction(e-> {
+			window.close();
+		});
 	}
+
+
 }
