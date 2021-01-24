@@ -44,8 +44,9 @@ public class Main extends Application {
 		window.setMinHeight(400);
 		initMenu();
 		window.setScene(menu);
-		window.getIcons().add(new Image("UTK.png"));
+		window.getIcons().add(new Image("cartoonTuring.png"));
 		window.setTitle("STEM");
+		window.set
 		window.show();
 
 	}
