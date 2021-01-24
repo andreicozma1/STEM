@@ -96,6 +96,10 @@ public class Main extends Application {
 			editor = null;
 		});
 
+		optionsButton.setOnAction(e-> {
+			OptionsMenu options = new OptionsMenu();
+		});
+
 		quitButton.setOnAction(e-> {
 			window.close();
 		});

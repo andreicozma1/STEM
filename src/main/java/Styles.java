@@ -1,10 +1,13 @@
+import com.sun.tools.javac.comp.Check;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 
 public class Styles {
 
     public static final String IDLE_BUTTON_STYLE = "-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: transparent; -fx-border-radius:5;";
     public static final String HOVERED_BUTTON_STYLE = "-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius:5; ";
+    public static final String CHECKBOX_STYLE = "";
 
     static Button makeBtn(String title) {
         Button btn = new Button(title);
@@ -13,5 +16,12 @@ public class Styles {
         btn.setOnMouseEntered(e -> btn.setStyle(HOVERED_BUTTON_STYLE));
         btn.setOnMouseExited(e -> btn.setStyle(IDLE_BUTTON_STYLE));
         return btn;
+    }
+
+    static CheckBox makeCheckBox(String title) {
+        CheckBox checkBox = new CheckBox(title);
+        checkBox.setPadding(new Insets(10,20,10,20));
+        checkBox.setStyle(CHECKBOX_STYLE);
+        return checkBox;
     }
 }
