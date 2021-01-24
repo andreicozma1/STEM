@@ -62,7 +62,7 @@ public class Main extends Application {
 		window.setResizable(false);
 
 		/* Contents of page. */
-		VBox buttonLayout = new VBox(10); 				//inner VBox to hold buttons
+		VBox buttonLayout = new VBox(5); 				//inner VBox to hold buttons
 		buttonLayout.setAlignment(Pos.CENTER_LEFT);
 		buttonLayout.setPadding(new Insets(20, 50, 20, 50));
 		buttonLayout.prefWidthProperty().bind(menuLayout.widthProperty());
@@ -98,7 +98,7 @@ public class Main extends Application {
 
 	static Button makeBtn(String title) {
 		Button btn = new Button(title);
-		btn.setPadding(new Insets(10, 20, 10, 20));
+		btn.setPadding(new Insets(8, 20, 8, 20));
 		btn.setFont(Font.font(null, FontWeight.BOLD, 20));
 		btn.setStyle(Styles.IDLE_BUTTON_STYLE);
 		btn.setOnMouseEntered(e -> btn.setStyle(Styles.HOVERED_BUTTON_STYLE));
