@@ -28,10 +28,9 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	private Stage window;
 	private Scene menu;
-	private CloseButton closebutton;
 	private HelpMenu help;
 	private Editor editor;
-	
+
 	/* Launch the app */
 	public static void main(String[] args) {
 		launch(args);
@@ -61,22 +60,19 @@ public class Main extends Application {
 
 		window.setResizable(false);
 
-		Label label0 = new Label("Welcome to the Simple Turing machine EMulator!");
-		Label label1 = new Label("To begin, create a new machine.");
-
 		/* Contents of page. */
 		VBox buttonLayout = new VBox(10); 				//inner VBox to hold buttons
 		buttonLayout.setAlignment(Pos.CENTER_LEFT);
 		buttonLayout.setPadding(new Insets(20, 50, 20, 50));
 		buttonLayout.prefWidthProperty().bind(menuLayout.widthProperty());
 
-		Button newMachineButton = makeBtn("New Machine");
+		Button newMachineButton = Styles.makeBtn("New Machine");
 		newMachineButton.requestFocus();
 
-		Button loadMachineButton = makeBtn("Load Machine");
-		Button optionsButton = makeBtn("Options");
-		Button helpButton = makeBtn("Help");
-		Button quitButton = makeBtn("Quit");
+		Button loadMachineButton = Styles.makeBtn("Load Machine");
+		Button optionsButton = Styles.makeBtn("Options");
+		Button helpButton = Styles.makeBtn("Help");
+		Button quitButton = Styles.makeBtn("Quit");
 
 		/* Set layout. */
 		buttonLayout.getChildren().addAll(newMachineButton, loadMachineButton, optionsButton, helpButton, quitButton); //, closebutton.getCloseButton());
@@ -99,11 +95,11 @@ public class Main extends Application {
 			editor.loadMachine(window, menu);
 			editor = null;
 		});
+
+		quitButton.setOnAction(e-> {
+			window.close();
+		});
 	}
 
-	private Button makeBtn(String title) {
-		Button btn = new Button(title);
-		btn.setPadding(new Insets(10, 20, 10, 20));
-		return btn;
-	}
+
 }
