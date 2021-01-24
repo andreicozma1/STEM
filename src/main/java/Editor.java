@@ -90,9 +90,7 @@ class Editor {
 		editorSpace = new Pane();
 		editorSpace.setPrefSize(10000,10000);
 
-		scrollPane = new ScrollPane();
-		scrollPane.setPannable(true);
-		scrollPane.setContent(editorSpace);
+		scrollPane = new ZoomableScrollPane(editorSpace);
 
 		pane.setCenter(scrollPane);
 		pane.setBottom(tapeArea);
