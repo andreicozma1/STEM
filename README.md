@@ -14,7 +14,7 @@ Jonathan Bryan [jbryan74@vols.utk.edu]
 Josh Herman [jherman4@vols.utk.edu]   
 
 ## Pre-requisites
-- Java 8 or greater
+- Java 9 or greater
 - https://www.oracle.com/java/technologies/javase-downloads.html
 
 
