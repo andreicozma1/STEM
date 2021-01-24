@@ -84,6 +84,7 @@ class Editor {
 
 	Editor(Boolean shouldLoad){
 		window = new Stage();
+		parentPane = new BorderPane();
 
 		editorSpace = new Pane();
 		editorSpace.setPrefSize(10000,10000);
@@ -94,7 +95,6 @@ class Editor {
 		initMenuBar();
 		initContextMenu();
 
-		parentPane = new BorderPane();
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		editor = new Scene(parentPane, screenBounds.getWidth()/2, screenBounds.getHeight()/2);
 
