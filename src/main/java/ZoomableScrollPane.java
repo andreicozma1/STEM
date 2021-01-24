@@ -9,6 +9,8 @@ import javafx.scene.layout.VBox;
 public class ZoomableScrollPane extends ScrollPane {
     private double scaleValue = 0.7;
     private double zoomIntensity = 0.002;
+    private double minScaleValue = 6;
+    private double maxScaleValue = 0.15;
     private Node target;
     private Node zoomNode;
 
@@ -19,8 +21,8 @@ public class ZoomableScrollPane extends ScrollPane {
         setContent(outerNode(zoomNode));
 
         setPannable(true);
-        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+//        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+//        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
 
@@ -56,6 +58,9 @@ public class ZoomableScrollPane extends ScrollPane {
         // calculate pixel offsets from [0, 1] range
         double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
+
+        // check if the scaleValue is within the min and max bounds
+        if (scaleValue * zoomFactor < maxScaleValue || scaleValue * zoomFactor > minScaleValue) return;
 
         scaleValue = scaleValue * zoomFactor;
         updateScale();
