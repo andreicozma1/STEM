@@ -1,7 +1,7 @@
-import com.sun.tools.javac.comp.Check;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+
 
 public class Styles {
 
