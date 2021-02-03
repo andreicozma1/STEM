@@ -1,4 +1,4 @@
-# Simple Turing machine EMulator (STEM)
+# Simple Turing Machine EMulator (STEM)
 
 ### Inspired by JFLAP and xTuringmachine
 Inspired by the design of JFLAP only implementing Turing machines  
@@ -19,6 +19,8 @@ Josh Herman [jherman4@vols.utk.edu]
 
 
 ## Build instructions
+- This project uses the Maven build system. The configuration is in the _pom.xml_ file.
+- You can use the Maven wrapper executable, _mvnw_ which is included with the project.
 
 ### Install Dependencies
 ```
