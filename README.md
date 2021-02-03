@@ -3,20 +3,20 @@
 ### Inspired by JFLAP and xTuringmachine
 Inspired by the design of JFLAP only implementing Turing machines  
 Compatible with xTuringmachine files  
-#### Contributors:
-Andrei Cozma [acozma@vols.utk.edu]     
-Hunter Price [hprice7@vols.utk.edu]   
-Sam MacLean [smaclean@vols.utk.edu]   
-Joel Kovalcson [jkovalcs@vols.utk.edu]    
-Dakota Sanders [dsande30@vols.utk.edu]   
-Matt Matto [hgd145@vols.utk.edu]   
-Jonathan Bryan [jbryan74@vols.utk.edu]   
-Josh Herman [jherman4@vols.utk.edu]   
+
+### Contributors:
+- Andrei Cozma [acozma@vols.utk.edu]     
+- Hunter Price [hprice7@vols.utk.edu]   
+- Sam MacLean [smaclean@vols.utk.edu]   
+- Joel Kovalcson [jkovalcs@vols.utk.edu]    
+- Dakota Sanders [dsande30@vols.utk.edu]   
+- Matt Matto [hgd145@vols.utk.edu]   
+- Jonathan Bryan [jbryan74@vols.utk.edu]   
+- Josh Herman [jherman4@vols.utk.edu]   
 
 ## Pre-requisites
 - Java 9 or greater
 - https://www.oracle.com/java/technologies/javase-downloads.html
-
 
 ## Build instructions
 - This project uses the Maven build system. The configuration is in the _pom.xml_ file.
