@@ -21,10 +21,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.print.Paper;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -44,6 +48,7 @@ import javafx.stage.Stage;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.Collections;
 import java.util.Optional;
@@ -322,6 +327,21 @@ class Editor {
 			}
 		});
 
+		Button print_button = new Button("Print Machine");
+		print_button.setOnAction(event -> {
+			try {
+				PrinterJob job = Objects.requireNonNull(PrinterJob.createPrinterJob(), "Cannot create printer job");
+				if (!job.showPrintDialog(editor.getWindow())) return;
+				WritableImage screenshot = editorSpace.snapshot(null, null);
+				Printer printer = job.getPrinter();
+				Paper paper = job.getJobSettings().getPageLayout().getPaper();
+				if (job.printPage(editorSpace)) job.endJob();
+			}
+			catch (Exception e) {
+				System.out.println("Problem Printing");
+			}
+		});
+
 		Button saveButton = new Button("Save");
 		saveButton.setOnAction(event -> saveMachine(window, currentMachine));
 
@@ -332,7 +352,7 @@ class Editor {
 		menuBar.getItems().add(separator);
 
 		// Add non-toggle buttons + Resetting Tape
-		menuBar.getItems().addAll(tapeButton, resetButton, runMachine, saveButton, rotateStartTri_button);
+		menuBar.getItems().addAll(tapeButton, resetButton, runMachine, saveButton, rotateStartTri_button, print_button);
 
 		// Cursor when over the bar will always be default cursor
 		menuBar.addEventFilter(MouseEvent.MOUSE_MOVED, event -> editor.setCursor(Cursor.DEFAULT));
