@@ -66,7 +66,7 @@ class Editor {
 	private ToolBar menuBar;
 	private Pane editorSpace;
 	private BorderPane parentPane;
-	private final ZoomableScrollPane scrollPane;
+	private ZoomableScrollPane scrollPane;
 	private ToggleGroup toggleGroup;
 	private Machine currentMachine;
 	private EventHandler<MouseEvent> currentHandler;
@@ -139,7 +139,8 @@ class Editor {
 			Optional<ButtonType> buttonData = saveAlert.showAndWait();
 
 			if(buttonData.isPresent() && buttonData.get().getButtonData() == ButtonBar.ButtonData.YES){
-				saveMachine(window, currentMachine);
+				if (!saveMachine(window, currentMachine))
+					return false;
 			}
 			else if(buttonData.isPresent() && buttonData.get().getButtonData() == ButtonBar.ButtonData.CANCEL_CLOSE) {
 				return false;
@@ -161,8 +162,9 @@ class Editor {
 		editor = null;
 		menuBar = null;
 		editorSpace = null;
-
+		scrollPane = null;
 		currentMachine = null;
+		parentPane = null;
 		if(currentHandler != null) {
 			window.removeEventHandler(MouseEvent.MOUSE_CLICKED, currentHandler);
 		}
@@ -714,10 +716,12 @@ class Editor {
 
 	public boolean saveMachine(Stage window, Machine m) {
 	    SaveLoad saveLoad = new SaveLoad();
-
-		machineFile = m.toString();
-		System.out.println(machineFile);
-	    return saveLoad.saveMachine(window, m);
+	    if (saveLoad.saveMachine(window, m)) {
+			machineFile = m.toString();
+			System.out.println(machineFile);
+			return true;
+		}
+	    return false;
 	}
 
 	//Where I store global tape given to us from the SaveLoad class's current tape
