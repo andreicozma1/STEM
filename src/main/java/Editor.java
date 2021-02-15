@@ -666,6 +666,7 @@ class Editor {
 	//
 	public void newMachine(){
 		currentMachine = new Machine();
+		window.setTitle("*new machine*");
 		startMachine();
 	}
 
@@ -682,7 +683,6 @@ class Editor {
 
     public void loadMachine(){
 	    SaveLoad saveLoad = new SaveLoad();
-
 	    currentMachine = saveLoad.loadMachine(window);
 	    stateNextVal = saveLoad.getStateNextVal();
 
