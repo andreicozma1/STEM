@@ -19,7 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.stage.Window;
+import javafx.stage.Stage;
 
 import java.io.*;
 
@@ -42,7 +42,7 @@ public class SaveLoad {
         return stateNextVal;
     }
 
-    public boolean saveMachine(Window window, Machine m){
+    public boolean saveMachine(Stage window, Machine m){
         /* Get the file to save to from user. */
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Text Files", "*.txt");
@@ -58,6 +58,7 @@ public class SaveLoad {
                 /* Calls the machine's toString(). */
                 bw.write(m.toString());
                 bw.close();
+                window.setTitle(file.getName());
                 return true;
             }
             catch (IOException e) {
@@ -79,8 +80,7 @@ public class SaveLoad {
         return false;
     }
 
-    public Machine loadMachine(Window window){
-
+    public Machine loadMachine(Stage window){
         /* Get a file to load from the user. */
         Machine loadMachine = new Machine();
         FileChooser chooser = new FileChooser();
@@ -104,9 +104,11 @@ public class SaveLoad {
                 if (curLine.equals(STEMHeader) || curLine.equals(JFLAPISHHeader)) {
                     // Load a file designed for this program.
                     loadMachine = loadSTEM(br, curLine);
+                    window.setTitle(file.getName());
                 } else if (curLine.equals(xTuringHeader)) {
                     // Load a file from xTuringMachine
                     loadMachine = loadxTuring(br, curLine);
+                    window.setTitle(file.getName());
                 } else {
                     // Not a valid header format, display a message and return false
                     Alert invalidFileType = new Alert(Alert.AlertType.INFORMATION);
@@ -119,8 +121,7 @@ public class SaveLoad {
 
                 }
 
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 /* Error occured. */
                 Alert fileError = new Alert(Alert.AlertType.ERROR);
                 fileError.setResizable(true);
@@ -133,6 +134,7 @@ public class SaveLoad {
 
             }
         }
+
         return loadMachine;
     }
     public Machine loadxTuring(BufferedReader br, String curLine) throws IOException{
