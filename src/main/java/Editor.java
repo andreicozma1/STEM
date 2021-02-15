@@ -78,7 +78,6 @@ class Editor {
 	private Polygon startTriangle;
 	private ContextMenu contextMenu;
 	private String machineFile;
-	private Text machineSpeed;
 	private double prevStateX;
 	private double prevStateY;
 	private int currentStartRotation;
@@ -264,22 +263,18 @@ class Editor {
 		MenuItem slow = new MenuItem("Slow");
 		slow.setOnAction(e -> {
 			currentMachine.setSpeed(500);
-			machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");
 		});
 		MenuItem normal = new MenuItem("Normal");
 		normal.setOnAction(e -> {
 			currentMachine.setSpeed(250);
-			machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");
 		});
 		MenuItem fast = new MenuItem("Fast");
 		fast.setOnAction(e -> {
 			currentMachine.setSpeed(75);
-			machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");
 		});
 		MenuItem noDelay = new MenuItem("No Delay");
 		noDelay.setOnAction(e -> {
 			currentMachine.setSpeed(0);
-			machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");
 		});
 
 		SplitMenuButton runMachine = new SplitMenuButton(manualControl, slow, normal, fast, noDelay);
@@ -756,14 +751,6 @@ class Editor {
 
 		ObjectExpression<Font> textTrack = Bindings.createObjectBinding(
 			() -> Font.font(Math.min(editorSpace.getWidth() / 55, 20)), editorSpace.widthProperty());
-//		TODO - WHY IS THIS HERE vvv
-		machineSpeed = new Text( "Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");
-		machineSpeed.xProperty().bind(editorSpace.widthProperty().divide(10));
-		machineSpeed.yProperty().bind(editorSpace.heightProperty());
-		machineSpeed.fontProperty().bind(textTrack);
-		editorSpace.getChildren().add(machineSpeed);
-//		TODO - WHY IS THIS HERE ^^^
-
 
 		Circle circle = new Circle(circleRadius, null);
 		circle.setStroke(Color.BLACK);
@@ -1314,8 +1301,6 @@ class Editor {
 			currentMachine.getTape().initTape(new ArrayList<>(' '));
 		}
 
-		editorSpace.getChildren().remove(machineSpeed);	
-
 		if(currentMachine.getSpeed() == -1){
 			ObjectExpression<Font> textTrack = Bindings.createObjectBinding(
 					() -> Font.font(Math.min(editorSpace.getWidth() / 55, 20)), editorSpace.widthProperty());
@@ -1472,8 +1457,6 @@ class Editor {
 				thisButton.setText("Run Machine");
 				thisButton.setOnAction(event1 -> runMachine(thisButton, args));
 
-				editorSpace.getChildren().add(machineSpeed);	
-				machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");		
 			});
 
 			editorSpace.addEventHandler(KeyEvent.KEY_PRESSED, keyPress);
@@ -1617,8 +1600,6 @@ class Editor {
 				task.cancel();
 				tester.setCont(false);
 				editorSpace.getChildren().remove(t);
-				editorSpace.getChildren().add(machineSpeed);
-				machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");	
 			});
 			task.setOnCancelled(event -> {
 				currentMachine.getTape().refreshTapeDisplay();
@@ -1636,8 +1617,6 @@ class Editor {
 				thisButton.setOnAction(event1 -> runMachine(thisButton, args));
 				tester.setCont(false);	
 				editorSpace.getChildren().remove(t);
-				editorSpace.getChildren().add(machineSpeed);
-				machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");	
 			});
 
 			thisButton.setText("Stop Machine");
@@ -1655,7 +1634,6 @@ class Editor {
 				task.cancel();
 				tester.setCont(false);
 				editorSpace.getChildren().remove(t);
-				machineSpeed.setText("Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");		
 			});
 
 			new Thread(task).start();
