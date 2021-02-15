@@ -53,6 +53,7 @@ public class SaveLoad {
         if(file != null) {
             /* Save the file */
             try {
+                System.out.println("User chose a file to save to");
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file));
                 /* Calls the machine's toString(). */
                 bw.write(m.toString());
@@ -73,6 +74,7 @@ public class SaveLoad {
         }
         else {
             /* No file chosen */
+            System.out.println("User did not choose a file to save to");
         }
         return false;
     }
