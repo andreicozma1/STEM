@@ -17,19 +17,21 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectExpression;
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.print.Paper;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.*;
+import javafx.scene.image.PixelReader;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -41,17 +43,22 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Translate;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 class Editor {
 	private final Stage window;
@@ -59,7 +66,7 @@ class Editor {
 	private ToolBar menuBar;
 	private Pane editorSpace;
 	private BorderPane parentPane;
-	private final ScrollPane scrollPane;
+	private final ZoomableScrollPane scrollPane;
 	private ToggleGroup toggleGroup;
 	private Machine currentMachine;
 	private EventHandler<MouseEvent> currentHandler;
@@ -327,18 +334,38 @@ class Editor {
 			}
 		});
 
-		Button print_button = new Button("Print Machine");
-		print_button.setOnAction(event -> {
-			try {
-				PrinterJob job = Objects.requireNonNull(PrinterJob.createPrinterJob(), "Cannot create printer job");
-				if (!job.showPrintDialog(editor.getWindow())) return;
-				WritableImage screenshot = editorSpace.snapshot(null, null);
-				Printer printer = job.getPrinter();
-				Paper paper = job.getJobSettings().getPageLayout().getPaper();
-				if (job.printPage(editorSpace)) job.endJob();
-			}
-			catch (Exception e) {
-				System.out.println("Problem Printing");
+		Button screenshot_button = new Button("Screenshot Machine");
+		screenshot_button.setOnAction(event -> {
+			FileChooser fileChooser = new FileChooser();
+
+			//Set extension filter and set the initial file name to include the png extension
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
+			fileChooser.setInitialFileName("*.png");
+
+			//Prompt user to select a file
+			File file = fileChooser.showSaveDialog(null);
+
+			if(file != null){
+
+				try {
+					//Get the bounds of the current viewport and translate it as needed
+					SnapshotParameters params = new SnapshotParameters();
+					params.setTransform(new Translate(
+							(int) scrollPane.getHvalue(),
+							(int) scrollPane.getVvalue()
+					));
+					WritableImage writableImage = new WritableImage(
+							(int) scrollPane.getViewportBounds().getWidth(),
+							(int) scrollPane.getViewportBounds().getHeight());
+
+					scrollPane.snapshot(params, writableImage);
+
+					RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+
+					//Write the snapshot to the chosen file
+					ImageIO.write(renderedImage, "png", file);
+
+				} catch (IOException ex) { ex.printStackTrace(); }
 			}
 		});
 
@@ -352,7 +379,7 @@ class Editor {
 		menuBar.getItems().add(separator);
 
 		// Add non-toggle buttons + Resetting Tape
-		menuBar.getItems().addAll(tapeButton, resetButton, runMachine, saveButton, rotateStartTri_button, print_button);
+		menuBar.getItems().addAll(tapeButton, resetButton, runMachine, saveButton, rotateStartTri_button, screenshot_button);
 
 		// Cursor when over the bar will always be default cursor
 		menuBar.addEventFilter(MouseEvent.MOUSE_MOVED, event -> editor.setCursor(Cursor.DEFAULT));
@@ -729,12 +756,14 @@ class Editor {
 
 		ObjectExpression<Font> textTrack = Bindings.createObjectBinding(
 			() -> Font.font(Math.min(editorSpace.getWidth() / 55, 20)), editorSpace.widthProperty());
-
+//		TODO - WHY IS THIS HERE vvv
 		machineSpeed = new Text( "Speed selected is " + currentMachine.getSpeedString() + ", Press Run Machine");
 		machineSpeed.xProperty().bind(editorSpace.widthProperty().divide(10));
 		machineSpeed.yProperty().bind(editorSpace.heightProperty());
 		machineSpeed.fontProperty().bind(textTrack);
 		editorSpace.getChildren().add(machineSpeed);
+//		TODO - WHY IS THIS HERE ^^^
+
 
 		Circle circle = new Circle(circleRadius, null);
 		circle.setStroke(Color.BLACK);
