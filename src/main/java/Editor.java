@@ -335,7 +335,7 @@ class Editor {
 
 			//Set extension filter and set the initial file name to include the png extension
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
-			fileChooser.setInitialFileName("*.png");
+			fileChooser.setInitialFileName("screenshot.png");
 
 			//Prompt user to select a file
 			File file = fileChooser.showSaveDialog(null);
