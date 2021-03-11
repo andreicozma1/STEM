@@ -25,32 +25,37 @@ public class HelpMenu {
 	private Stage window;
 	private Scene menu;
 	private VBox layout;
-	private CloseButton closebutton;
+	private ScrollPane scrollPane;
+//	private CloseButton closebutton;
 	
 	public HelpMenu(Scene prev){
 		window = new Stage();
 		window.setTitle("Help");
-		layout = new VBox(20);
-
-		WebView =
-
-		closebutton = new CloseButton();
-		closebutton.setCloseButton(window);
-
-		ScrollPane scrollPane = new ScrollPane();
-		Label label = new Label("Hello world");
-		for (int i =0 ; i <30; i++) {
-			Label l = new Label("Hello world");
-			layout.getChildren().addAll(l);
-		}
-
-//		Button backButton = new Button("Back");
-//		backButton.setOnAction(e->window.setScene(prev));
-		
-		layout.getChildren().addAll(label, closebutton.getCloseButton());
+		layout = new VBox();
+		scrollPane = new ScrollPane();
 		scrollPane.setContent(layout);
+
+//		WebView webView = new WebView();
+//		webView.getEngine().load("./help.html");
+//		scrollPane.setContent(webView);
+
+
 		menu = new Scene(scrollPane, 300, 300);
 		window.setScene(menu);
 		window.show();
+
+//		closebutton = new CloseButton();
+//		closebutton.setCloseButton(window);
+//		ScrollPane scrollPane = new ScrollPane();
+//		Label label = new Label("Hello world");
+//		for (int i =0 ; i <30; i++) {
+//			Label l = new Label("Hello world");
+//			layout.getChildren().addAll(l);
+//		}
+//		Button backButton = new Button("Back");
+//		backButton.setOnAction(e->window.setScene(prev));
+//		layout.getChildren().addAll(label, closebutton.getCloseButton());
+//		scrollPane.setContent(layout);
+
 	}
 }
