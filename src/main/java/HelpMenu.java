@@ -13,6 +13,7 @@
  *     GNU General Public License for more details.
  */
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
@@ -20,17 +21,37 @@ import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.scene.web.WebView;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 public class HelpMenu {
 
 	public HelpMenu(){
+		Scene menu;
 		Stage window = new Stage();
+		FXMLLoader loader = new FXMLLoader();
 		window.setTitle("Help");
-		VBox layout = new VBox();
-		Scene menu = new Scene(layout, 300, 300);
 
-		String html_path = this.getClass().getResource("help.html").toString();
+		// load the fxml file containing the help menu content
+		try {
+			URL xml_url = new URL(this.getClass().getResource("test.fxml").toExternalForm());
+			loader.setLocation(xml_url);
+		}catch(MalformedURLException e){
+			System.out.println("Could not find fxml file");
+			return;
+		}
 
-		addWebView(layout, html_path);
+		// load the fxml content into the Scene
+		try {
+			VBox vbox = loader.<VBox>load();
+			menu = new Scene(vbox);
+		}catch(IOException e){
+			System.out.println("Could not load help menu content");
+			return;
+		}
 
 		window.setScene(menu);
 		window.show();
