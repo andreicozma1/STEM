@@ -23,8 +23,6 @@ import javafx.scene.web.WebView;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 public class HelpMenu {
@@ -37,7 +35,7 @@ public class HelpMenu {
 
 		// load the fxml file containing the help menu content
 		try {
-			URL xml_url = new URL(this.getClass().getResource("test.fxml").toExternalForm());
+			URL xml_url = new URL(this.getClass().getResource("fxml/test.fxml").toExternalForm());
 			loader.setLocation(xml_url);
 		}catch(MalformedURLException e){
 			System.out.println("Could not find fxml file");
