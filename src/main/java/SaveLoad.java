@@ -130,8 +130,9 @@ public class SaveLoad {
                 fileError.showAndWait();
 
             }
+            return loadMachine;
         }
-        return loadMachine;
+        return null;
     }
     public Machine loadxTuring(BufferedReader br, String curLine) throws IOException{
         Machine loadMachine = new Machine();

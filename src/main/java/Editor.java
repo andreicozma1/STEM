@@ -104,7 +104,9 @@ class Editor {
 		circleRadius = 20;
 		startTriangle = new Polygon();
 
-		if(shouldLoad) loadMachine(); else newMachine();
+		if(shouldLoad) {
+			if(!loadMachine()) return;
+		} else newMachine();
 
 		window.setScene(editor);
 		window.show();
@@ -680,10 +682,13 @@ class Editor {
 	//Where I store global tape given to us from the SaveLoad class's current tape
     ArrayList<Character> originalTape = new ArrayList<>();
 
-    public void loadMachine(){
+    public boolean loadMachine(){
 	    SaveLoad saveLoad = new SaveLoad();
 
 	    currentMachine = saveLoad.loadMachine(window);
+
+	    if(currentMachine == null) return false;
+
 	    stateNextVal = saveLoad.getStateNextVal();
 
 	    //When the machine is loaded, we set originalTape
@@ -695,6 +700,7 @@ class Editor {
 
 		//currentMachine.getTape().refreshTapeDisplay();
 		startMachine();
+		return true;
 	}
 	
 	/* Called whenever a new machine is setup */
