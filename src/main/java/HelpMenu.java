@@ -13,34 +13,36 @@
  *     GNU General Public License for more details.
  */
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class HelpMenu {
-	private Scene menu;
-	private CloseButton closebutton;
-	
-	public HelpMenu(Stage window, Scene prev){
-		closebutton = new CloseButton();
-		closebutton.setCloseButton(window);
-		
-		Label label = new Label("Hello world");
-//		label.setStyle("-fx-text-fill: #839496");
-		
-		Button backButton = new Button("Back");
-		backButton.setOnAction(e->window.setScene(prev));
-		
-		VBox layout = new VBox(20);
-		layout.getChildren().addAll(label, backButton, closebutton.getCloseButton());
-//		layout.setStyle("-fx-background-color: #002b36");
-		menu = new Scene(layout, 300, 300);
-	}
-	
-	public void setMenu(Stage window){
+
+	public HelpMenu(){
+		Scene menu;
+		Stage window = new Stage();
 		window.setTitle("Help");
+
+		// load the fxml content into the Scene
+		try {
+			URL xml_url = new URL(this.getClass().getResource("fxml/helpmenu.fxml").toExternalForm());
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(xml_url);
+			menu = loader.load();
+		}catch(MalformedURLException e){
+			System.out.println("Could not find fxml file");
+			return;
+		} catch(IOException e) {
+			System.out.println("Could not load help menu content");
+			return;
+		}
+
 		window.setScene(menu);
+		window.show();
 	}
 }
