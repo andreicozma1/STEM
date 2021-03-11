@@ -217,8 +217,6 @@ class Editor {
 		});
 
 		currentMachine.getTape().setDisplay(tapeDisplay, headDisplay, tapeBar);
-
-		System.out.println("I'm in here!");
 	}
 
 
