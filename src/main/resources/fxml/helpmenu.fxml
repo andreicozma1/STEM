@@ -18,7 +18,7 @@
                 <panes>
                     <TitledPane text="Add State">
                         <VBox alignment="CENTER">
-                            <ImageView scaleX="0.8" scaleY="0.8">
+                            <ImageView fitHeight="70.0" preserveRatio="true">
                                 <Image url="@/helpmenu/state.png" />
                             </ImageView>
                             <Label text="The “Add State” button toggles the ability to add states to the machine by clicking on the editing space." wrapText="true" />
@@ -26,11 +26,11 @@
                     </TitledPane>
                     <TitledPane text="Add Translation">
                         <VBox alignment="CENTER">
-                            <ImageView scaleX="1.0" scaleY="1.0">
+                            <ImageView fitHeight="50.0" preserveRatio="true">
                                 <Image url="@/helpmenu/transition.png" />
                             </ImageView>
                             <Label text="The “Add Transition” button toggles the ability to add transition between states of the turing machine by clicking on the nodes you want to link with the transition." wrapText="true" />
-                            <ImageView scaleX="0.5" scaleY="0.5">
+                            <ImageView fitHeight="140.0" preserveRatio="true">
                                 <Image url="@/helpmenu/addtransition.png" />
                             </ImageView>
                             <Label text="When you add a transition a prompt will be shown that look like the image above. Enter the characters you want to read and write then choose the direction you want to move on the tape (left, right, or stay). Then press confirm create the transition." wrapText="true" />
@@ -38,7 +38,7 @@
                     </TitledPane>
                     <TitledPane text="Edit Transition" wrapText="true">
                         <VBox alignment="CENTER">
-                            <ImageView scaleX="0.5" scaleY="0.5">
+                            <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/edittransition.png" />
                             </ImageView>
                             <Label text="The “Edit Transition” button will toggle the ability to edit transitions. Click on an edge to bring up the menu above. Double click on the Read, Write, or Direction fields to edit. The delete transition button will delete a transition." />
@@ -51,7 +51,7 @@
                     </TitledPane>
                     <TitledPane text="Edit Tape" wrapText="true">
                         <VBox alignment="CENTER">
-                            <ImageView scaleX="0.5" scaleY="0.5">
+                            <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/edittape.png" />
                             </ImageView>
                             <Label text="The “Edit Tape” button will spawn the menu above. Enter a string that" wrapText="true" />
