@@ -54,7 +54,7 @@
                             <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/edittape.png" />
                             </ImageView>
-                            <Label text="The “Edit Tape” button will spawn the menu above. Enter a string that" wrapText="true" />
+                            <Label text="The “Edit Tape” button will spawn the menu above. Enter the string that you want to populate the tape with. Then press OK." wrapText="true" />
                         </VBox>
                     </TitledPane>
                 </panes>
