@@ -71,12 +71,11 @@ public class Main extends Application {
 		newMachineButton.requestFocus();
 
 		Button loadMachineButton = makeBtn("Load Machine");
-		Button optionsButton = makeBtn("Options");
 		Button helpButton = makeBtn("Help");
 		Button quitButton = makeBtn("Quit");
 
 		/* Set layout. */
-		buttonLayout.getChildren().addAll(newMachineButton, loadMachineButton, optionsButton, helpButton, quitButton); //, closebutton.getCloseButton());
+		buttonLayout.getChildren().addAll(newMachineButton, loadMachineButton, helpButton, quitButton); //, closebutton.getCloseButton());
 		menuLayout.setCenter(buttonLayout);
 
 		/* After menu is set up, create other scenes. */
