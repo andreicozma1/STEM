@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.web.WebView;
 
 public class HelpMenu {
 	private Stage window;
@@ -31,6 +32,8 @@ public class HelpMenu {
 		window.setTitle("Help");
 		layout = new VBox(20);
 
+		WebView =
+
 		closebutton = new CloseButton();
 		closebutton.setCloseButton(window);
 
@@ -39,7 +42,6 @@ public class HelpMenu {
 		for (int i =0 ; i <30; i++) {
 			Label l = new Label("Hello world");
 			layout.getChildren().addAll(l);
-
 		}
 
 //		Button backButton = new Button("Back");
@@ -50,6 +52,5 @@ public class HelpMenu {
 		menu = new Scene(scrollPane, 300, 300);
 		window.setScene(menu);
 		window.show();
-
 	}
 }
