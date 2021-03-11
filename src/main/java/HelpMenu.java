@@ -15,11 +15,7 @@
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
-import javafx.scene.web.WebView;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -34,7 +30,7 @@ public class HelpMenu {
 
 		// load the fxml content into the Scene
 		try {
-			URL xml_url = new URL(this.getClass().getResource("fxml/test.fxml").toExternalForm());
+			URL xml_url = new URL(this.getClass().getResource("fxml/helpmenu.fxml").toExternalForm());
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(xml_url);
 			menu = loader.load();
