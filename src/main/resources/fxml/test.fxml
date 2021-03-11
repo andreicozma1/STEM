@@ -4,17 +4,22 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11">
+<?import javafx.scene.text.*?>
+<?import javafx.scene.Scene?>
+<Scene>
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <VBox alignment="CENTER" prefHeight="397.0" prefWidth="598.0">
             <children>
-                <Label text="Help Menu" />
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="38.0" prefWidth="605.0" text="HELP" textAlignment="CENTER">
+               <font>
+                  <Font size="26.0" />
+               </font></Label>
                 <Accordion prefHeight="843.0" prefWidth="598.0">
                     <panes>
-                        <TitledPane animated="false" text="Add State">
+                        <TitledPane animated="false" expanded="false" text="Add State" wrapText="true">
                             <content>
-                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="596.0">
                                     <children>
                                         <ImageView fitHeight="150.0" fitWidth="200.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                                         </ImageView>
@@ -23,7 +28,7 @@
                                 </VBox>
                             </content>
                         </TitledPane>
-                        <TitledPane animated="false" text="Add Translation">
+                        <TitledPane animated="false" expanded="false" text="Add Translation" wrapText="true">
                             <content>
                                 <VBox alignment="CENTER" prefHeight="523.0" prefWidth="596.0">
                                     <children>
@@ -39,14 +44,14 @@
                                 </VBox>
                             </content>
                         </TitledPane>
-                        <TitledPane animated="false" text="Delete">
+                        <TitledPane animated="false" text="Delete" wrapText="true">
                             <content>
                                 <Label text="The “Delete” button will toggle the ability to delete any state or transition on the editor. Deleting a state will delete all transitions connected to it." wrapText="true" />
                             </content>
                         </TitledPane>
-                        <TitledPane animated="false" text="Edit Translation">
+                        <TitledPane animated="false" text="Edit Translation" wrapText="true">
                             <content>
-                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                <VBox alignment="CENTER">
                                     <children>
                                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
 
@@ -56,7 +61,7 @@
                                 </VBox>
                             </content>
                         </TitledPane>
-                        <TitledPane animated="false" text="Edit Tape">
+                        <TitledPane animated="false" text="Edit Tape" wrapText="true">
                             <content>
                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                     <children>
@@ -68,8 +73,8 @@
                                 </VBox>
                             </content>
                         </TitledPane>
-                        <TitledPane animated="false" text="Add Translation" />
-                        <TitledPane animated="false" text="Add Translation" />
+                        <TitledPane animated="false" text="Add Translation" wrapText="true" />
+                        <TitledPane animated="false" text="Add Translation" wrapText="true" />
                     </panes>
                <opaqueInsets>
                   <Insets />
@@ -79,3 +84,4 @@
         </VBox>
     </content>
 </ScrollPane>
+</Scene>

@@ -30,36 +30,23 @@ public class HelpMenu {
 	public HelpMenu(){
 		Scene menu;
 		Stage window = new Stage();
-		FXMLLoader loader = new FXMLLoader();
 		window.setTitle("Help");
-
-		// load the fxml file containing the help menu content
-		try {
-			URL xml_url = new URL(this.getClass().getResource("fxml/test.fxml").toExternalForm());
-			loader.setLocation(xml_url);
-		}catch(MalformedURLException e){
-			System.out.println("Could not find fxml file");
-			return;
-		}
 
 		// load the fxml content into the Scene
 		try {
-			ScrollPane vbox = loader.<ScrollPane>load();
-			menu = new Scene(vbox);
-		}catch(IOException e){
+			URL xml_url = new URL(this.getClass().getResource("fxml/test.fxml").toExternalForm());
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(xml_url);
+			menu = loader.load();
+		}catch(MalformedURLException e){
+			System.out.println("Could not find fxml file");
+			return;
+		} catch(IOException e) {
 			System.out.println("Could not load help menu content");
 			return;
 		}
 
 		window.setScene(menu);
 		window.show();
-	}
-
-	public void addWebView(VBox layout, String html_path) {
-
-		WebView webView = new WebView();
-		WebEngine webEngine= webView.getEngine();
-		webEngine.load(html_path);
-		layout.getChildren().add(webView);
 	}
 }
