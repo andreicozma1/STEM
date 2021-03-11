@@ -46,7 +46,7 @@ public class HelpMenu {
 
 		// load the fxml content into the Scene
 		try {
-			VBox vbox = loader.<VBox>load();
+			ScrollPane vbox = loader.<ScrollPane>load();
 			menu = new Scene(vbox);
 		}catch(IOException e){
 			System.out.println("Could not load help menu content");
