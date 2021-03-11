@@ -57,6 +57,14 @@
                             <Label text="The “Edit Tape” button will spawn the menu above. Enter the string that you want to populate the tape with. Then press OK." wrapText="true" />
                         </VBox>
                     </TitledPane>
+                    <TitledPane text="Run Machine" wrapText="true">
+                        <VBox alignment="CENTER">
+                            <ImageView fitHeight="125.0" preserveRatio="true">
+                                <Image url="@/helpmenu/runmachine.png" />
+                            </ImageView>
+                            <Label text="To run your machine click the drop down on the “Run Machine“ button to select the speed. Then press the button to begin execution. " wrapText="true" />
+                        </VBox>
+                    </TitledPane>
                 </panes>
             </Accordion>
         </VBox>
