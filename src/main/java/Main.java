@@ -41,6 +41,7 @@ public class Main extends Application {
 
 		initMenu();
 		window.setScene(menu);
+		window.getIcons().add(new Image("tmicon.png"));
 		window.setTitle("STEM");
 		window.show();
 	}
