@@ -59,11 +59,11 @@
             <classifier>mac</classifier>
         </dependency>
         <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-base</artifactId>
-        <version>11</version>
-        <classifier>win</classifier>
-    </dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>11</version>
+            <classifier>win</classifier>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
