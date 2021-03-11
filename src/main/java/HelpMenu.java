@@ -14,48 +14,33 @@
  */
 
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.scene.web.WebView;
 
 public class HelpMenu {
-	private Stage window;
-	private Scene menu;
-	private VBox layout;
-	private ScrollPane scrollPane;
-//	private CloseButton closebutton;
-	
-	public HelpMenu(Scene prev){
-		window = new Stage();
+
+	public HelpMenu(){
+		Stage window = new Stage();
 		window.setTitle("Help");
-		layout = new VBox();
-		scrollPane = new ScrollPane();
-		scrollPane.setContent(layout);
+		VBox layout = new VBox();
+		Scene menu = new Scene(layout, 300, 300);
 
-//		WebView webView = new WebView();
-//		webView.getEngine().load("./help.html");
-//		scrollPane.setContent(webView);
+		String html_path = this.getClass().getResource("help.html").toString();
 
+		addWebView(layout, html_path);
 
-		menu = new Scene(scrollPane, 300, 300);
 		window.setScene(menu);
 		window.show();
+	}
 
-//		closebutton = new CloseButton();
-//		closebutton.setCloseButton(window);
-//		ScrollPane scrollPane = new ScrollPane();
-//		Label label = new Label("Hello world");
-//		for (int i =0 ; i <30; i++) {
-//			Label l = new Label("Hello world");
-//			layout.getChildren().addAll(l);
-//		}
-//		Button backButton = new Button("Back");
-//		backButton.setOnAction(e->window.setScene(prev));
-//		layout.getChildren().addAll(label, closebutton.getCloseButton());
-//		scrollPane.setContent(layout);
+	public void addWebView(VBox layout, String html_path) {
 
+		WebView webView = new WebView();
+		WebEngine webEngine= webView.getEngine();
+		webEngine.load(html_path);
+		layout.getChildren().add(webView);
 	}
 }

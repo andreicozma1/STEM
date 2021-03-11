@@ -80,8 +80,8 @@ public class Main extends Application {
 		menuLayout.setCenter(buttonLayout);
 
 		/* After menu is set up, create other scenes. */
-		helpButton.setOnAction(e-> {System.out.println("sdsdsf");
-			new HelpMenu(menu);
+		helpButton.setOnAction(e-> {
+			new HelpMenu();
 		});
 
 		newMachineButton.setOnAction(e-> {
