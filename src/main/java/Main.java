@@ -78,9 +78,10 @@ public class Main extends Application {
 		menuLayout.setCenter(buttonLayout);
 
 		/* After menu is set up, create other scenes. */
-		help = new HelpMenu(window, menu);
-		helpButton.setOnAction(e-> help.setMenu(window));
-		
+		helpButton.setOnAction(e-> {
+			new HelpMenu();
+		});
+
 		newMachineButton.setOnAction(e-> {
 			new Editor(false);
 		});

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Scene xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+        <VBox prefHeight="397.0" prefWidth="598.0">
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="605.0" text="HELP">
+                <font>
+                    <Font size="26.0" />
+                </font>
+            </Label>
+            <Accordion>
+                <panes>
+                    <TitledPane text="Add State">
+                        <VBox alignment="CENTER">
+                            <ImageView fitHeight="70.0" preserveRatio="true">
+                                <Image url="@/helpmenu/state.png" />
+                            </ImageView>
+                            <Label text="The “Add State” button toggles the ability to add states to the machine by clicking on the editing space." wrapText="true" />
+                        </VBox>
+                    </TitledPane>
+                    <TitledPane text="Add Translation">
+                        <VBox alignment="CENTER">
+                            <ImageView fitHeight="50.0" preserveRatio="true">
+                                <Image url="@/helpmenu/transition.png" />
+                            </ImageView>
+                            <Label text="The “Add Transition” button toggles the ability to add transition between states of the turing machine by clicking on the nodes you want to link with the transition." wrapText="true" />
+                            <ImageView fitHeight="140.0" preserveRatio="true">
+                                <Image url="@/helpmenu/addtransition.png" />
+                            </ImageView>
+                            <Label text="When you add a transition a prompt will be shown that look like the image above. Enter the characters you want to read and write then choose the direction you want to move on the tape (left, right, or stay). Then press confirm create the transition." wrapText="true" />
+                        </VBox>
+                    </TitledPane>
+                    <TitledPane text="Edit Transition" wrapText="true">
+                        <VBox alignment="CENTER">
+                            <ImageView fitHeight="110.0" preserveRatio="true">
+                                <Image url="@/helpmenu/edittransition.png" />
+                            </ImageView>
+                            <Label text="The “Edit Transition” button will toggle the ability to edit transitions. Click on an edge to bring up the menu above. Double click on the Read, Write, or Direction fields to edit. The delete transition button will delete a transition." />
+                        </VBox>
+                    </TitledPane>
+                    <TitledPane text="Delete" wrapText="true">
+                        <VBox alignment="CENTER">
+                            <Label text="The “Delete” button will toggle the ability to delete any state or transition on the editor. Deleting a state will delete all transitions connected to it." wrapText="true" />
+                        </VBox>
+                    </TitledPane>
+                    <TitledPane text="Edit Tape" wrapText="true">
+                        <VBox alignment="CENTER">
+                            <ImageView fitHeight="110.0" preserveRatio="true">
+                                <Image url="@/helpmenu/edittape.png" />
+                            </ImageView>
+                            <Label text="The “Edit Tape” button will spawn the menu above. Enter the string that you want to populate the tape with. Then press OK." wrapText="true" />
+                        </VBox>
+                    </TitledPane>
+                    <TitledPane text="Run Machine" wrapText="true">
+                        <VBox alignment="CENTER">
+                            <ImageView fitHeight="125.0" preserveRatio="true">
+                                <Image url="@/helpmenu/runmachine.png" />
+                            </ImageView>
+                            <Label text="To run your machine click the drop down on the “Run Machine“ button to select the speed. Then press the button to begin execution. " wrapText="true" />
+                        </VBox>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+        </VBox>
+    </ScrollPane>
+</Scene>
