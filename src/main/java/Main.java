@@ -1,6 +1,6 @@
 /*
  *     Simple Turing machine EMulator (STEM)
- *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto
+ *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,12 +14,10 @@
  */
 
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectExpression;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -43,6 +41,7 @@ public class Main extends Application {
 
 		initMenu();
 		window.setScene(menu);
+		window.getIcons().add(new Image("tmicon.png"));
 		window.setTitle("STEM");
 		window.show();
 	}

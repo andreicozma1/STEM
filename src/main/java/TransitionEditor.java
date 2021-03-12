@@ -1,6 +1,6 @@
 /*
  *     Simple Turing machine EMulator (STEM)
- *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto
+ *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -20,22 +20,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.geometry.Insets;
-import javafx.scene.*;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.Group;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
 import java.util.ArrayList;
 
 
