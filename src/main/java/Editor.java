@@ -1759,8 +1759,8 @@ class Editor {
 				double offsetX = e.getSceneX() - prevStateX;
 				double offsetY = e.getSceneY() - prevStateY;
 
-				double newX = c.getCenterX() + offsetX;
-				double newY = c.getCenterY() + offsetY;
+				double newX = c.getCenterX() + offsetX / scrollPane.scaleValue;
+				double newY = c.getCenterY() + offsetY / scrollPane.scaleValue;
 				if((newX > circleRadius) && newX < (editorSpace.getPrefWidth() - circleRadius)
 						&& (newY > circleRadius) && (newY < editorSpace.getPrefHeight() - (110
 						 + circleRadius))) {
