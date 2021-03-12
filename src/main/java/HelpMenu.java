@@ -26,6 +26,8 @@ public class HelpMenu {
 	public HelpMenu(){
 		Scene menu;
 		Stage window = new Stage();
+		window.setResizable(false);
+
 		window.setTitle("Help");
 
 		// load the fxml content into the Scene
