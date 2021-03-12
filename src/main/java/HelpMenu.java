@@ -41,7 +41,7 @@ public class HelpMenu {
 			System.out.println("Could not load help menu content");
 			return;
 		}
-
+		window.setResizable(false);
 		window.setScene(menu);
 		window.show();
 	}

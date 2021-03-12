@@ -16,7 +16,7 @@
             </Label>
             <Accordion>
                 <panes>
-                    <TitledPane text="Add State">
+                    <TitledPane text="Add State" wrapText="true">
                         <VBox alignment="CENTER">
                             <ImageView fitHeight="70.0" preserveRatio="true">
                                 <Image url="@/helpmenu/state.png" />
@@ -24,7 +24,7 @@
                             <Label text="The “Add State” button toggles the ability to add states to the machine by clicking on the editing space." wrapText="true" />
                         </VBox>
                     </TitledPane>
-                    <TitledPane text="Add Translation">
+                    <TitledPane text="Add Translation" wrapText="true">
                         <VBox alignment="CENTER">
                             <ImageView fitHeight="50.0" preserveRatio="true">
                                 <Image url="@/helpmenu/transition.png" />
@@ -41,7 +41,7 @@
                             <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/edittransition.png" />
                             </ImageView>
-                            <Label text="The “Edit Transition” button will toggle the ability to edit transitions. Click on an edge to bring up the menu above. Double click on the Read, Write, or Direction fields to edit. The delete transition button will delete a transition." />
+                            <Label text="The “Edit Transition” button will toggle the ability to edit transitions. Click on an edge to bring up the menu above. Double click on the Read, Write, or Direction fields to edit. The delete transition button will delete a transition." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Delete" wrapText="true">
