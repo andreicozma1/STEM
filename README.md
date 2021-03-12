@@ -58,7 +58,7 @@ java -jar STEM.jar
   
 ### License
 Simple Turing machine EMulator (STEM)  
-Copyright (C) 2020 Andrei Cozma, Hunter Price, Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Jonathan Bryan
+Copyright (C) 2021 Andrei Cozma, Hunter Price, Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Jonathan Bryan
 
 This program is free software: you can redistribute it and/or modify  
 it under the terms of the GNU General Public License as published by  
