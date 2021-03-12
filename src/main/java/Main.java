@@ -52,12 +52,12 @@ public class Main extends Application {
 		BorderPane menuLayout = new BorderPane(); 				//outer Borderpane to hold menubar
 		menu = new Scene(menuLayout);
 
-		Image background = new Image("turingback.jpg");
+		Image background = new Image("background.png");
 		BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true);
 		menuLayout.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, bSize)));
 
-		window.setWidth(background.getWidth());
-		window.setHeight(background.getHeight());
+		window.setWidth(800);
+		window.setHeight(600);
 
 		window.setResizable(false);
 
