@@ -18,6 +18,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -61,10 +62,15 @@ public class Main extends Application {
 		window.setResizable(false);
 
 		/* Contents of page. */
-		VBox buttonLayout = new VBox(5); 				//inner VBox to hold buttons
+		VBox buttonLayout = new VBox(9); 				//inner VBox to hold buttons
 		buttonLayout.setAlignment(Pos.CENTER_LEFT);
 		buttonLayout.setPadding(new Insets(20, 50, 20, 50));
 		buttonLayout.prefWidthProperty().bind(menuLayout.widthProperty());
+
+		Label title = new Label("Simple Turing\nMachine Simulator");
+		title.setFont(Font.font(null, FontWeight.BOLD, 30));
+		title.setStyle(Styles.IDLE_BUTTON_STYLE);
+		title.setPadding(new Insets(8, 20, 40, 20));
 
 		Button newMachineButton = makeBtn("New Machine");
 		newMachineButton.requestFocus();
@@ -73,8 +79,10 @@ public class Main extends Application {
 		Button helpButton = makeBtn("Help");
 		Button quitButton = makeBtn("Quit");
 
+		Region spacer = new Region();
+		spacer.setPrefHeight(90);
 		/* Set layout. */
-		buttonLayout.getChildren().addAll(newMachineButton, loadMachineButton, helpButton, quitButton); //, closebutton.getCloseButton());
+		buttonLayout.getChildren().addAll(title, newMachineButton, loadMachineButton, helpButton, quitButton, spacer); //, closebutton.getCloseButton());
 		menuLayout.setCenter(buttonLayout);
 
 		/* After menu is set up, create other scenes. */
