@@ -33,7 +33,7 @@
                             <ImageView fitHeight="140.0" preserveRatio="true">
                                 <Image url="@/helpmenu/addtransition.png" />
                             </ImageView>
-                            <Label minHeight="-Infinity" text="When you add a transition a prompt will be shown that look like the image above. Enter the characters you want to read and write then choose the direction you want to move on the tape (left, right, or stay). Then press confirm create the transition." wrapText="true" />
+                            <Label minHeight="-Infinity" text="When you add a transition a prompt will be shown that look like the image above. Enter the characters you want to read and write then choose the direction you want to move on the tape (left, right, or stay). Then press confirm create the transition. When creating a transition the wildcard character is a tilde (~)." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Edit Transition">
