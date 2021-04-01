@@ -24,7 +24,7 @@
                             <Label text="The “Add State” button toggles the ability to add states to the machine by clicking on the editing space." wrapText="true" />
                         </VBox>
                     </TitledPane>
-                    <TitledPane text="Add Translation">
+                    <TitledPane text="Add Transition">
                         <VBox alignment="CENTER">
                             <ImageView fitHeight="50.0" preserveRatio="true">
                                 <Image url="@/helpmenu/transition.png" />
