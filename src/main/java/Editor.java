@@ -31,12 +31,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
@@ -87,6 +89,14 @@ class Editor {
 	private static final int START_RIGHT = 2;
 	private static final int START_TOP = 3;
 	//private Integer tapeDisplayOffset;
+
+	// used for drawing comment boxes
+	private EventHandler<MouseEvent> pressHandler = event -> {
+		System.out.println("Dummy Event");
+	};
+	private EventHandler<MouseEvent> dragHandler = event -> {
+		System.out.println("Dummy Event");
+	};
 
 	void setCircleRadius(int size){
 		circleRadius = size;
@@ -232,11 +242,11 @@ class Editor {
 		ToggleButton addState = new ToggleButton("Add State");
 		addState.setUserData("Add State");
 		addState.setToggleGroup(toggleGroup);
-		
+
 		ToggleButton deleteState = new ToggleButton("Delete");
 		deleteState.setUserData("Delete Value");
 		deleteState.setToggleGroup(toggleGroup);
-		
+
 		ToggleButton addTransition = new ToggleButton("Add Transition");
 		addTransition.setUserData("Add Transition");
 		addTransition.setToggleGroup(toggleGroup);
@@ -245,13 +255,17 @@ class Editor {
 		editTransition.setUserData("Edit Transition");
 		editTransition.setToggleGroup(toggleGroup);
 
+		ToggleButton addCommentBox = new ToggleButton("Add Comment Box");
+		addCommentBox.setUserData("Add Comment Box");
+		addCommentBox.setToggleGroup(toggleGroup);
+
 		// END TOGGLE BUTTONS
 
 		Separator separator = new Separator();
 		separator.setOrientation(Orientation.VERTICAL);
 
 		// Begin NON-Toggle buttons
-		
+
 		Button tapeButton = new Button("Edit Tape");
 		tapeButton.setOnAction(e->editTape(window, currentMachine));
 
@@ -280,7 +294,7 @@ class Editor {
 
 		SplitMenuButton runMachine = new SplitMenuButton(manualControl, slow, normal, fast, noDelay);
 		runMachine.setText("Run Machine");
-		runMachine.setOnAction(e-> {	
+		runMachine.setOnAction(e-> {
 			if(currentMachine.getStartState() == null){
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setResizable(true);
@@ -369,7 +383,7 @@ class Editor {
 		saveButton.setOnAction(event -> saveMachine(window, currentMachine));
 
 		// Add toggle buttons
-		menuBar.getItems().addAll(addState, addTransition, deleteState, editTransition);
+		menuBar.getItems().addAll(addState, addTransition, deleteState, editTransition, addCommentBox);
 
 		// Add separator
 		menuBar.getItems().add(separator);
@@ -388,7 +402,7 @@ class Editor {
 		setStart.setOnAction(event -> {
 			State s = (State) contextMenu.getOwnerNode().getUserData();
 			drawStartTriangle(s);
-			
+
 			currentMachine.setStartState(s);
 			s.setStart(true);
 			System.out.printf("State %s is now start\n", currentMachine.getStartState().getName());
@@ -578,7 +592,7 @@ class Editor {
 			s.setCircle(c);
 			s.setLabel(t);
 			c.setUserData(s);
-			t.setUserData(s);			
+			t.setUserData(s);
 
 			c.setOnContextMenuRequested(event1 -> {
 				contextMenu.show(c,event1.getScreenX(), event1.getScreenY());
@@ -606,7 +620,7 @@ class Editor {
 				Path path = new Path(clonedTransition.getFromState(), clonedTransition.getToState()); // setup a new path between the new from state and old destination
 				currentMachine.getPaths().add(path); // add the new path to the machine
 				clonedTransition.setPath(path); // set the transitions new path
-			}			
+			}
 
 			// check for incoming transitions
 			ArrayList<Transition> container = new ArrayList<>();
@@ -614,8 +628,8 @@ class Editor {
 				if(tr.getToState() == originState && tr.getToState() != tr.getFromState()){
 					clonedTransition = cloneTransition(tr.getFromState(), s, tr.getReadChar(), tr.getWriteChar());
 					clonedTransition.setMoveDirection(tr.getMoveDirection());
-					container.add(clonedTransition);			
-				}			
+					container.add(clonedTransition);
+				}
 			}
 
 			for(Transition tr : container){
@@ -632,7 +646,7 @@ class Editor {
 				if(tr.getToState() == s && tr.getToState() != tr.getFromState()){
 					System.out.printf("Adding Transiton %s -> %s, %c ; %c ; %c\n", tr.getFromState().getName(), tr.getToState().getName(),
 							tr.getReadChar(), tr.getWriteChar(), tr.getMoveDirection().toString().charAt(0));
-					
+
 					tl.add(tr);
 				}
 			}
@@ -745,7 +759,7 @@ class Editor {
 		startMachine();
 		return true;
 	}
-	
+
 	/* Called whenever a new machine is setup */
 	private void startMachine(){
 		initTapeDisplay();
@@ -783,9 +797,14 @@ class Editor {
 			//   ___) |  __/ |_| |_| | |_) |
 			//  |____/ \___|\__|\__,_| .__/
 			//                       |_|
+
 			editorSpace.removeEventFilter(MouseEvent.MOUSE_MOVED, MoveEvent);
 			if(currentHandler != null)
 				editorSpace.removeEventHandler(MouseEvent.MOUSE_CLICKED, currentHandler);
+			if(pressHandler != null)
+				editorSpace.removeEventHandler(MouseEvent.MOUSE_PRESSED, pressHandler);
+			if(dragHandler != null)
+				editorSpace.removeEventHandler(MouseEvent.MOUSE_DRAGGED, dragHandler);
 			if(transitionFromState != null){
 				transitionFromState.getCircle().setFill(transitionFromState.getBaseColor());
 				transitionFromState = null;
@@ -898,7 +917,8 @@ class Editor {
 				currentHandler = event -> {
 					if(event.getButton() == MouseButton.PRIMARY
 							&& (event.getTarget() instanceof Circle
-							|| event.getTarget() instanceof Text)){
+							|| event.getTarget() instanceof Text
+							|| event.getTarget() instanceof Rectangle)){
 
 						Object Target = ((Node) event.getTarget()).getUserData();
 
@@ -932,13 +952,17 @@ class Editor {
 							Transition targetTransition = (Transition) Target;
 							deleteTransition(targetTransition);
 						}
+						else if(event.getTarget() instanceof Rectangle){
+							editorSpace.getChildren().remove(event.getTarget());
+							System.out.println("Triggered");
+						}
 
 						for(Transition t : currentMachine.getTransitions())
 							System.out.printf("%c ; %c ; %c\n", t.getReadChar(), t.getWriteChar(), t.getMoveDirection().toString().charAt(0));
 
 						for(Path p : currentMachine.getPaths())
 							System.out.println(p.toString());
-						
+
 					}
 				};
 				editorSpace.addEventHandler(MouseEvent.MOUSE_CLICKED, currentHandler);
@@ -1064,9 +1088,79 @@ class Editor {
 				};
 				editorSpace.addEventHandler(MouseEvent.MOUSE_CLICKED, currentHandler);
 			}
+
+			//                _     _    _____                                     _
+			//       /\      | |   | |  / ____|                                   | |
+			//      /  \   __| | __| | | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ ___
+			//     / /\ \ / _` |/ _` | | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __/ __|
+			//    / ____ \ (_| | (_| | | |___| (_) | | | | | | | | | | |  __/ | | | |_\__ \
+			//   /_/    \_\__,_|\__,_|  \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|___/
+			//
+
+			else if (new_toggle.getUserData() == "Add Comment Box")
+			{
+					System.out.println(new_toggle.getUserData());
+
+	 				class RectCoords
+					{
+						double x1 = 0;
+						double y1 = 0;
+						double x2 = 0;
+						double y2 = 0;
+
+						ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
+						Color randColor;
+					};
+
+					final RectCoords c = new RectCoords();
+
+					// Define our new click handler
+					pressHandler = event -> {
+
+						if(event.getButton() == MouseButton.PRIMARY){
+							//System.out.println("Checking for click");
+							c.rects.add(new Rectangle());
+							c.randColor = Color.color(Math.random(), Math.random(), Math.random());
+							c.x1 = event.getX();
+							c.y1 = event.getY();
+							//System.out.printf("x1 = %f, y1 = %f\n", c.x1, c.y1);
+						}
+/*
+						if(event.getButton() == MouseButton.SECONDARY){
+							TextField tf = new TextField();
+							tf.setX(event.getX());
+							tf.setY(event.getY());
+
+							textField.prefColumnCountProperty().bind(textField.textProperty().length());
+						}
+*/					};
+
+					dragHandler = event -> {
+
+					if(event.getButton() == MouseButton.PRIMARY){
+						  //System.out.println("Checking for drag");
+							c.x2 = event.getX();
+							c.y2 = event.getY();
+					    //System.out.printf("x2 = %f, y2 = %f\n", c.x2, c.y2);
+
+							Rectangle r = c.rects.get(c.rects.size() - 1);
+							r.setX(c.x1);
+							r.setY(c.y1);
+							r.setWidth(c.x2-c.x1);
+							r.setHeight(c.y2-c.y1);
+							r.setFill(c.randColor);
+							r.setOpacity(.50);
+							r.setUserData("I'm a rectangle.");
+							if(!editorSpace.getChildren().contains(r))
+								editorSpace.getChildren().add(r);
+								r.toBack();
+						}
+					};
+				editorSpace.addEventHandler(MouseEvent.MOUSE_PRESSED, pressHandler);
+				editorSpace.addEventHandler(MouseEvent.MOUSE_DRAGGED, dragHandler);
+			}
 		});
 	}
-
 
 	/* drawStartTriangle: draws the triangle indicating the start state
 	 * Parameters:
@@ -1178,7 +1272,7 @@ class Editor {
 		}
 	}
 
-	/*	editTransition: this function opens the second edit transition window. 
+	/*	editTransition: this function opens the second edit transition window.
 	*   	It'll open the window and wait until the user is done with whatever changes they are making
 	*	Post-condition: once the user closes the window, the machine will be updated with the changes the user made.
 	*/
@@ -1570,7 +1664,7 @@ class Editor {
 						currentMachine.setSpeed(nextSpeed);
 						tester.setCurSpeed(currentMachine.getSpeed());
 						System.out.println("Slowing down");
-	
+
 						String speedText = currentMachine.getSpeedString();
 						t.setText("<Up Arrow> Increase Speed  <Down Arrow> Decrease Speed  <Esc> Stop Machine \tCurrent Speed: " + speedText);
 					}
@@ -1598,7 +1692,7 @@ class Editor {
 				alert.showAndWait();
 
 				thisButton.setText("Run Machine");
-				thisButton.setOnAction(event1 -> runMachine(thisButton, args));		
+				thisButton.setOnAction(event1 -> runMachine(thisButton, args));
 
 				for (Node b : args)
 					b.setDisable(false);
@@ -1622,7 +1716,7 @@ class Editor {
 
 				thisButton.setText("Run Machine");
 				thisButton.setOnAction(event1 -> runMachine(thisButton, args));
-				tester.setCont(false);	
+				tester.setCont(false);
 				editorSpace.getChildren().remove(t);
 			});
 
@@ -1725,7 +1819,7 @@ class Editor {
 
 	/* stateDragged EventHandler: This is the event handler for if a state is dragged (or the circle/text of the state)
 	*		This function will calculate the changes, and update the circle, text, transitions, and the accept circle if needed
-	*		It also only works if the primary button is clicked on the mouse. 
+	*		It also only works if the primary button is clicked on the mouse.
 	*		It will also only work if the State is being dragged within the bounds of the window
 	* Post-condition: the state's position has been updated
 	* NOTE: this function expects for only a State's circle or text to be linked to it
@@ -1860,7 +1954,7 @@ class Editor {
 		s.getLabel().setOnMouseReleased(stateReleased);
 
 	}
-	
+
 	// TODO: Create better redraw method in path class so we don't have to delete it
 	private void redrawPaths(ArrayList<Transition> tl){
 	    for(Transition t : tl){
@@ -2001,5 +2095,5 @@ class Editor {
 	private double distForm(double x1, double x2, double y1, double y2){
 		return Math.hypot(x2-x1, y2-y1);
 	}
-	
+
 }
