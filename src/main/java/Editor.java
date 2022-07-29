@@ -117,6 +117,7 @@ class Editor {
 
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 		editor = new Scene(parentPane, screenBounds.getWidth()/2, screenBounds.getHeight()/2);
+		editor.getStylesheets().add("transparenttextarea.css");
 
 		window.setMinWidth(screenBounds.getWidth()/3);
 		window.setMinHeight(screenBounds.getHeight()/3);
@@ -754,6 +755,7 @@ class Editor {
 		//currentMachine = currentMachine;
 		redrawAllStates();
 		redrawAllPaths();
+		redrawAllComments();
 
 		//currentMachine.getTape().refreshTapeDisplay();
 		startMachine();
@@ -811,6 +813,10 @@ class Editor {
 			}
 			for (Path p : currentMachine.getPaths())
 				p.setTextFillColor(Color.BLACK);
+
+			for(TextArea ta: currentMachine.getComments())
+				ta.setEditable(false);
+
 			redrawAllPaths();
 
 			//   _   _
@@ -917,7 +923,7 @@ class Editor {
 				currentHandler = event -> {
 					if(event.getButton() == MouseButton.PRIMARY
 							&& (event.getTarget() instanceof Circle
-							|| event.getTarget() instanceof Text
+							|| event.getTarget() instanceof TextArea
 							|| event.getTarget() instanceof Rectangle)){
 
 						Object Target = ((Node) event.getTarget()).getUserData();
@@ -954,7 +960,6 @@ class Editor {
 						}
 						else if(event.getTarget() instanceof Rectangle){
 							editorSpace.getChildren().remove(event.getTarget());
-							System.out.println("Triggered");
 						}
 
 						for(Transition t : currentMachine.getTransitions())
@@ -1114,6 +1119,9 @@ class Editor {
 
 					final RectCoords c = new RectCoords();
 
+					for(TextArea ta: currentMachine.getComments())
+						ta.setEditable(true);
+
 					// Define our new click handler
 					pressHandler = event -> {
 
@@ -1125,37 +1133,40 @@ class Editor {
 							c.y1 = event.getY();
 							//System.out.printf("x1 = %f, y1 = %f\n", c.x1, c.y1);
 						}
-/*
-						if(event.getButton() == MouseButton.SECONDARY){
-							TextField tf = new TextField();
-							tf.setX(event.getX());
-							tf.setY(event.getY());
 
-							textField.prefColumnCountProperty().bind(textField.textProperty().length());
+						if(event.getButton() == MouseButton.SECONDARY){
+							TextArea ta = new TextArea();
+							ta.setFont(Font.font("Verdana", 20));
+							ta.setStyle("-fx-background-color: transparent");
+							ta.setLayoutX(event.getX());
+							ta.setLayoutY(event.getY());
+							currentMachine.getComments().add(ta);
+							editorSpace.getChildren().add(ta);
+							System.out.printf("Creating textbox at %f,%f\n", event.getX(), event.getY());
 						}
-*/					};
+					};
 
 					dragHandler = event -> {
 
-					if(event.getButton() == MouseButton.PRIMARY){
-						  //System.out.println("Checking for drag");
-							c.x2 = event.getX();
-							c.y2 = event.getY();
-					    //System.out.printf("x2 = %f, y2 = %f\n", c.x2, c.y2);
+						if(event.getButton() == MouseButton.PRIMARY){
+							  //System.out.println("Checking for drag");
+								c.x2 = event.getX();
+								c.y2 = event.getY();
+						    //System.out.printf("x2 = %f, y2 = %f\n", c.x2, c.y2);
 
-							Rectangle r = c.rects.get(c.rects.size() - 1);
-							r.setX(c.x1);
-							r.setY(c.y1);
-							r.setWidth(c.x2-c.x1);
-							r.setHeight(c.y2-c.y1);
-							r.setFill(c.randColor);
-							r.setOpacity(.50);
-							r.setUserData("I'm a rectangle.");
-							if(!editorSpace.getChildren().contains(r))
-								editorSpace.getChildren().add(r);
-								r.toBack();
-						}
-					};
+								Rectangle r = c.rects.get(c.rects.size() - 1);
+								r.setX(c.x1);
+								r.setY(c.y1);
+								r.setWidth(c.x2-c.x1);
+								r.setHeight(c.y2-c.y1);
+								r.setFill(c.randColor);
+								r.setOpacity(.50);
+								r.setUserData("I'm a rectangle.");
+								if(!editorSpace.getChildren().contains(r))
+									editorSpace.getChildren().add(r);
+									r.toBack();
+							}
+						};
 				editorSpace.addEventHandler(MouseEvent.MOUSE_PRESSED, pressHandler);
 				editorSpace.addEventHandler(MouseEvent.MOUSE_DRAGGED, dragHandler);
 			}
@@ -2034,6 +2045,14 @@ class Editor {
 
 	}
 
+	private void redrawAllComments(){
+		for(TextArea ta : currentMachine.getComments())
+			redrawComment(ta);
+	}
+
+	private void redrawComment(TextArea ta){
+		editorSpace.getChildren().add(ta);
+	}
 
 	public void showException(Exception e){
 		System.out.println(e);

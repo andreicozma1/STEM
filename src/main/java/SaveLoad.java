@@ -28,6 +28,9 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.scene.control.TextArea;
+import javafx.scene.text.Font;
+
 
 
 public class SaveLoad {
@@ -273,6 +276,12 @@ public class SaveLoad {
         Pattern statePattern = Pattern.compile("\t(-?\\d+) (\\d+.\\d+) (\\d+.\\d+) (\\w+) (\\w+)( (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*))?");
         Pattern transitionPattern = Pattern.compile("\t(-?\\d+) (-?\\d+) (\\p{ASCII}) (\\p{ASCII}) (\\w+)");
 
+/*
+        curLine = br.readLine();
+        String vline[] = curLine.split(" ");
+        Double version = Double.parseDouble(vline[1]);
+        System.out.printf("%f\n", version);
+*/
         // Read until beginning of states
         while(!curLine.equals("STATES:")) {
             curLine = br.readLine();
@@ -368,7 +377,31 @@ public class SaveLoad {
         }
 
         curLine = br.readLine();
-        
+        // Read until beginning of COMMENTS
+        while(!curLine.equals("COMMENTS:")){
+          curLine = br.readLine();
+        }
+        curLine = br.readLine();
+        while(!curLine.startsWith("//")) {
+          // Read comments
+          TextArea ta = new TextArea();
+          ta.setFont(Font.font("Verdana", 20));
+          ta.setStyle("-fx-background-color: transparent");
+          //parse string till double is found. first double is x, second is y
+          String line[] = curLine.split(":");
+          String text = line[0];
+          text.replace("\t", "");
+          double x = Double.parseDouble(line[1]);
+          double y = Double.parseDouble(line[2]);
+
+          ta.setText(text);
+          ta.setLayoutX(x);
+          ta.setLayoutY(y);
+          loadMachine.getComments().add(ta);
+          curLine = br.readLine();
+        }
+        curLine = br.readLine();
+        curLine = br.readLine();
         // load in the start triangle rotation
         if(curLine != null){
             String[] cur_rot = curLine.split(":");
