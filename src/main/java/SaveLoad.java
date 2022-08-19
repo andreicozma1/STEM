@@ -394,14 +394,22 @@ public class SaveLoad {
             ta.setFont(Font.font("Verdana", 20));
             ta.setStyle("-fx-background-color: rgba(255,255,255,0.4)");
             //parse string till double is found. first double is x, second is y
+            String text = "";
+            while(curLine.indexOf(":") == -1)
+            {
+              text = text + curLine + "\n";
+              curLine = br.readLine();
+            }
             String line[] = curLine.split(":");
-            String text = line[0];
+            text = text + line[0];
             double x = Double.parseDouble(line[1]);
             double y = Double.parseDouble(line[2]);
 
             ta.setText(text);
             ta.setLayoutX(x);
             ta.setLayoutY(y);
+            ta.setPrefColumnCount(15);
+            ta.setPrefRowCount(5);
             ta.setEditable(false);
             loadMachine.getComments().add(ta);
             curLine = br.readLine();
