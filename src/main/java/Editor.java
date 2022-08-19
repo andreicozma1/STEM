@@ -920,10 +920,15 @@ class Editor {
 				for (Path p : currentMachine.getPaths())
 					p.setTextFillColor(Color.DARKRED);
 
+				for (TextArea ta: currentMachine.getComments()){
+					if(ta.getLength() == 0){
+						editorSpace.getChildren().remove(ta);
+					}
+				}
+
 				currentHandler = event -> {
 					if(event.getButton() == MouseButton.PRIMARY
 							&& (event.getTarget() instanceof Circle
-							|| event.getTarget() instanceof TextArea
 							|| event.getTarget() instanceof Rectangle)){
 
 						Object Target = ((Node) event.getTarget()).getUserData();
@@ -1125,21 +1130,21 @@ class Editor {
 					// Define our new click handler
 					pressHandler = event -> {
 
-						if(event.getButton() == MouseButton.PRIMARY){
-							//System.out.println("Checking for click");
+						if(event.getButton() == MouseButton.PRIMARY && !event.isShiftDown()){
 							c.rects.add(new Rectangle());
 							c.randColor = Color.color(Math.random(), Math.random(), Math.random());
 							c.x1 = event.getX();
 							c.y1 = event.getY();
-							//System.out.printf("x1 = %f, y1 = %f\n", c.x1, c.y1);
 						}
-
-						if(event.getButton() == MouseButton.SECONDARY){
+						else{
 							TextArea ta = new TextArea();
 							ta.setFont(Font.font("Verdana", 20));
-							ta.setStyle("-fx-background-color: transparent");
+							ta.setStyle("-fx-background-color: rgba(255,255,255,0.4)");
 							ta.setLayoutX(event.getX());
 							ta.setLayoutY(event.getY());
+							ta.setPrefColumnCount(15);
+							ta.setPrefRowCount(5);
+							ta.setPromptText("Enter comment");
 							currentMachine.getComments().add(ta);
 							editorSpace.getChildren().add(ta);
 							System.out.printf("Creating textbox at %f,%f\n", event.getX(), event.getY());
@@ -1148,7 +1153,7 @@ class Editor {
 
 					dragHandler = event -> {
 
-						if(event.getButton() == MouseButton.PRIMARY){
+						if(event.getButton() == MouseButton.PRIMARY && !event.isShiftDown()){
 							  //System.out.println("Checking for drag");
 								c.x2 = event.getX();
 								c.y2 = event.getY();
@@ -1161,10 +1166,15 @@ class Editor {
 								r.setHeight(c.y2-c.y1);
 								r.setFill(c.randColor);
 								r.setOpacity(.50);
-								r.setUserData("I'm a rectangle.");
-								if(!editorSpace.getChildren().contains(r))
+								//r.setUserData("I'm a rectangle.");
+								if(!editorSpace.getChildren().contains(r)){
 									editorSpace.getChildren().add(r);
 									r.toBack();
+								}
+
+								if(!currentMachine.getcBoxes().contains(r)){
+									currentMachine.getcBoxes().add(r);
+								}
 							}
 						};
 				editorSpace.addEventHandler(MouseEvent.MOUSE_PRESSED, pressHandler);
@@ -2048,10 +2058,19 @@ class Editor {
 	private void redrawAllComments(){
 		for(TextArea ta : currentMachine.getComments())
 			redrawComment(ta);
+
+		for(Rectangle r: currentMachine.getcBoxes())
+			redrawcBox(r);
 	}
 
 	private void redrawComment(TextArea ta){
 		editorSpace.getChildren().add(ta);
+	}
+
+	private void redrawcBox(Rectangle r)
+	{
+		editorSpace.getChildren().add(r);
+		r.toBack();
 	}
 
 	public void showException(Exception e){

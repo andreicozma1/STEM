@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 
+import javafx.scene.shape.Rectangle;
+
 
 
 public class SaveLoad {
@@ -276,12 +278,12 @@ public class SaveLoad {
         Pattern statePattern = Pattern.compile("\t(-?\\d+) (\\d+.\\d+) (\\d+.\\d+) (\\w+) (\\w+)( (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*))?");
         Pattern transitionPattern = Pattern.compile("\t(-?\\d+) (-?\\d+) (\\p{ASCII}) (\\p{ASCII}) (\\w+)");
 
-/*
+
         curLine = br.readLine();
         String vline[] = curLine.split(" ");
-        Double version = Double.parseDouble(vline[1]);
-        System.out.printf("%f\n", version);
-*/
+        Double version = Double.parseDouble(vline[2]);
+        System.out.printf("Version %f\n", version);
+
         // Read until beginning of states
         while(!curLine.equals("STATES:")) {
             curLine = br.readLine();
@@ -377,30 +379,57 @@ public class SaveLoad {
         }
 
         curLine = br.readLine();
-        // Read until beginning of COMMENTS
-        while(!curLine.equals("COMMENTS:")){
-          curLine = br.readLine();
-        }
-        curLine = br.readLine();
-        while(!curLine.startsWith("//")) {
-          // Read comments
-          TextArea ta = new TextArea();
-          ta.setFont(Font.font("Verdana", 20));
-          ta.setStyle("-fx-background-color: transparent");
-          //parse string till double is found. first double is x, second is y
-          String line[] = curLine.split(":");
-          String text = line[0];
-          text.replace("\t", "");
-          double x = Double.parseDouble(line[1]);
-          double y = Double.parseDouble(line[2]);
 
-          ta.setText(text);
-          ta.setLayoutX(x);
-          ta.setLayoutY(y);
-          loadMachine.getComments().add(ta);
+        // IF VERSION 1.1
+        if(version > 1)
+        {
+          // Read until beginning of COMMENTS
+          while(!curLine.equals("COMMENTS:")){
+            curLine = br.readLine();
+          }
           curLine = br.readLine();
-        }
-        curLine = br.readLine();
+          while(!curLine.startsWith("//")) {
+            // Read comments
+            TextArea ta = new TextArea();
+            ta.setFont(Font.font("Verdana", 20));
+            ta.setStyle("-fx-background-color: rgba(255,255,255,0.4)");
+            //parse string till double is found. first double is x, second is y
+            String line[] = curLine.split(":");
+            String text = line[0];
+            double x = Double.parseDouble(line[1]);
+            double y = Double.parseDouble(line[2]);
+
+            ta.setText(text);
+            ta.setLayoutX(x);
+            ta.setLayoutY(y);
+            ta.setEditable(false);
+            loadMachine.getComments().add(ta);
+            curLine = br.readLine();
+          }
+          curLine = br.readLine();
+          curLine = br.readLine();
+          curLine = br.readLine();
+          while(!curLine.startsWith("//")){
+            //read comment boxes
+            Rectangle r = new Rectangle();
+            String line[] = curLine.split(":");
+            double x = Double.parseDouble(line[0]);
+            double y = Double.parseDouble(line[1]);
+            double w = Double.parseDouble(line[2]);
+            double h = Double.parseDouble(line[3]);
+            Color c = Color.web(line[4]);
+
+            r.setX(x);
+            r.setY(y);
+            r.setWidth(w);
+            r.setHeight(h);
+            r.setFill(c);
+            r.setOpacity(.50);
+            loadMachine.getcBoxes().add(r);
+            curLine = br.readLine();
+          }
+          curLine = br.readLine();
+       }
         curLine = br.readLine();
         // load in the start triangle rotation
         if(curLine != null){

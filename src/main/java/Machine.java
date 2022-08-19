@@ -14,6 +14,7 @@
  */
 
 import java.util.ArrayList;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.control.TextArea;
 
 class Machine {
@@ -26,6 +27,7 @@ class Machine {
 	private int startTriRotation;
 
 	private ArrayList<TextArea> comments = new ArrayList<>();
+	private ArrayList<Rectangle> cBoxes = new ArrayList<>();
 
 	Machine(){
 		this.tape = new Tape();
@@ -112,6 +114,10 @@ class Machine {
 		return comments;
 	}
 
+	public ArrayList<Rectangle> getcBoxes(){
+		return cBoxes;
+	}
+
 	public String toString(){
 		//System.out.println("I'm in toString");
 		StringBuilder ret = new StringBuilder();
@@ -153,9 +159,16 @@ class Machine {
 		ret.append("// Comment format: text:x:y\n");
 		ret.append("COMMENTS:\n");
 		for (TextArea ta: comments){
-			ret.append(String.format("\t%s:%f:%f\n", ta.getText(), ta.getLayoutX(), ta.getLayoutY()));
+			ret.append(String.format("%s:%f:%f\n", ta.getText(), ta.getLayoutX(), ta.getLayoutY()));
 		}
-		ret.append("// Comments End");
+		ret.append("// Comments End\n");
+
+		ret.append("// Comment box format: x:y:width:height:color\n");
+		ret.append("COMMENT BOXES:\n");
+		for (Rectangle r: cBoxes){
+			ret.append(String.format("\t%f:%f:%f:%f:%s\n", r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getFill()));
+		}
+		ret.append("// Comment Box End\n");
 		// make sure to save the current rotation
 		ret.append("\n");
 		ret.append("Start Triangle Position:" + String.valueOf(startTriRotation));
