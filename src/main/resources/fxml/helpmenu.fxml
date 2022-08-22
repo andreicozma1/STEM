@@ -46,7 +46,7 @@
                     </TitledPane>
                     <TitledPane text="Delete">
                         <VBox alignment="CENTER">
-                            <Label text="The “Delete” button will toggle the ability to delete any state or transition on the editor. Deleting a state will delete all transitions connected to it." wrapText="true" />
+                            <Label text="The “Delete” button will toggle the ability to delete any state or transition on the editor. Deleting a state will delete all transitions connected to it. You can also delete the colored comment background boxes. Comment text boxes will delete themselves if they have no text when you enter delete mode." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Edit Tape">
@@ -55,6 +55,14 @@
                                 <Image url="@/helpmenu/edittape.png" />
                             </ImageView>
                             <Label text="The “Edit Tape” button will spawn the menu above. Enter the string that you want to populate the tape with. Then press OK." wrapText="true" />
+                        </VBox>
+                    </TitledPane>
+                    <TitledPane text="Add Comments">
+                        <VBox alignment="CENTER">
+                            <ImageView fitHeight="110.0" preserveRatio="true">
+                                <Image url="@/helpmenu/commentbox.png" />
+                            </ImageView>
+                            <Label text="The “Add Comments” button will toggle the ability to add colored background boxes by clicking and dragging down and to the right to cover a section of your machine. You can then shift click anywhere to add a text box to write the comment pertaining to the area covered by the background box." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Run Machine">

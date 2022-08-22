@@ -14,6 +14,8 @@
  */
 
 import java.util.ArrayList;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.control.TextArea;
 
 class Machine {
 	private State startState;
@@ -23,6 +25,9 @@ class Machine {
 	private int speed;
 	private Tape tape;
 	private int startTriRotation;
+
+	private ArrayList<TextArea> comments = new ArrayList<>();
+	private ArrayList<Rectangle> cBoxes = new ArrayList<>();
 
 	Machine(){
 		this.tape = new Tape();
@@ -56,33 +61,33 @@ class Machine {
 	public State getStartState() {
 		return startState;
 	}
-	
+
 	public void setStartState(State startState) {
 		if(this.startState != null)
 			this.startState.setStart(false);
 		this.startState = startState;
 	}
-	
+
 	public ArrayList<State> getStates() {
 		return states;
 	}
-	
+
 	public void setStates(ArrayList<State> states) {
 		this.states = states;
 	}
-	
+
 	public void addState(State state){
 		states.add(state);
 	}
-	
+
 	public void deleteState(State state){
 		states.remove(state);
 	}
-	
+
 	public ArrayList<Transition> getTransitions() {
 		return transitions;
 	}
-	
+
 	public void setTransitions(ArrayList<Transition> transitions) {
 		this.transitions = transitions;
 	}
@@ -105,10 +110,18 @@ class Machine {
 		this.speed = speed;
 	}
 
+	public ArrayList<TextArea> getComments() {
+		return comments;
+	}
+
+	public ArrayList<Rectangle> getcBoxes(){
+		return cBoxes;
+	}
+
 	public String toString(){
 		//System.out.println("I'm in toString");
 		StringBuilder ret = new StringBuilder();
-		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.0));
+		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.1)); //Bumped to v 1.1 for adding comments to SaveLoad
 		ret.append("// State Format: name x y start accept\n");
 		ret.append("STATES:\n");
 
@@ -141,11 +154,26 @@ class Machine {
 		for (Character c : tape.getTapeAsArray()){
 			ret.append(String.format("%c", c));
 		}
+		ret.append("\n");
 
+		ret.append("// Comment format: text:x:y\n");
+		ret.append("COMMENTS:\n");
+		for (TextArea ta: comments){
+			ret.append(String.format("%s:%f:%f\n", ta.getText(), ta.getLayoutX(), ta.getLayoutY()));
+		}
+		ret.append("// Comments End\n");
+
+		ret.append("// Comment box format: x:y:width:height:color\n");
+		ret.append("COMMENT BOXES:\n");
+		for (Rectangle r: cBoxes){
+			ret.append(String.format("\t%f:%f:%f:%f:%s\n", r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getFill()));
+		}
+		ret.append("// Comment Box End\n");
 		// make sure to save the current rotation
 		ret.append("\n");
 		ret.append("Start Triangle Position:" + String.valueOf(startTriRotation));
 		ret.append("\n");
+
 
 		return ret.toString();
 	}
