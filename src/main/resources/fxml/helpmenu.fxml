@@ -59,7 +59,7 @@
                     </TitledPane>
                     <TitledPane text="Add Comments">
                         <VBox alignment="CENTER">
-                            <ImageView fitHeight="125.0" preserveRatio="true">
+                            <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/commentbox.png" />
                             </ImageView>
                             <Label text="The “Add Comments” button will toggle the ability to add colored background boxes by clicking and dragging down and to the right to cover a section of your machine. You can then shift click anywhere to add a text box to write the comment pertaining to the area covered by the background box." wrapText="true" />
