@@ -265,10 +265,17 @@ class Editor {
 		Separator separator = new Separator();
 		separator.setOrientation(Orientation.VERTICAL);
 
+		Separator separator1 = new Separator();
+		separator1.setOrientation(Orientation.VERTICAL);
+
 		// Begin NON-Toggle buttons
 
+		//quickTapeEdit takes the text input and updates the tape with the given value
+		TextField quickTapeEdit = new TextField();
+		quickTapeEdit.setOnAction(e->editTape(window, currentMachine, quickTapeEdit.getText()));
+		
 		Button tapeButton = new Button("Edit Tape");
-		tapeButton.setOnAction(e->editTape(window, currentMachine));
+		tapeButton.setOnAction(e->editTape(window, currentMachine, quickTapeEdit.getText()));
 
 		//New Reset Button
 		Button resetButton = new Button("Reset Tape");
@@ -383,14 +390,23 @@ class Editor {
 		Button saveButton = new Button("Save");
 		saveButton.setOnAction(event -> saveMachine(window, currentMachine));
 
+		Button helpButton = new Button("Help");
+		helpButton.setOnAction(event -> new HelpMenu());
+
 		// Add toggle buttons
 		menuBar.getItems().addAll(addState, addTransition, deleteState, editTransition, addCommentBox);
 
 		// Add separator
 		menuBar.getItems().add(separator);
 
+		// Add tape editor UI
+		menuBar.getItems().addAll(quickTapeEdit, tapeButton);
+
+		// Add another seperator
+		menuBar.getItems().add(separator1);
+
 		// Add non-toggle buttons + Resetting Tape
-		menuBar.getItems().addAll(tapeButton, resetButton, runMachine, saveButton, rotateStartTri_button, screenshot_button);
+		menuBar.getItems().addAll(resetButton, runMachine, saveButton, rotateStartTri_button, screenshot_button, helpButton);
 
 		// Cursor when over the bar will always be default cursor
 		menuBar.addEventFilter(MouseEvent.MOUSE_MOVED, event -> editor.setCursor(Cursor.DEFAULT));
@@ -1342,20 +1358,11 @@ class Editor {
 
 	}
 
-	private void editTape(Stage window, Machine currentMachine) {
-		TextInputDialog tapeEdit = new TextInputDialog( currentMachine.getTape().toString());
-		tapeEdit.setResizable(true);
-		tapeEdit.setTitle("Edit Tape");
-		tapeEdit.setHeaderText("Valid characters are Ascii values 32-125\nThis includes all alpha-numeric values.");
+	//editTape changed to no longer open a seperate window to edit the tape; it just changes the value outright now
+	private void editTape(Stage window, Machine currentMachine, String r) {
 
-		tapeEdit.setContentText("Enter a string for the tape (spaces for blank):");
-		tapeEdit.initOwner(window);
-		tapeEdit.initModality(Modality.APPLICATION_MODAL);
-
-		Optional<String> result = tapeEdit.showAndWait();
-		result.ifPresent(tapeString -> {
 			ArrayList<Character> characters = new ArrayList<>();
-			for(Character c : tapeString.toCharArray()) {
+			for(Character c : r.toCharArray()) {
 				if (c >= 32 && c < 126) {
 					characters.add(c);
 				}
@@ -1367,7 +1374,8 @@ class Editor {
 					alert.initOwner(window);
 					alert.initModality(Modality.APPLICATION_MODAL);
 					alert.showAndWait();
-					editTape(window, currentMachine);
+					r = "";
+					editTape(window, currentMachine, r);
 					return;
 				}
 			}
@@ -1378,7 +1386,6 @@ class Editor {
 			currentMachine.getTape().initTape(characters);
 			currentMachine.getTape().refreshTapeDisplay();
 
-		});
 	}
 
 	// Function to delete state

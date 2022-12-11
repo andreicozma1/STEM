@@ -52,9 +52,9 @@
                     <TitledPane text="Edit Tape">
                         <VBox alignment="CENTER">
                             <ImageView fitHeight="110.0" preserveRatio="true">
-                                <Image url="@/helpmenu/edittape.png" />
+                                <Image url="@/helpmenu/newedittape.png" />
                             </ImageView>
-                            <Label text="The “Edit Tape” button will spawn the menu above. Enter the string that you want to populate the tape with. Then press OK." wrapText="true" />
+                            <Label text="This text entry next to the “Edit Tape” button will allow you to edit the tape value. Simply type in the value you want and either click the 'Edit Tape' button or hit enter. Please make sure to only input Ascii values from 35 to 125." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Add Comments">
