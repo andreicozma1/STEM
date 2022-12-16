@@ -21,7 +21,7 @@
                             <ImageView fitHeight="70.0" preserveRatio="true">
                                 <Image url="@/helpmenu/state.png" />
                             </ImageView>
-                            <Label text="The “Add State” button toggles the ability to add states to the machine by clicking on the editing space." wrapText="true" />
+                            <Label minHeight="-Infinity" text="The “Add State” button toggles the ability to add states to the machine by clicking on the editing space." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Add Transition">
@@ -41,12 +41,12 @@
                             <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/edittransition.png" />
                             </ImageView>
-                            <Label text="The “Edit Transition” button will toggle the ability to edit transitions. Click on an edge to bring up the menu above. Double click on the Read, Write, or Direction fields to edit. The delete transition button will delete a transition." wrapText="true" />
+                            <Label minHeight="-Infinity" text="The “Edit Transition” button will toggle the ability to edit transitions. Click on an edge to bring up the menu above. Double click on the Read, Write, or Direction fields to edit. The delete transition button will delete a transition." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Delete">
                         <VBox alignment="CENTER">
-                            <Label text="The “Delete” button will toggle the ability to delete any state or transition on the editor. Deleting a state will delete all transitions connected to it. You can also delete the colored comment background boxes. Comment text boxes will delete themselves if they have no text when you enter delete mode." wrapText="true" />
+                            <Label minHeight="-Infinity" text="The “Delete” button will toggle the ability to delete any state or transition on the editor. Deleting a state will delete all transitions connected to it. You can also delete the colored comment background boxes. Comment text boxes will delete themselves if they have no text when you enter delete mode." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Edit Tape">
@@ -54,7 +54,7 @@
                             <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/newedittape.png" />
                             </ImageView>
-                            <Label text="This text entry next to the “Edit Tape” button will allow you to edit the tape value. Simply type in the value you want and either click the 'Edit Tape' button or hit enter. Please make sure to only input Ascii values from 35 to 125." wrapText="true" />
+                            <Label minHeight="-Infinity" text="This text entry next to the “Edit Tape” button will allow you to edit the tape value. Simply type in the value you want and either click the 'Edit Tape' button or hit enter. Please make sure to only input Ascii values from 35 to 125." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Add Comments">
@@ -62,7 +62,7 @@
                             <ImageView fitHeight="110.0" preserveRatio="true">
                                 <Image url="@/helpmenu/commentbox.png" />
                             </ImageView>
-                            <Label text="The “Add Comments” button will toggle the ability to add colored background boxes by clicking and dragging down and to the right to cover a section of your machine. You can then shift click anywhere to add a text box to write the comment pertaining to the area covered by the background box." wrapText="true" />
+                            <Label minHeight="-Infinity" text="The “Add Comments” button will toggle the ability to add colored background boxes by clicking and dragging down and to the right to cover a section of your machine. You can then shift click anywhere to add a text box to write the comment pertaining to the area covered by the background box." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Run Machine">
@@ -70,7 +70,7 @@
                             <ImageView fitHeight="125.0" preserveRatio="true">
                                 <Image url="@/helpmenu/runmachine.png" />
                             </ImageView>
-                            <Label text="To run your machine click the drop down on the “Run Machine“ button to select the speed. Then press the button to begin execution. " wrapText="true" />
+                            <Label minHeight="-Infinity" text="To run your machine click the drop down on the “Run Machine“ button to select the speed. Then press the button to begin execution. " wrapText="true" />
                         </VBox>
                     </TitledPane>
                 </panes>
