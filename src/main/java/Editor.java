@@ -535,7 +535,7 @@ class Editor {
 		MenuItem setColor = new MenuItem("Set Color");
 		setColor.setOnAction(event -> {
 			State s = (State) contextMenu.getOwnerNode().getUserData();
-			ColorPicker stateChanger = new ColorPicker(Color.LIGHTGOLDENRODYELLOW);
+			ColorPicker stateChanger = new ColorPicker(s.getBaseColor());
 			Dialog<Color> pickerWindow = new Dialog<>();
 			pickerWindow.setTitle("Color Picker");
 			pickerWindow.setHeaderText("Select a state color");
