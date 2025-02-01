@@ -1478,10 +1478,10 @@ class Editor {
 
 							if (currentState.isAccept()) {
 								alert.setGraphic(new ImageView(this.getClass().getResource("checkmark.png").toString()));
-								alert.setHeaderText("The machine has finished successfully");
+								alert.setHeaderText(String.format("The machine has finished successfully at State %s.\n%d transition(s) completed.", tester.getFinalState().getName(), tester.getTransitionCounter()));
 								thisButton.fire();
 							} else {
-								alert.setHeaderText("The machine has finished unsuccessfully");
+								alert.setHeaderText(String.format("The machine has finished unsuccessfully at State %s.\n%d transition(s) completed.", tester.getFinalState().getName(), tester.getTransitionCounter()));
 								alert.setContentText(tester.getFailReason());
 								thisButton.fire();
 							}
@@ -1711,9 +1711,9 @@ class Editor {
 
 				if (tester.didSucceed()) {
 					alert.setGraphic(new ImageView(this.getClass().getResource("checkmark.png").toString()));
-					alert.setHeaderText("The machine has finished successfully");
+					alert.setHeaderText(String.format("The machine has finished successfully at State %s.\n%d transition(s) completed.", tester.getFinalState().getName(), tester.getTransitionCounter()));
 				} else {
-					alert.setHeaderText("The machine has finished unsuccessfully");
+					alert.setHeaderText(String.format("The machine has finished unsuccessfully at State %s.\n%d transition(s) completed.", tester.getFinalState().getName(), tester.getTransitionCounter()));
 					alert.setContentText(tester.getFailReason());
 				}
 
