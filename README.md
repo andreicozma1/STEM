@@ -13,6 +13,7 @@ Compatible with xTuringmachine files
 - Matt Matto [hgd145@vols.utk.edu]   
 - Jonathan Bryan [jbryan74@vols.utk.edu]   
 - Josh Herman [jherman4@vols.utk.edu]   
+- Jahneulie Weste [wsv346@vols.utk.edu]
 
 ## Pre-requisites
 - Java 9 or greater
