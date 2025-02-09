@@ -25,6 +25,24 @@ public class Tester {
     private int loops;
     private int curSpeed;
     private boolean cont;
+    private int transitionCounter;
+    private State finalState;
+
+    public State getFinalState() {
+        return finalState;
+    }
+
+    public void updateFinalState(State finalState) {
+        this.finalState = finalState;
+    }
+
+    public int getTransitionCounter() {
+        return transitionCounter;
+    }
+
+    public void incrementTransitionCounter() {
+        this.transitionCounter += 1;
+    }
 
     public boolean isCont() {
         return cont;
@@ -122,6 +140,7 @@ public class Tester {
             System.out.printf("Going from State %s to %s along Transition %c ; %c ; %c\n",
                     currentState.getName(), next.getToState().getName(),
                     next.getReadChar(), next.getWriteChar(), next.getMoveDirection().toString().charAt(0));
+            incrementTransitionCounter();
 
             TimeUnit.MILLISECONDS.sleep(curSpeed);
             switch(next.getMoveDirection()){
@@ -147,6 +166,7 @@ public class Tester {
             }
 
             currentState = next.getToState();
+            updateFinalState(currentState);
             next = this.nextTransition(currentState, m.getTape());
 
             loops++;
