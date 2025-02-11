@@ -32,7 +32,7 @@ public class HelpMenu {
 
 		// load the fxml content into the Scene
 		try {
-			URL xml_url = new URL(this.getClass().getResource("fxml/helpmenu.fxml").toExternalForm());
+			URL xml_url = getClass().getResource("/fxml/helpmenu.fxml");
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(xml_url);
 			menu = loader.load();
