@@ -60,7 +60,7 @@
                     <TitledPane text="Edit Tape">
                         <VBox alignment="CENTER">
                             <ImageView fitHeight="110.0" preserveRatio="true">
-                                <Image url="@/helpmenu/newedittape.png" />
+                                <Image url="@/helpmenu/newedittape.PNG" />
                             </ImageView>
                             <Label minHeight="-Infinity" text="This text entry next to the “Edit Tape” button will allow you to edit the tape value. Simply type in the value you want and either click the 'Edit Tape' button or hit enter. Please make sure to only input Ascii values from 35 to 125." wrapText="true" />
                         </VBox>
