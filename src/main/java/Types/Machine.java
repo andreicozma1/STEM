@@ -1,3 +1,4 @@
+package Types;
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -14,10 +15,11 @@
  */
 
 import java.util.ArrayList;
+
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.TextArea;
 
-class Machine {
+public class Machine {
 	private State startState;
 	private ArrayList<State> states = new ArrayList<>();
 	private ArrayList<Transition> transitions = new ArrayList<>();
@@ -29,12 +31,12 @@ class Machine {
 	private ArrayList<TextArea> comments = new ArrayList<>();
 	private ArrayList<Rectangle> cBoxes = new ArrayList<>();
 
-	Machine(){
+	public Machine() {
 		this.tape = new Tape();
 		this.speed = 250;
 	}
 
-	Machine(ArrayList<State> states, ArrayList<Transition> transitions, State startState){
+	public Machine(ArrayList<State> states, ArrayList<Transition> transitions, State startState) {
 		this.states = states;
 		this.transitions = transitions;
 		this.startState = startState;
@@ -42,11 +44,11 @@ class Machine {
 		this.speed = 250;
 	}
 
-	public void setStartTriRotation(int input){
+	public void setStartTriRotation(int input) {
 		startTriRotation = input;
 	}
 
-	public int getStartTriRotation(){
+	public int getStartTriRotation() {
 		return startTriRotation;
 	}
 
@@ -63,7 +65,7 @@ class Machine {
 	}
 
 	public void setStartState(State startState) {
-		if(this.startState != null)
+		if (this.startState != null)
 			this.startState.setStart(false);
 		this.startState = startState;
 	}
@@ -76,11 +78,11 @@ class Machine {
 		this.states = states;
 	}
 
-	public void addState(State state){
+	public void addState(State state) {
 		states.add(state);
 	}
 
-	public void deleteState(State state){
+	public void deleteState(State state) {
 		states.remove(state);
 	}
 
@@ -100,13 +102,13 @@ class Machine {
 		return speed;
 	}
 
-	public String getSpeedString(){
+	public String getSpeedString() {
 		String speedString = speed == 500 ? "Slow" : speed == 250 ? "Normal" : speed == 75 ? "Fast" : "No Delay";
 		return speedString;
 	}
 
 	public void setSpeed(int speed) {
-	    System.out.printf("Speed: %d\n", speed);
+		System.out.printf("Speed: %d\n", speed);
 		this.speed = speed;
 	}
 
@@ -114,19 +116,20 @@ class Machine {
 		return comments;
 	}
 
-	public ArrayList<Rectangle> getcBoxes(){
+	public ArrayList<Rectangle> getcBoxes() {
 		return cBoxes;
 	}
 
-	public String toString(){
-		//System.out.println("I'm in toString");
+	public String toString() {
+		// System.out.println("I'm in toString");
 		StringBuilder ret = new StringBuilder();
-		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.11)); //Bumped to v 1.11 for adding comments to SaveLoad
+		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.11)); // Bumped to v 1.11 for fixng :
+																						// in comments
 		ret.append("// State Format: name x y start accept\n");
 		ret.append("STATES:\n");
 
 		// TODO: This needs to be changed to add more information for states when saving a file
-		for (State s : states){
+		for (State s : states) {
 			ret.append(String.format("\t%s %f %f %s %s %f %f %f %f\n",
 					s.getName(), s.getX(), s.getY(),
 					Boolean.toString((startState == s)), Boolean.toString(s.isAccept()), s.getBaseColor().getRed(),
@@ -138,7 +141,7 @@ class Machine {
 		ret.append("// The Character '~' is the catchall character\n");
 		ret.append("TRANSITION:\n");
 
-		for (Transition t : transitions){
+		for (Transition t : transitions) {
 			ret.append(String.format("\t%d %d %c %c %s\n",
 					Integer.parseInt(t.getFromState().getName()),
 					Integer.parseInt(t.getToState().getName()),
@@ -151,29 +154,30 @@ class Machine {
 
 		ret.append(String.format("\t%d\n", tape.getTapeHead()));
 		ret.append("\t");
-		for (Character c : tape.getTapeAsArray()){
+		for (Character c : tape.getTapeAsArray()) {
 			ret.append(String.format("%c", c));
 		}
 		ret.append("\n");
 
 		ret.append("// Comment format: text:x:y\n");
 		ret.append("COMMENTS:\n");
-		for (TextArea ta: comments){
-			ret.append(String.format("%s\n:%f:%f\n", ta.getText().replace(":", "\\:"), ta.getLayoutX(), ta.getLayoutY()));
+		for (TextArea ta : comments) {
+			ret.append(
+					String.format("%s\n:%f:%f\n", ta.getText().replace(":", "\\:"), ta.getLayoutX(), ta.getLayoutY()));
 		}
 		ret.append("// Comments End\n");
 
 		ret.append("// Comment box format: x:y:width:height:color\n");
 		ret.append("COMMENT BOXES:\n");
-		for (Rectangle r: cBoxes){
-			ret.append(String.format("\t%f:%f:%f:%f:%s\n", r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getFill()));
+		for (Rectangle r : cBoxes) {
+			ret.append(
+					String.format("\t%f:%f:%f:%f:%s\n", r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getFill()));
 		}
 		ret.append("// Comment Box End\n");
 		// make sure to save the current rotation
 		ret.append("\n");
 		ret.append("Start Triangle Position:" + String.valueOf(startTriRotation));
 		ret.append("\n");
-
 
 		return ret.toString();
 	}

@@ -1,3 +1,5 @@
+package Editor;
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -28,12 +30,13 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Types.Machine;
+import Types.State;
+import Types.Transition;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 
 import javafx.scene.shape.Rectangle;
-
-
 
 public class SaveLoad {
     private int stateNextVal;
@@ -45,15 +48,14 @@ public class SaveLoad {
         return stateNextVal;
     }
 
-    public boolean saveMachine(Stage window, Machine m){
+    public boolean saveMachine(Stage window, Machine m) {
         /* Get the file to save to from user. */
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Text Files", "*.txt");
         chooser.getExtensionFilters().add(filter);
         File file = chooser.showSaveDialog(window);
 
-
-        if(file != null) {
+        if (file != null) {
             /* Save the file */
             try {
                 System.out.println("User chose a file to save to");
@@ -63,8 +65,7 @@ public class SaveLoad {
                 bw.close();
                 window.setTitle(file.getName());
                 return true;
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 /* Error occured during saving. */
                 Alert saveError = new Alert(Alert.AlertType.ERROR);
                 saveError.setResizable(true);
@@ -75,15 +76,14 @@ public class SaveLoad {
                 saveError.showAndWait();
                 return false;
             }
-        }
-        else {
+        } else {
             /* No file chosen */
             System.out.println("User did not choose a file to save to");
         }
         return false;
     }
 
-    public Machine loadMachine(Stage window){
+    public Machine loadMachine(Stage window) {
         /* Get a file to load from the user. */
         Machine loadMachine = new Machine();
         FileChooser chooser = new FileChooser();
@@ -92,7 +92,7 @@ public class SaveLoad {
 
         chooser.setTitle("Pick a Turing Machine file");
         File file = chooser.showOpenDialog(window);
-        if(file != null) {
+        if (file != null) {
             /* Reads in the file */
 
             BufferedReader br;
@@ -126,6 +126,7 @@ public class SaveLoad {
 
             } catch (Exception e) {
                 /* Error occured. */
+                System.out.println(e);
                 Alert fileError = new Alert(Alert.AlertType.ERROR);
                 fileError.setResizable(true);
                 fileError.setTitle("File Error");
@@ -140,23 +141,25 @@ public class SaveLoad {
         }
         return null;
     }
-    public Machine loadxTuring(BufferedReader br, String curLine) throws IOException{
+
+    public Machine loadxTuring(BufferedReader br, String curLine) throws IOException {
         Machine loadMachine = new Machine();
         br.readLine(); // TransitionCharacters MaxStates (Not needed for our machine)
-
 
         curLine = br.readLine(); // TapeMinIndex TapeMaxIndex TapeHeadIndex; (Grab the head index from the end)
 
         Pattern tapeInfo = Pattern.compile("(-?\\d+) (-?\\d+) (-?\\d+)\\p{Punct}");
         Matcher tapeMatch = tapeInfo.matcher(curLine);
         int tapeHead;
-        if (tapeMatch.matches()) tapeHead = Integer.parseInt(tapeMatch.group(3)) - Integer.parseInt(tapeMatch.group(1));
-        else throw new IOException("Bad TapeHead");
+        if (tapeMatch.matches())
+            tapeHead = Integer.parseInt(tapeMatch.group(3)) - Integer.parseInt(tapeMatch.group(1));
+        else
+            throw new IOException("Bad TapeHead");
 
         curLine = br.readLine(); // Tape (Grab this and copy it)
         ArrayList<Character> tapeChars = new ArrayList<>();
-        for (char c : curLine.toCharArray()){
-            if(c == '#')
+        for (char c : curLine.toCharArray()) {
+            if (c == '#')
                 tapeChars.add(' ');
             else
                 tapeChars.add(c);
@@ -175,20 +178,24 @@ public class SaveLoad {
         Pattern transitionNum = Pattern.compile("(\\d+)\\p{Punct}");
         Matcher transitionNumMatch = transitionNum.matcher(curLine);
         int numTransitions;
-        if (transitionNumMatch.matches()) numTransitions = Integer.parseInt(curLine.substring(0, curLine.length() - 1));
-        else throw new IOException("Bad NumTransitions");
+        if (transitionNumMatch.matches())
+            numTransitions = Integer.parseInt(curLine.substring(0, curLine.length() - 1));
+        else
+            throw new IOException("Bad NumTransitions");
         System.out.println(numTransitions);
         Hashtable<String, State> statesNeeded = new Hashtable<>();
         ArrayList<Transition> totalTransitions = new ArrayList<>();
 
         // Pattern match to read a transition line.
-        Pattern transitionLinePattern = Pattern.compile("(\\d+) (\\p{ASCII}) (\\p{ASCII}) (\\p{ASCII}) (-?\\d+)\\p{Punct}"); //
+        Pattern transitionLinePattern = Pattern
+                .compile("(\\d+) (\\p{ASCII}) (\\p{ASCII}) (\\p{ASCII}) (-?\\d+)\\p{Punct}"); //
         Matcher transitionMatch;
 
-        for(int i = 0; i < numTransitions;) {
+        for (int i = 0; i < numTransitions;) {
             // Next transition, and if reached the end of file before reading all transitions, throw exception
             // curState read write move nextState;
-            if ((curLine = br.readLine()) == null) throw new EOFException();
+            if ((curLine = br.readLine()) == null)
+                throw new EOFException();
             //System.out.println(curLine);
             transitionMatch = transitionLinePattern.matcher(curLine);
 
@@ -199,7 +206,7 @@ public class SaveLoad {
                 // We have a state to put the transition in
                 State startState;
                 Transition newTransition = new Transition();
-                if(statesNeeded.containsKey(transitionMatch.group(1))) {
+                if (statesNeeded.containsKey(transitionMatch.group(1))) {
                     startState = statesNeeded.get(transitionMatch.group(1));
                 }
                 // Otherwise make a state
@@ -208,30 +215,37 @@ public class SaveLoad {
                     statesNeeded.put(transitionMatch.group(1), startState);
                 }
 
-
                 // Setup the transition
                 startState.getTransition().add(newTransition);
                 newTransition.setFromState(startState);
-                if (transitionMatch.group(2).charAt(0) == '#') newTransition.setReadChar(' '); // Change the blanks to spaces
-                else if (transitionMatch.group(2).charAt(0) == '*') newTransition.setReadChar('~'); // Change the wildcard to tilde
-                else newTransition.setReadChar(transitionMatch.group(2).charAt(0));
+                if (transitionMatch.group(2).charAt(0) == '#')
+                    newTransition.setReadChar(' '); // Change the blanks to spaces
+                else if (transitionMatch.group(2).charAt(0) == '*')
+                    newTransition.setReadChar('~'); // Change the wildcard to tilde
+                else
+                    newTransition.setReadChar(transitionMatch.group(2).charAt(0));
 
-                if (transitionMatch.group(3).charAt(0) == '#') newTransition.setWriteChar(' '); // Change the blanks to spaces
-                else if (transitionMatch.group(3).charAt(0) == '*') newTransition.setWriteChar('~'); // Change the wildcard to tilde
-                else newTransition.setWriteChar(transitionMatch.group(3).charAt(0));
+                if (transitionMatch.group(3).charAt(0) == '#')
+                    newTransition.setWriteChar(' '); // Change the blanks to spaces
+                else if (transitionMatch.group(3).charAt(0) == '*')
+                    newTransition.setWriteChar('~'); // Change the wildcard to tilde
+                else
+                    newTransition.setWriteChar(transitionMatch.group(3).charAt(0));
 
-                if (transitionMatch.group(4).charAt(0) == 'L') newTransition.setMoveDirection(Transition.Direction.LEFT);
-                else if (transitionMatch.group(4).charAt(0) == 'R') newTransition.setMoveDirection(Transition.Direction.RIGHT);
-                else throw new IOException("Bad Direction"); // Old machine only accepted left and right directions.
+                if (transitionMatch.group(4).charAt(0) == 'L')
+                    newTransition.setMoveDirection(Transition.Direction.LEFT);
+                else if (transitionMatch.group(4).charAt(0) == 'R')
+                    newTransition.setMoveDirection(Transition.Direction.RIGHT);
+                else
+                    throw new IOException("Bad Direction"); // Old machine only accepted left and right directions.
 
-                if(statesNeeded.containsKey(transitionMatch.group(5))) {
+                if (statesNeeded.containsKey(transitionMatch.group(5))) {
                     newTransition.setToState(statesNeeded.get(transitionMatch.group(5)));
-                }
-                else {
+                } else {
                     State toState = new State();
                     statesNeeded.put(transitionMatch.group(5), toState);
 
-                    if(transitionMatch.group(5).equals("-1")) {
+                    if (transitionMatch.group(5).equals("-1")) {
                         toState.setAccept(true); // Old machine only had one accept state.
                     }
                     newTransition.setToState(toState);
@@ -245,7 +259,7 @@ public class SaveLoad {
         }
         Integer counter = 0;
         int highestState = Integer.MIN_VALUE;
-        for(Map.Entry<String, State> s : statesNeeded.entrySet()) {
+        for (Map.Entry<String, State> s : statesNeeded.entrySet()) {
             State curState = s.getValue();
             curState.setName(s.getKey());
 
@@ -256,16 +270,15 @@ public class SaveLoad {
             loadMachine.addState(curState);
             counter++;
             int curVal = Integer.parseInt(curState.getName());
-            if (curVal > highestState) highestState = curVal;
+            if (curVal > highestState)
+                highestState = curVal;
         }
         stateNextVal = highestState + 1;
         loadMachine.setTransitions(totalTransitions);
 
-
         return loadMachine;
         // Create our own state locations
     }
-
 
     public Machine loadSTEM(BufferedReader br, String curLine) throws IOException {
         Machine loadMachine = new Machine();
@@ -275,9 +288,9 @@ public class SaveLoad {
         // () are used to create groups that can be read later.
         // ? Is used for optional information
         // + means read more of the same until finished
-        Pattern statePattern = Pattern.compile("\t(-?\\d+) (\\d+.\\d+) (\\d+.\\d+) (\\w+) (\\w+)( (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*))?");
+        Pattern statePattern = Pattern.compile(
+                "\t(-?\\d+) (\\d+.\\d+) (\\d+.\\d+) (\\w+) (\\w+)( (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*) (\\d*.\\d*))?");
         Pattern transitionPattern = Pattern.compile("\t(-?\\d+) (-?\\d+) (\\p{ASCII}) (\\p{ASCII}) (\\w+)");
-
 
         curLine = br.readLine();
         String vline[] = curLine.split(" ");
@@ -285,11 +298,11 @@ public class SaveLoad {
         System.out.printf("Version %f\n", version);
 
         // Read until beginning of states
-        while(!curLine.equals("STATES:")) {
+        while (!curLine.equals("STATES:")) {
             curLine = br.readLine();
         }
         // Process all states
-        while(!curLine.startsWith("//")) {
+        while (!curLine.startsWith("//")) {
             curLine = br.readLine();
             Matcher stateMatcher = statePattern.matcher(curLine);
             // If there was a matching pattern for a state
@@ -307,9 +320,10 @@ public class SaveLoad {
                 }
                 newState.setAccept(Boolean.parseBoolean(stateMatcher.group(5)));
                 String k = stateMatcher.group(6);
-                if(k != null){
+                if (k != null) {
                     Scanner colGrabber = new Scanner(k);
-                    Color nucolor = new Color(colGrabber.nextDouble(), colGrabber.nextDouble(), colGrabber.nextDouble(), colGrabber.nextDouble());
+                    Color nucolor = new Color(colGrabber.nextDouble(), colGrabber.nextDouble(), colGrabber.nextDouble(),
+                            colGrabber.nextDouble());
                     newState.setColor(nucolor);
                     colGrabber.close();
                 }
@@ -322,11 +336,11 @@ public class SaveLoad {
             }
         }
         // Read until beginning of transitions
-        while(!curLine.equals("TRANSITION:")) {
+        while (!curLine.equals("TRANSITION:")) {
             curLine = br.readLine();
         }
         // Process all transitions
-        while(!curLine.startsWith("//")) {
+        while (!curLine.startsWith("//")) {
             curLine = br.readLine();
             Matcher transitionMatcher = transitionPattern.matcher(curLine);
             // If there was a matching pattern for a transition
@@ -338,16 +352,20 @@ public class SaveLoad {
                 newTransition.setToState(totalStates.get(transitionMatcher.group(2)));
                 newTransition.setReadChar(transitionMatcher.group(3).charAt(0));
                 newTransition.setWriteChar(transitionMatcher.group(4).charAt(0));
-                if(transitionMatcher.group(5).equals("RIGHT")) newTransition.setMoveDirection(Transition.Direction.RIGHT);
-                else if(transitionMatcher.group(5).equals("LEFT")) newTransition.setMoveDirection(Transition.Direction.LEFT);
-                else if(transitionMatcher.group(5).equals("STAY")) newTransition.setMoveDirection(Transition.Direction.STAY);
-                else throw new IOException("Bad Transition");
+                if (transitionMatcher.group(5).equals("RIGHT"))
+                    newTransition.setMoveDirection(Transition.Direction.RIGHT);
+                else if (transitionMatcher.group(5).equals("LEFT"))
+                    newTransition.setMoveDirection(Transition.Direction.LEFT);
+                else if (transitionMatcher.group(5).equals("STAY"))
+                    newTransition.setMoveDirection(Transition.Direction.STAY);
+                else
+                    throw new IOException("Bad Transition");
                 // Add transition to machine
                 loadMachine.getTransitions().add(newTransition);
             }
         }
         // Read until beginning of tape
-        while(!curLine.equals("TAPE:")) {
+        while (!curLine.equals("TAPE:")) {
             curLine = br.readLine();
         }
         // Read tape
@@ -357,7 +375,8 @@ public class SaveLoad {
         curLine = br.readLine();
         curLine = curLine.substring(1, curLine.length()); // Remove the tab
         ArrayList<Character> newTape = new ArrayList<>();
-        for(char c : curLine.toCharArray()) newTape.add(c);
+        for (char c : curLine.toCharArray())
+            newTape.add(c);
 
         //Have to set the globalTape variable here
         globalTape = newTape;
@@ -370,91 +389,94 @@ public class SaveLoad {
         for (Map.Entry<String, State> pair : totalStates.entrySet()) {
 
             int cur = Integer.parseInt(pair.getKey());
-            if (cur > highestState) highestState = cur;
+            if (cur > highestState)
+                highestState = cur;
         }
-        if(highestState >= 0) {
+        if (highestState >= 0) {
             stateNextVal = highestState + 1;
-        }
-        else{
+        } else {
             stateNextVal = 0;
         }
 
         curLine = br.readLine();
 
-        // IF VERSION with comments
-        if(version > 1)
-        {
-          // Read until beginning of COMMENTS
-          while(!curLine.equals("COMMENTS:")){
-            curLine = br.readLine();
-          }
-          curLine = br.readLine();
-          while(!curLine.startsWith("//")) {
-            // Read comments
-            TextArea ta = new TextArea();
-            ta.setFont(Font.font("Verdana", 20));
-            ta.setStyle("-fx-background-color: rgba(255,255,255,0.4)");
-            //parse string till ':' is found. first double is x, second is y
-            String text = "";
-            String[] line = null;
-            // check which version we are reading
-            // if the file is in the older verison, then we
-            // can just read it in with the old way, and when the user
-            // saves again, the new format will be used
-            if (version >= 1.11) {
-              while (curLine.indexOf(":") != 0) {
-                text = text + curLine.replace("\\:", ":") + "\n";
+        // IF VERSION 1.11
+        if (version > 1) {
+            // Read until beginning of COMMENTS
+            while (!curLine.equals("COMMENTS:")) {
                 curLine = br.readLine();
-              }
-              line = curLine.split(":");
-              text = text.substring(0, text.length() - 1); // remove the last newline
-            } else { // read in with the old way
-              while (curLine.indexOf(":") == -1) {
-                text = text + curLine + "\n";
-                curLine = br.readLine();
-              }
-              line = curLine.split(":");
-              text = text + line[0];
             }
-            double x = Double.parseDouble(line[1]);
-            double y = Double.parseDouble(line[2]);
-
-            ta.setText(text);
-            ta.setLayoutX(x);
-            ta.setLayoutY(y);
-            ta.setPrefColumnCount(15);
-            ta.setPrefRowCount(5);
-            ta.setEditable(false);
-            loadMachine.getComments().add(ta);
             curLine = br.readLine();
-          }
-          curLine = br.readLine();
-          curLine = br.readLine();
-          curLine = br.readLine();
-          while(!curLine.startsWith("//")){
-            //read comment boxes
-            Rectangle r = new Rectangle();
-            String line[] = curLine.split(":");
-            double x = Double.parseDouble(line[0]);
-            double y = Double.parseDouble(line[1]);
-            double w = Double.parseDouble(line[2]);
-            double h = Double.parseDouble(line[3]);
-            Color c = Color.web(line[4]);
+            while (!curLine.startsWith("//")) {
+                // Read comments
+                TextArea ta = new TextArea();
+                ta.setFont(Font.font("Verdana", 20));
+                ta.setStyle("-fx-background-color: rgba(255,255,255,0.4)");
+                //parse string till ':' is found. first double is x, second is y
+                String text = "";
+                String[] line = null;
+                // check which version we are reading
+                // if the file is in the older verison, then we
+                // can just read it in with the old way, and when the user
+                // saves again, the new format will be used
+                if (version >= 1.11) {
+                    while (curLine.indexOf(":") != 0) {
+                        text = text + curLine.replace("\\:", ":") + "\n";
+                        curLine = br.readLine();
+                    }
+                    line = curLine.split(":");
+                    text = text.substring(0, text.length() - 2); // remove the last newline
+                } else { // read in with the old way
+                    while (curLine.indexOf(":") == -1) {
+                        text = text + curLine + "\n";
+                        curLine = br.readLine();
+                    }
+                    line = curLine.split(":");
+                    text = text + line[0];
+                }
+                double x = Double.parseDouble(line[1]);
+                double y = Double.parseDouble(line[2]);
 
-            r.setX(x);
-            r.setY(y);
-            r.setWidth(w);
-            r.setHeight(h);
-            r.setFill(c);
-            r.setOpacity(.50);
-            loadMachine.getcBoxes().add(r);
+                ta.setText(text);
+                ta.setLayoutX(x);
+                ta.setLayoutY(y);
+                ta.setPrefColumnCount(15);
+                ta.setPrefRowCount(5);
+                ta.setEditable(false);
+                loadMachine.getComments().add(ta);
+                curLine = br.readLine();
+            }
             curLine = br.readLine();
-          }
-          curLine = br.readLine();
-       }
+            curLine = br.readLine();
+            curLine = br.readLine();
+            while (!curLine.startsWith("//")) {
+                //read comment boxes
+                Rectangle r = new Rectangle();
+                String line[] = curLine.split(":");
+                double x = Double.parseDouble(line[0]);
+                double y = Double.parseDouble(line[1]);
+                double w = Double.parseDouble(line[2]);
+                double h = Double.parseDouble(line[3]);
+                Color c = Color.web(line[4]);
+
+                r.setX(x);
+                r.setY(y);
+                r.setWidth(w);
+                r.setHeight(h);
+                r.setFill(c);
+                r.setOpacity(.50);
+                loadMachine.getcBoxes().add(r);
+                curLine = br.readLine();
+            }
+            curLine = br.readLine();
+        } else {
+            // TODO: Update old file format to new one
+            System.out.println("Your save file is outdated!");
+            System.exit(1);
+        }
         curLine = br.readLine();
         // load in the start triangle rotation
-        if(curLine != null){
+        if (curLine != null) {
             String[] cur_rot = curLine.split(":");
             loadMachine.setStartTriRotation(Integer.parseInt(cur_rot[1]));
         }

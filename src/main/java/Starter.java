@@ -1,3 +1,4 @@
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -16,6 +17,7 @@
 public class Starter {
 
     public static void main(final String[] args) {
+        System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
         Main.main(args);
     }
 

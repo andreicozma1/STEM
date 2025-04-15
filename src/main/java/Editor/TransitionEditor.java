@@ -1,3 +1,5 @@
+package Editor;
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -37,13 +39,18 @@ import javafx.util.Callback;
 
 import java.util.ArrayList;
 
+import Types.Path;
+import Types.State;
+import Types.Transition;
+import Types.Changes.TransitionReadChange;
+import Types.Changes.TransitionWriteChange;
 
 public class TransitionEditor {
 
     public Transition createdTransition;
     private ArrayList<Transition> deletedTransitions;
 
-    public TransitionEditor(Stage window, State from, State to){
+    public TransitionEditor(Stage window, State from, State to) {
         Stage transitionEditor = new Stage();
         transitionEditor.initModality(Modality.APPLICATION_MODAL);
         transitionEditor.initOwner(window);
@@ -53,7 +60,6 @@ public class TransitionEditor {
         VBox col1 = new VBox();
         VBox col2 = new VBox();
         VBox col3 = new VBox();
-
 
         //    ____      _    _
         //   / ___|___ | |  / |
@@ -67,7 +73,7 @@ public class TransitionEditor {
         col1TextArea.setPrefColumnCount(1);
         col1TextArea.setTextFormatter(new TextFormatter<>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
-            if(newText.length() > 1 || containsIllegalCharacters(newText))
+            if (newText.length() > 1 || containsIllegalCharacters(newText))
                 return null;
             else
                 return change;
@@ -76,7 +82,7 @@ public class TransitionEditor {
         col1TextArea.setStyle("-fx-padding: 5px; -fx-border-insets: 5px; -fx-background-insets:5px;");
         col1TextArea.resize(100, 100);
 
-        col1.getChildren().addAll(col1Text,col1TextArea);
+        col1.getChildren().addAll(col1Text, col1TextArea);
 
         //    ____      _    ____
         //   / ___|___ | |  |___ \
@@ -84,13 +90,13 @@ public class TransitionEditor {
         //  | |___ (_) | |   / __/
         //   \____\___/|_|  |_____|
         //
-        Text col2Text= new Text("Write");
+        Text col2Text = new Text("Write");
 
         TextField col2TextArea = new TextField();
         col2TextArea.setPrefColumnCount(1);
         col2TextArea.setTextFormatter(new TextFormatter<>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
-            if(newText.length() > 1 || containsIllegalCharacters(newText))
+            if (newText.length() > 1 || containsIllegalCharacters(newText))
                 return null;
             else
                 return change;
@@ -143,8 +149,7 @@ public class TransitionEditor {
             transitionEditor.close();
         });
 
-
-        borderPane.setAlignment(submitButton, Pos.CENTER);
+        BorderPane.setAlignment(submitButton, Pos.CENTER);
 
         //   ____  _           _ _
         //  | __ )(_)_ __   __| (_)_ __   __ _ ___
@@ -156,7 +161,7 @@ public class TransitionEditor {
         col2.setAlignment(Pos.TOP_CENTER);
         col3.setAlignment(Pos.TOP_CENTER);
 
-        hBox.getChildren().addAll(col1,col2,col3);
+        hBox.getChildren().addAll(col1, col2, col3);
 
         ObjectExpression<Font> col1TextAreaFontTrack = Bindings.createObjectBinding(
                 () -> Font.font(col1TextArea.getWidth() / 2), col1TextArea.widthProperty());
@@ -165,7 +170,8 @@ public class TransitionEditor {
         ObjectExpression<Font> toggleButtonFontTrack = Bindings.createObjectBinding(
                 () -> Font.font(left.getWidth() / 8), left.widthProperty());
         ObjectExpression<Font> submitButtonFontTrack = Bindings.createObjectBinding(
-                () -> Font.font(Math.min(borderPane.getWidth(), borderPane.getHeight())/ 8), borderPane.widthProperty(), borderPane.heightProperty());
+                () -> Font.font(Math.min(borderPane.getWidth(), borderPane.getHeight()) / 8),
+                borderPane.widthProperty(), borderPane.heightProperty());
 
         BooleanBinding submitButtonDisableBinding = new BooleanBinding() {
             {
@@ -207,7 +213,7 @@ public class TransitionEditor {
 
         borderPane.setCenter(hBox);
         borderPane.setBottom(submitButton);
-        Scene popUp = new Scene(borderPane, 300,200);
+        Scene popUp = new Scene(borderPane, 300, 200);
         transitionEditor.setScene(popUp);
 
         transitionEditor.setMinWidth(300);
@@ -215,9 +221,11 @@ public class TransitionEditor {
 
         transitionEditor.showAndWait();
     }
-    /* Constructor for editing an already existing transition
-    */
-    public TransitionEditor(Stage window, Path path){
+
+    /*
+     * Constructor for editing an already existing transition
+     */
+    public TransitionEditor(Stage window, Path path, Editor editor) {
         Stage transitionEditor = new Stage();
         transitionEditor.setTitle("Transition Editor");
         transitionEditor.setWidth(640);
@@ -229,16 +237,17 @@ public class TransitionEditor {
         ObservableList<Transition> list = FXCollections.observableArrayList();
 
         TableView table = new TableView();
-        Label label = new Label("To make any changes, double click on the Read/Write/Direction cells, and press Enter when finished. Any edits are final. Once the window is closed, the edits will take effect.");
+        Label label = new Label(
+                "To make any changes, double click on the Read/Write/Direction cells, and press Enter when finished. Any edits are final. Once the window is closed, the edits will take effect.");
         label.setMaxWidth(transitionEditor.getWidth());
         label.setMaxHeight(transitionEditor.getHeight());
-        label.setPrefWidth(transitionEditor.getWidth()/4);
-        label.setPrefHeight(transitionEditor.getHeight()/4);
+        label.setPrefWidth(transitionEditor.getWidth() / 4);
+        label.setPrefHeight(transitionEditor.getHeight() / 4);
         label.setWrapText(true);
         label.setTextAlignment(TextAlignment.CENTER);
-        //label.setFont(new Font("Arial", 20));
+        // label.setFont(new Font("Arial", 20));
         table.setEditable(true);
- 
+
         TableColumn FromS = new TableColumn("From State");
         FromS.setMaxWidth(100);
         FromS.setPrefWidth(100);
@@ -253,170 +262,175 @@ public class TransitionEditor {
         read.setCellValueFactory(new PropertyValueFactory<Transition, String>("ReadString"));
         read.setCellFactory(TextFieldTableCell.forTableColumn());
         read.setOnEditCommit(
-            new EventHandler<CellEditEvent<Transition, String>>(){
-                @Override
-                public void handle(CellEditEvent<Transition, String> t) {
-                    if(t.getNewValue().length() == 1){
-                        ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow())).setReadChar(t.getNewValue().charAt(0));
-                        t.getTableView().refresh();
+                new EventHandler<CellEditEvent<Transition, String>>() {
+                    @Override
+                    public void handle(CellEditEvent<Transition, String> t) {
+                        if (t.getNewValue().length() == 1) {
+                            Transition target = (Transition) t.getTableView().getItems()
+                                    .get(t.getTablePosition().getRow());
+                            editor.addChange(
+                                    new TransitionReadChange(target, target.getReadChar(), t.getNewValue().charAt(0),
+                                            editor));
+                            t.getTableView().refresh();
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setResizable(true);
+                            alert.initOwner(window);
+                            alert.initModality(Modality.APPLICATION_MODAL);
+                            alert.setTitle("Incorrect Transition");
+                            alert.setHeaderText("Read can only be 1 character in length.");
+                            alert.showAndWait();
+                            t.getTableView().refresh();
+                        }
                     }
-                    else{
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setResizable(true);
-						alert.initOwner(window);
-						alert.initModality(Modality.APPLICATION_MODAL);
-						alert.setTitle("Incorrect Transition");
-						alert.setHeaderText("Read can only be 1 character in length.");
-                        alert.showAndWait();
-                        t.getTableView().refresh();
-                    }
-                }
-            }
-        );
+                });
         TableColumn write = new TableColumn("Write");
         write.setMaxWidth(100);
         write.setPrefWidth(100);
         write.setCellValueFactory(new PropertyValueFactory<Transition, String>("WriteString"));
         write.setCellFactory(TextFieldTableCell.forTableColumn());
         write.setOnEditCommit(
-            new EventHandler<CellEditEvent<Transition, String>>(){
-                @Override
-                public void handle(CellEditEvent<Transition, String> t) {
-                    if(t.getNewValue().length() == 1){
-                        ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow())).setWriteChar(t.getNewValue().charAt(0));
-                        t.getTableView().refresh();
+                new EventHandler<CellEditEvent<Transition, String>>() {
+                    @Override
+                    public void handle(CellEditEvent<Transition, String> t) {
+                        if (t.getNewValue().length() == 1) {
+                            Transition target = (Transition) t.getTableView().getItems()
+                                    .get(t.getTablePosition().getRow());
+                            editor.addChange(
+                                    new TransitionWriteChange(target, target.getWriteChar(),
+                                            t.getNewValue().charAt(0), editor));
+                            t.getTableView().refresh();
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setResizable(true);
+                            alert.initOwner(window);
+                            alert.initModality(Modality.APPLICATION_MODAL);
+                            alert.setTitle("Incorrect Transition");
+                            alert.setHeaderText("Write can only be 1 character in length.");
+                            alert.showAndWait();
+                            t.getTableView().refresh();
+                        }
                     }
-                    else{
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setResizable(true);
-						alert.initOwner(window);
-						alert.initModality(Modality.APPLICATION_MODAL);
-						alert.setTitle("Incorrect Transition");
-						alert.setHeaderText("Write can only be 1 character in length.");
-                        alert.showAndWait();
-                        t.getTableView().refresh();
-                    }
-                }
-            }
-        );
+                });
         TableColumn direction = new TableColumn("Direction");
         direction.setMaxWidth(100);
         direction.setPrefWidth(100);
         direction.setCellValueFactory(new PropertyValueFactory<Transition, String>("DirectionChar"));
         direction.setCellFactory(TextFieldTableCell.forTableColumn());
         direction.setOnEditCommit(
-            new EventHandler<CellEditEvent<Transition, String>>(){
-                @Override
-                public void handle(CellEditEvent<Transition, String> t) {
-                    if(Character.toUpperCase(t.getNewValue().charAt(0)) == 'L' || 
-                        Character.toUpperCase(t.getNewValue().charAt(0)) == 'R' || Character.toUpperCase(t.getNewValue().charAt(0)) == 'S'){
-                        ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow())).setDirectionChar(Character.toUpperCase(t.getNewValue().charAt(0)));
-                        t.getTableView().refresh();
+                new EventHandler<CellEditEvent<Transition, String>>() {
+                    @Override
+                    public void handle(CellEditEvent<Transition, String> t) {
+                        if (Character.toUpperCase(t.getNewValue().charAt(0)) == 'L' ||
+                                Character.toUpperCase(t.getNewValue().charAt(0)) == 'R'
+                                || Character.toUpperCase(t.getNewValue().charAt(0)) == 'S') {
+                            ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                                    .setDirectionChar(Character.toUpperCase(t.getNewValue().charAt(0)));
+                            t.getTableView().refresh();
+                        } else {
+                            System.out.println("This is our value: " + t.getNewValue());
+                            System.out.println("This is our length: " + t.getNewValue().length());
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setResizable(true);
+                            alert.initOwner(window);
+                            alert.initModality(Modality.APPLICATION_MODAL);
+                            alert.setTitle("Incorrect Transition");
+                            alert.setHeaderText("Direction must be 'L', 'R', or 'S'\nL: Left\nR: Right\nS: Stay");
+                            alert.showAndWait();
+                            t.getTableView().refresh();
+                        }
                     }
-                    else{
-                        System.out.println("This is our value: " + t.getNewValue());
-                        System.out.println("This is our length: " + t.getNewValue().length());
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setResizable(true);
-						alert.initOwner(window);
-						alert.initModality(Modality.APPLICATION_MODAL);
-						alert.setTitle("Incorrect Transition");
-						alert.setHeaderText("Direction must be 'L', 'R', or 'S'\nL: Left\nR: Right\nS: Stay");
-                        alert.showAndWait();
-                        t.getTableView().refresh();
-                    }
-                }
-            }
-        );
+                });
 
         TableColumn deleteCol = new TableColumn("Delete Transition");
         deleteCol.setMaxWidth(130);
         deleteCol.setPrefWidth(130);
 
-        /* Adding the button to the column
-        */
-        Callback<TableColumn<Transition, String>, TableCell<Transition, String>> cellFactory
-                = //
+        /*
+         * Adding the button to the column
+         */
+        Callback<TableColumn<Transition, String>, TableCell<Transition, String>> cellFactory = //
                 new Callback<TableColumn<Transition, String>, TableCell<Transition, String>>() {
-            @Override
-            public TableCell call(final TableColumn<Transition, String> param) {
-                
-                final TableCell<Transition, String> cell = new TableCell<Transition, String>() {
-
-                    final Button del_btn = new Button("Delete transition!");
-                    
                     @Override
-                    public void updateItem(String item, boolean empty) {
-                        
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            // event listener for when the button is pressed
-                            del_btn.setOnAction(event -> {
-                                Alert alert = new Alert(Alert.AlertType.NONE);
-                                alert.setResizable(true);
-                                alert.setTitle("Delete?");
-                                alert.setContentText("Are you sure you want to delete this transition? The transition will not be recoverable after being deleted.");
-                                ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-                                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
-                                alert.getButtonTypes().setAll(yesButton, noButton);
+                    public TableCell call(final TableColumn<Transition, String> param) {
 
-                                /* this portion is when the user clicks to delete a transition. It asks for a confirmation
-                                * If confirmed: the respective transition is stored in a list. Then, once the user presses the X for closing the window, all changes will be recorded
-                                */
-                                alert.showAndWait().ifPresent(type -> {
-                                        if (type.getText() == "Yes") {
-                                            // get the respective transition, add it to the deleted list, and remove it from the list in the table
-                                            Transition trns = getTableView().getItems().get(getIndex());
-                                            deletedTransitions.add(trns);
-                                            list.remove(trns);
+                        final TableCell<Transition, String> cell = new TableCell<Transition, String>() {
 
-                                        } else if (type.getText() == "No") {
-                                            System.out.println("USER CLICKED NO");
-                                        }
+                            final Button del_btn = new Button("Delete transition!");
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    // event listener for when the button is pressed
+                                    del_btn.setOnAction(event -> {
+                                        Alert alert = new Alert(Alert.AlertType.NONE);
+                                        alert.setResizable(true);
+                                        alert.setTitle("Delete?");
+                                        alert.setContentText(
+                                                "Are you sure you want to delete this transition? The transition will not be recoverable after being deleted.");
+                                        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+                                        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+                                        alert.getButtonTypes().setAll(yesButton, noButton);
+
+                                        /*
+                                         * this portion is when the user clicks to delete a transition. It asks for a
+                                         * confirmation
+                                         * If confirmed: the respective transition is stored in a list. Then, once the
+                                         * user presses the X for closing the window, all changes will be recorded
+                                         */
+                                        alert.showAndWait().ifPresent(type -> {
+                                            if (type.getText() == "Yes") {
+                                                // get the respective transition, add it to the deleted list, and remove
+                                                // it from the list in the table
+                                                Transition trns = getTableView().getItems().get(getIndex());
+                                                deletedTransitions.add(trns);
+                                                list.remove(trns);
+
+                                            } else if (type.getText() == "No") {
+                                                System.out.println("USER CLICKED NO");
+                                            }
+                                        });
                                     });
-                            });
-                            setGraphic(del_btn);
-                            setText(null);
-                        }
+                                    setGraphic(del_btn);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
                     }
                 };
-                return cell;
-            }
-        };
 
-        
         deleteCol.setCellFactory(cellFactory);
 
-        
-
         table.setItems(list);
-        
+
         // if it is not a self loop
-        if(path.getStateOne() != path.getStateTwo()){
-            for(State s : path.getStates()){
-                if(s.getTransition().size() > 0){
-                    for(Transition t : s.getTransition()){
-                        if((t.getToState() == path.getStateTwo() && t.getFromState() == path.getStateOne()) || 
-                            (t.getToState() == path.getStateOne() && t.getFromState() == path.getStateTwo())){
+        if (path.getStateOne() != path.getStateTwo()) {
+            for (State s : path.getStates()) {
+                if (s.getTransition().size() > 0) {
+                    for (Transition t : s.getTransition()) {
+                        if ((t.getToState() == path.getStateTwo() && t.getFromState() == path.getStateOne()) ||
+                                (t.getToState() == path.getStateOne() && t.getFromState() == path.getStateTwo())) {
                             list.add(t);
                         }
                     }
                 }
             }
-        }
-        else{
-            if(path.getStateOne().getTransition().size() > 0){
-                for(Transition t : path.getStateOne().getTransition()){
-                    if(t.getFromState() == t.getToState()){
+        } else {
+            if (path.getStateOne().getTransition().size() > 0) {
+                for (Transition t : path.getStateOne().getTransition()) {
+                    if (t.getFromState() == t.getToState()) {
                         list.add(t);
                     }
                 }
             }
         }
-        
+
         table.getColumns().addAll(FromS, ToS, read, write, direction, deleteCol);
         VBox vbox = new VBox(label);
         vbox.getChildren().addAll(table);
@@ -425,20 +439,19 @@ public class TransitionEditor {
         transitionEditor.showAndWait();
     }
 
-    public ArrayList<Transition> getDeletedTransition(){
+    public ArrayList<Transition> getDeletedTransition() {
         return deletedTransitions;
     }
 
-
-    public TransitionEditor(Stage window, State from, State to, char read, char write){
+    public TransitionEditor(Stage window, State from, State to, char read, char write) {
         createdTransition = new Transition(to, from, read, write);
     }
 
-    private boolean containsIllegalCharacters(String s){
+    private boolean containsIllegalCharacters(String s) {
         char s_arr[] = s.trim().toCharArray();
 
-        for(char c : s_arr){
-            if(c < 32 || c >= 127)
+        for (char c : s_arr) {
+            if (c < 32 || c >= 127)
                 return true;
         }
 

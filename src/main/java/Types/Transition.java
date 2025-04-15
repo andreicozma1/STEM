@@ -1,3 +1,4 @@
+package Types;
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -14,31 +15,32 @@
  */
 
 public class Transition {
-    private Path path;
+	private Path path;
 	private State toState;
 	private State fromState;
 	private char readChar;
 	private char writeChar;
 	private Direction moveDirection;
-	public enum Direction{
+
+	public enum Direction {
 		LEFT, RIGHT, STAY
 	}
 
-	public Transition(){
+	public Transition() {
 		this.path = null;
 		this.toState = null;
 		this.fromState = null;
 		this.moveDirection = null;
-	 }
+	}
 
-	public Transition(State toState, State fromState, char readChar, char writeChar){
+	public Transition(State toState, State fromState, char readChar, char writeChar) {
 		this.toState = toState;
 		this.fromState = fromState;
 		this.readChar = readChar;
 		this.writeChar = writeChar;
 	}
 
-	public Transition(State toState, State fromState, char readChar, char writeChar, Direction moveDirection){
+	public Transition(State toState, State fromState, char readChar, char writeChar, Direction moveDirection) {
 		this.toState = toState;
 		this.fromState = fromState;
 		this.readChar = readChar;
@@ -49,27 +51,27 @@ public class Transition {
 	public State getToState() {
 		return toState;
 	}
-	
+
 	public String getToStateName() {
 		return toState.getName();
-	}	
+	}
 
 	public void setToState(State toState) {
 		this.toState = toState;
 	}
-	
+
 	public State getFromState() {
 		return fromState;
 	}
 
 	public String getFromStateName() {
 		return fromState.getName();
-	}	
-	
+	}
+
 	public void setFromState(State fromState) {
 		this.fromState = fromState;
 	}
-	
+
 	public char getReadChar() {
 		return readChar;
 	}
@@ -77,7 +79,7 @@ public class Transition {
 	public String getReadString() {
 		return Character.toString(readChar);
 	}
-	
+
 	public void setReadChar(char readChar) {
 		this.readChar = readChar;
 	}
@@ -89,57 +91,53 @@ public class Transition {
 	public String getWriteString() {
 		return Character.toString(writeChar);
 	}
-	
+
 	public void setWriteChar(char writeChar) {
 		this.writeChar = writeChar;
 	}
-	
-	public String getDirectionChar(){
-		if(this.moveDirection == Direction.RIGHT){
+
+	public String getDirectionChar() {
+		if (this.moveDirection == Direction.RIGHT) {
 			return "R";
-		}
-		else if(this.moveDirection == Direction.LEFT){
+		} else if (this.moveDirection == Direction.LEFT) {
 			return "L";
-		}
-		else if(this.moveDirection == Direction.STAY){
+		} else if (this.moveDirection == Direction.STAY) {
 			return "S";
 		}
 		return "Error";
 	}
 
-	public void setDirectionChar(char direction){
-		if(direction == 'R'){
+	public void setDirectionChar(char direction) {
+		if (direction == 'R') {
 			this.moveDirection = Direction.RIGHT;
-		}
-		else if(direction == 'L'){
+		} else if (direction == 'L') {
 			this.moveDirection = Direction.LEFT;
-		}
-		else{
+		} else {
 			this.moveDirection = Direction.STAY;
 		}
 	}
 
-	public Direction getMoveDirection(){
+	public Direction getMoveDirection() {
 		return moveDirection;
 	}
-	
-	public void setMoveDirection(Direction moveDirection){
+
+	public void setMoveDirection(Direction moveDirection) {
 		this.moveDirection = moveDirection;
 	}
 
-	public void setPath(Path p){
+	public void setPath(Path p) {
 		this.path = p;
 	}
 
-	public Path getPath(){
+	public Path getPath() {
 		return this.path;
 	}
 
-	public boolean compareTo(Transition t){
+	public boolean compareTo(Transition t) {
 		return (t.fromState == fromState)
-				&&(t.toState == toState)
-				&&(t.readChar == readChar)
-				&&(t.writeChar == writeChar)
-				&&(t.moveDirection == moveDirection);
+				&& (t.toState == toState)
+				&& (t.readChar == readChar)
+				&& (t.writeChar == writeChar)
+				&& (t.moveDirection == moveDirection);
 	}
 }

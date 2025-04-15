@@ -1,3 +1,4 @@
+package Types;
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -19,7 +20,7 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 
-class State {
+public class State {
 	private String name;
 	private Text label;
 	private double x;
@@ -27,25 +28,27 @@ class State {
 	private boolean start;
 	private boolean accept;
 	private boolean debug;
+	private boolean selected;
 	private Color baseColor;
 	private Color currColor;
 	private Circle circle;
 	private Circle acceptCircle;
+	private Circle selectedCircle;
 	private ArrayList<Transition> transition;
 
-	public State(){
+	public State() {
 		transition = new ArrayList<>();
 		this.baseColor = Color.LIGHTGOLDENRODYELLOW;
 	}
 
-	public State(String name, double x, double y){
+	public State(String name, double x, double y) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		transition = new ArrayList<>();
 	}
 
-	public State(String name, double x, double y, Text label, Circle circle){
+	public State(String name, double x, double y, Text label, Circle circle) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
@@ -58,65 +61,73 @@ class State {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Text getLabel() {
 		return label;
 	}
-	
+
 	public void setLabel(Text label) {
 		this.label = label;
 	}
-	
-	public void setLabelId(String name){
+
+	public void setLabelId(String name) {
 		this.label.setId(name);
 		this.label.setText(name);
 	}
 
-	public double getX(){
+	public double getX() {
 		return x;
 	}
-	
-	public void setX(double x){
+
+	public void setX(double x) {
 		this.x = x;
 	}
-	
-	public double getY(){
+
+	public double getY() {
 		return y;
 	}
-	
-	public void setY(double y){
+
+	public void setY(double y) {
 		this.y = y;
 	}
-	
+
 	public boolean isStart() {
 		return start;
 	}
-	
+
 	public void setStart(boolean start) {
 		this.start = start;
 	}
-	
+
 	public boolean isAccept() {
 		return accept;
 	}
-	
+
 	public void setAccept(boolean accept) {
 		this.accept = accept;
 	}
-	
-	public Circle getCircle(){
+
+	public boolean isSelected() {
+		return this.selected;
+	}
+
+	public void setSelected(boolean value) {
+		this.selected = value;
+	}
+
+	public Circle getCircle() {
 		return circle;
 	}
-	
-	public void setCircle(Circle circle){
+
+	public void setCircle(Circle circle) {
 		this.circle = circle;
 	}
 
-	public void setCircleId(String name){
+	public void setCircleId(String name) {
 		this.circle.setId(name);
 	}
 
@@ -128,35 +139,47 @@ class State {
 		this.acceptCircle = acceptCircle;
 	}
 
+	public Circle getSelctedCircle() {
+		return this.selectedCircle;
+	}
+
+	public void setSelctedCircle(Circle selectedCircle) {
+		this.selectedCircle = selectedCircle;
+	}
+
 	public ArrayList<Transition> getTransition() {
 		return transition;
 	}
 
-	public void addNewTransition(Transition newTransition){
+	public void addNewTransition(Transition newTransition) {
 		this.transition.add(newTransition);
 	}
-	
+
 	public void setTransition(ArrayList<Transition> transition) {
 		this.transition = transition;
 	}
 
-	public void setDebug(boolean debug) { this.debug = debug; }
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
 
-	public boolean isDebug() {return debug;}
+	public boolean isDebug() {
+		return debug;
+	}
 
-	public void setColor(Color c){
+	public void setColor(Color c) {
 		this.baseColor = c;
 	}
 
-	public Color getBaseColor(){
+	public Color getBaseColor() {
 		return baseColor;
 	}
 
-	public Color getCurrColor(){
+	public Color getCurrColor() {
 		return currColor;
 	}
 
-	public State cloneState(){
+	public State cloneState() {
 		State clone = new State();
 
 		clone.name = this.name;

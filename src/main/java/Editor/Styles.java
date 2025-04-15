@@ -1,3 +1,5 @@
+package Editor;
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -13,21 +15,9 @@
  *     GNU General Public License for more details.
  */
 
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
+public class Styles {
 
-public class CloseButton {
-	private Button button;
-	
-	public CloseButton(){
-		button = new Button("Close");
-	}
-	
-	public Button getCloseButton(){
-		return button;
-	}
-	
-	public void setCloseButton(Stage window){
-		button.setOnAction(e->window.close());
-	}
+    public static final String IDLE_BUTTON_STYLE = "-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: transparent; -fx-border-radius:5;";
+    public static final String HOVERED_BUTTON_STYLE = "-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius:5; ";
+
 }

@@ -1,3 +1,5 @@
+package Editor;
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -36,8 +38,8 @@ public class ZoomableScrollPane extends ScrollPane {
         setContent(outerNode(zoomNode));
 
         setPannable(true);
-//        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-//        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        //        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        //        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
 
@@ -75,7 +77,8 @@ public class ZoomableScrollPane extends ScrollPane {
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
 
         // check if the scaleValue is within the min and max bounds
-        if (scaleValue * zoomFactor < maxScaleValue || scaleValue * zoomFactor > minScaleValue) return;
+        if (scaleValue * zoomFactor < maxScaleValue || scaleValue * zoomFactor > minScaleValue)
+            return;
 
         scaleValue = scaleValue * zoomFactor;
         updateScale();
@@ -85,7 +88,8 @@ public class ZoomableScrollPane extends ScrollPane {
         Point2D posInZoomTarget = target.parentToLocal(zoomNode.parentToLocal(mousePoint));
 
         // calculate adjustment of scroll position (pixels)
-        Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
+        Point2D adjustment = target.getLocalToParentTransform()
+                .deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
 
         // convert back to [0, 1] range
         // (too large/small values are automatically corrected by ScrollPane)

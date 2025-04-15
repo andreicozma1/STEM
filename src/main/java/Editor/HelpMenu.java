@@ -1,3 +1,5 @@
+package Editor;
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -23,7 +25,7 @@ import java.net.URL;
 
 public class HelpMenu {
 
-	public HelpMenu(){
+	public HelpMenu() {
 		Scene menu;
 		Stage window = new Stage();
 		window.setResizable(false);
@@ -36,10 +38,10 @@ public class HelpMenu {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(xml_url);
 			menu = loader.load();
-		}catch(MalformedURLException e){
+		} catch (MalformedURLException e) {
 			System.out.println("Could not find fxml file");
 			return;
-		} catch(IOException e) {
+		} catch (IOException e) {
 			System.out.println("Could not load help menu content");
 			return;
 		}

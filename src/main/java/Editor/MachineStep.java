@@ -1,3 +1,5 @@
+package Editor;
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -13,21 +15,22 @@
  *     GNU General Public License for more details.
  */
 
+import Types.Transition;
+
 public class MachineStep {
     private Transition t;
     private char c;
 
-
-    MachineStep(Transition t, char c){
+    public MachineStep(Transition t, char c) {
         this.t = t;
         this.c = c;
     }
 
-    public char getChar(){
+    public char getChar() {
         return this.c;
     }
 
-    public Transition getTransition(){
+    public Transition getTransition() {
         return this.t;
     }
 }

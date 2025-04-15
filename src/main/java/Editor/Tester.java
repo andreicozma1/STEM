@@ -1,3 +1,5 @@
+package Editor;
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -18,6 +20,11 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
+import Types.Machine;
+import Types.State;
+import Types.Tape;
+import Types.Transition;
 
 public class Tester {
     private String failReason;
@@ -52,7 +59,9 @@ public class Tester {
         this.cont = cont;
     }
 
-    public void setFailReason(String reason) { failReason = reason; }
+    public void setFailReason(String reason) {
+        failReason = reason;
+    }
 
     public String getFailReason() {
         return failReason;
@@ -70,15 +79,14 @@ public class Tester {
         return curSpeed;
     }
 
-    public Transition nextTransition(State currentState, Tape tape){
+    public Transition nextTransition(State currentState, Tape tape) {
         Character curChar = tape.currentTapeVal();
         Transition curTransition = null;
 
-
         // Find the transition where the current tape char is
         // equal to the first transition's readChar
-        for(Transition t : currentState.getTransition()){
-            if(t.getReadChar() == curChar && t.getFromState() == currentState){
+        for (Transition t : currentState.getTransition()) {
+            if (t.getReadChar() == curChar && t.getFromState() == currentState) {
                 curTransition = t;
                 break;
             }
@@ -86,9 +94,9 @@ public class Tester {
 
         // If no Transition is found, search for a transition
         // with no read char. I.E. catchall transition
-        if(curTransition == null){
-            for(Transition t : currentState.getTransition()){
-                if(t.getFromState() == currentState && t.getReadChar() == '~'){
+        if (curTransition == null) {
+            for (Transition t : currentState.getTransition()) {
+                if (t.getFromState() == currentState && t.getReadChar() == '~') {
                     curTransition = t;
                     break;
                 }
@@ -98,14 +106,14 @@ public class Tester {
         return curTransition;
     }
 
-    public State runMachine(Machine m, State startState) throws Exception{
+    public State runMachine(Machine m, State startState) throws Exception {
         State currentState;
         ArrayList<State> states = m.getStates();
         Tape tape = m.getTape();
 
         // Fail if there is no start state
         currentState = startState;
-       if(currentState == null){
+        if (currentState == null) {
             failReason = "Machine has no start state!";
             succeeded = false;
             return null;
@@ -119,21 +127,22 @@ public class Tester {
 
         // Main body
 
-        finalState = currentState; 
+        finalState = currentState;
         Transition next = this.nextTransition(currentState, m.getTape());
-        while(next != null && cont != false) {
+        while (next != null && cont != false) {
 
             // Set the color of the selected State
-            if(currentState.getCircle() != null){
+            if (currentState.getCircle() != null) {
                 currentState.getCircle().setFill(Color.GREENYELLOW);
             }
 
             // If the writeChar is the null character do not write anything
-            if(next.getWriteChar() != '~'){
-                try{
+            if (next.getWriteChar() != '~') {
+                try {
                     tape.setTape(next.getWriteChar());
-                } catch (Exception e){
-                    failReason = String.format("Cannot set %c to tape location %d", next.getWriteChar(), tape.getTapeHead());
+                } catch (Exception e) {
+                    failReason = String.format("Cannot set %c to tape location %d", next.getWriteChar(),
+                            tape.getTapeHead());
                     throw e;
                 }
             }
@@ -144,7 +153,7 @@ public class Tester {
             incrementTransitionCounter();
 
             TimeUnit.MILLISECONDS.sleep(curSpeed);
-            switch(next.getMoveDirection()){
+            switch (next.getMoveDirection()) {
                 case LEFT:
                     tape.left();
                     break;
@@ -161,7 +170,7 @@ public class Tester {
             });
 
             // Reset Colors
-            if(currentState.getCircle() != null) {
+            if (currentState.getCircle() != null) {
                 currentState.setColor(currentState.getBaseColor());
                 currentState.getCircle().setFill(currentState.getBaseColor());
             }
@@ -172,16 +181,16 @@ public class Tester {
 
             loops++;
             // TODO: prompt user if loop goes over X iterations
-            if(loops % 1000 == 0){
+            if (loops % 1000 == 0) {
             }
 
             //Detect breakpoints
-            if(currentState.isDebug()){
+            if (currentState.isDebug()) {
                 return currentState;
             }
         }
 
-        if(currentState != null)
+        if (currentState != null)
             currentState.getCircle().setFill(Color.GREENYELLOW);
 
         Platform.runLater(() -> {
@@ -190,13 +199,12 @@ public class Tester {
         });
 
         TimeUnit.MILLISECONDS.sleep(curSpeed);
-        if(currentState.getCircle() != null) {
+        if (currentState.getCircle() != null) {
             currentState.setColor(currentState.getBaseColor());
             currentState.getCircle().setFill(currentState.getBaseColor());
         }
         this.succeeded = currentState.isAccept();
         return currentState;
     }
-
 
 }
