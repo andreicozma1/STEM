@@ -29,7 +29,7 @@
                             <ImageView fitHeight="120.0" preserveRatio="true">
                                 <Image url="@/helpmenu/editstate.png" />
                             </ImageView>
-                            <Label minHeight="-Infinity" text="To view editing options, right click on the state." wrapText="true" />
+                            <Label minHeight="-Infinity" text="To view editing options, right click on the state. When selecting 'Set Color', the default color will be the current color of the state." wrapText="true" />
                         </VBox>
                     </TitledPane>
                     <TitledPane text="Add Transition">
