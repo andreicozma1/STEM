@@ -14,6 +14,7 @@ Compatible with xTuringmachine files
 - Jonathan Bryan [jbryan74@vols.utk.edu]   
 - Josh Herman [jherman4@vols.utk.edu]   
 - Jahneulie Weste [wsv346@vols.utk.edu]
+- Christian Niehaus [cniehau1@vols.utk.edu]
 
 ## Pre-requisites
 - Java 9 or greater
