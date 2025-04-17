@@ -817,6 +817,7 @@ class Editor {
 			//                       |_|
 
 			editorSpace.removeEventFilter(MouseEvent.MOUSE_MOVED, MoveEvent);
+			editorSpace.setCursor(Cursor.DEFAULT);
 			if(currentHandler != null)
 				editorSpace.removeEventHandler(MouseEvent.MOUSE_CLICKED, currentHandler);
 			if(pressHandler != null)
@@ -936,9 +937,12 @@ class Editor {
 				for (Path p : currentMachine.getPaths())
 					p.setTextFillColor(Color.DARKRED);
 
-				for (TextArea ta: currentMachine.getComments()){
+				for (int i = 0; i < currentMachine.getComments().size(); i++){
+					TextArea ta = currentMachine.getComments().get(i);
 					if(ta.getLength() == 0){
 						editorSpace.getChildren().remove(ta);
+						currentMachine.getComments().remove(ta);
+						i--;
 					}
 				}
 

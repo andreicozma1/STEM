@@ -311,6 +311,7 @@ public class SaveLoad {
                     Scanner colGrabber = new Scanner(k);
                     Color nucolor = new Color(colGrabber.nextDouble(), colGrabber.nextDouble(), colGrabber.nextDouble(), colGrabber.nextDouble());
                     newState.setColor(nucolor);
+                    colGrabber.close();
                 }
 
                 // Add state to machine
@@ -380,7 +381,7 @@ public class SaveLoad {
 
         curLine = br.readLine();
 
-        // IF VERSION 1.1
+        // IF VERSION with comments
         if(version > 1)
         {
           // Read until beginning of COMMENTS
@@ -393,15 +394,28 @@ public class SaveLoad {
             TextArea ta = new TextArea();
             ta.setFont(Font.font("Verdana", 20));
             ta.setStyle("-fx-background-color: rgba(255,255,255,0.4)");
-            //parse string till double is found. first double is x, second is y
+            //parse string till ':' is found. first double is x, second is y
             String text = "";
-            while(curLine.indexOf(":") == -1)
-            {
-              text = text + curLine + "\n";
-              curLine = br.readLine();
+            String[] line = null;
+            // check which version we are reading
+            // if the file is in the older verison, then we
+            // can just read it in with the old way, and when the user
+            // saves again, the new format will be used
+            if (version >= 1.11) {
+              while (curLine.indexOf(":") != 0) {
+                text = text + curLine.replace("\\:", ":") + "\n";
+                curLine = br.readLine();
+              }
+              line = curLine.split(":");
+              text = text.substring(0, text.length() - 1); // remove the last newline
+            } else { // read in with the old way
+              while (curLine.indexOf(":") == -1) {
+                text = text + curLine + "\n";
+                curLine = br.readLine();
+              }
+              line = curLine.split(":");
+              text = text + line[0];
             }
-            String line[] = curLine.split(":");
-            text = text + line[0];
             double x = Double.parseDouble(line[1]);
             double y = Double.parseDouble(line[2]);
 
