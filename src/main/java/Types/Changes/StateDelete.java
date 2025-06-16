@@ -20,6 +20,9 @@ public class StateDelete implements Change {
     private ArrayList<Transition> transitions;
     private boolean wasStart;
 
+    protected StateDelete() {
+    }
+
     public StateDelete(State state, Machine machine, Editor editor) {
         this.state = state;
         this.editor = editor;
@@ -111,6 +114,12 @@ public class StateDelete implements Change {
 
         if (state.isAccept()) {
             this.editor.getEditorSpace().getChildren().remove(state.getAcceptCircle());
+        }
+
+        if (state.isSelected()) {
+            this.editor.getEditorSpace().getChildren().remove(state.getSelctedCircle());
+            state.setSelected(false);
+            state.setSelctedCircle(null);
         }
 
         this.machine.deleteState(state);

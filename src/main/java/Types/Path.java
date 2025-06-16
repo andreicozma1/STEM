@@ -33,6 +33,7 @@ public class Path {
     private CubicCurve curve;
     private ArrayList<Text> aboveTexts;
     private ArrayList<Text> belowTexts;
+    private ArrayList<Transition> transitions;
 
     private static double distance = 12;
     private double theta;
@@ -46,9 +47,11 @@ public class Path {
         this.state2 = state2;
         aboveTexts = new ArrayList<>();
         belowTexts = new ArrayList<>();
+        transitions = new ArrayList<Transition>();
     }
 
     public ArrayList<Node> addTransition(Transition t) {
+        transitions.add(t);
         ArrayList<Node> ret = new ArrayList<>();
 
         State fromState = t.getFromState();
@@ -189,6 +192,8 @@ public class Path {
         State toState = t.getToState();
         String text;
 
+        transitions.remove(t);
+
         if (toState == fromState) {
             char readChar = (t.getReadChar() == ' ') ? '☐' : t.getReadChar();
             char writeChar = (t.getWriteChar() == ' ') ? '☐' : t.getWriteChar();
@@ -291,6 +296,10 @@ public class Path {
         ret.add(state2);
 
         return ret;
+    }
+
+    public ArrayList<Transition> getTransitions() {
+        return this.transitions;
     }
 
     public String toString() {

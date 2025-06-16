@@ -17,7 +17,6 @@
 public class Starter {
 
     public static void main(final String[] args) {
-        System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
         Main.main(args);
     }
 

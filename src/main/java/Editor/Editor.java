@@ -40,6 +40,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
@@ -94,7 +95,9 @@ public class Editor {
 	private final LinkedList<Change> redoStack = new LinkedList<Change>();
 	private boolean draggingMouse = false;
 	private ArrayList<State> selectedStates = new ArrayList<State>();
-	private final Rectangle selectedRectangle = new Rectangle(0, 0, 0, 0);
+	private final Rectangle selectedArea = new Rectangle(0, 0, 0, 0);
+	private final ContextMenu selectedAreaMenu = new ContextMenu();
+	private Shape choosingBox;
 	private double firstX; // for letting the user select
 	private double firstY; // an area from any corner
 	// used for rotating the start triangle
@@ -121,11 +124,18 @@ public class Editor {
 		parentPane = new BorderPane();
 
 		editorSpace = new Pane();
-		editorSpace.setPrefSize(10000, 10000);
+		// editorSpace.setPrefSize(13000, 10000);
 
 		scrollPane = new ZoomableScrollPane(editorSpace);
 		parentPane.setCenter(scrollPane);
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+
+        // make the editor space take up the entire screen when zoomed out all the way
+		int uiHeight = 175;
+		editorSpace.setPrefSize((screenBounds.getWidth() - 2) / scrollPane.getMaxScaleValue(),
+				(screenBounds.getHeight() - uiHeight) / scrollPane.getMaxScaleValue());
+    
+
 		editor = new Scene(parentPane, screenBounds.getWidth() / 2, screenBounds.getHeight() / 2);
 		System.out.println(screenBounds.getWidth() / 2);
 		System.out.println(screenBounds.getHeight() / 2);
@@ -209,51 +219,69 @@ public class Editor {
 	//  |___|_| \_|___| |_| |____/
 	//
 	private void initSelectedRectangle() {
-		selectedRectangle.setFill(new Color(0.1, 0.1, 0.1, 0.1));
-		selectedRectangle.setStroke(Color.BLACK);
-		selectedRectangle.toFront();
+		selectedArea.setFill(new Color(0.1, 0.1, 0.1, 0.1));
+		selectedArea.setStroke(Color.BLACK);
+		selectedArea.toFront();
 
-		selectedRectangle.setOnMouseEntered(event -> {
+		selectedArea.setOnMouseEntered(event -> {
 			if (!this.draggingMouse) {
-				selectedRectangle.setFill(new Color(0.1, 0.1, 0.1, 0.15));
+				selectedArea.setFill(new Color(0.1, 0.1, 0.1, 0.15));
 			}
 		});
 
-		selectedRectangle.setOnMouseExited(event -> {
+		selectedArea.setOnMouseExited(event -> {
 			if (!this.draggingMouse) {
-				selectedRectangle.setFill(new Color(0.1, 0.1, 0.1, 0.1));
+				selectedArea.setFill(new Color(0.1, 0.1, 0.1, 0.1));
 			}
 		});
 
-		selectedRectangle.setOnMousePressed(event -> {
+		MenuItem createUnit = new MenuItem("Create Unit");
+        createUnit.setOnAction(event -> {
+            System.out.println("Creating Unit");
+        });
+
+		MenuItem deleteArea = new MenuItem("Delete");
+		deleteArea.setOnAction(event -> {
+			selectedArea.setWidth(-1);
+			addChange(new StateManyDelete(selectedStates, currentMachine, this));
+		});
+		selectedAreaMenu.getItems().addAll(createUnit, deleteArea);
+		selectedArea.setOnContextMenuRequested(
+				event -> selectedAreaMenu.show(selectedArea, event.getScreenX(), event.getScreenY()));
+
+		selectedArea.setOnMousePressed(event -> {
 			scrollPane.setPannable(false);
 			draggingMouse = true;
 
-			oldStateX = selectedRectangle.getX();
-			oldStateY = selectedRectangle.getY();
+			oldStateX = selectedArea.getX();
+			oldStateY = selectedArea.getY();
 
 			prevStateX = event.getSceneX();
 			prevStateY = event.getSceneY();
 		});
 
-		selectedRectangle.setOnMouseDragged(event -> {
+		selectedArea.setOnMouseDragged(event -> {
 			// get the offsets
 			double offsetX = (event.getSceneX() - prevStateX) / scrollPane.scaleValue;
 			double offsetY = (event.getSceneY() - prevStateY) / scrollPane.scaleValue;
 
 			// if the resulting offset would push the selectedRectangle off screen, do not move along that axis
-			if (selectedRectangle.getX() + offsetX < 0
-					|| selectedRectangle.getX() + selectedRectangle.getWidth() + offsetX > editorSpace.getPrefWidth()) {
+			if (selectedArea.getX() + offsetX < 0
+					|| selectedArea.getX() + selectedArea.getWidth() + offsetX > editorSpace.getPrefWidth()) {
 				offsetX = 0;
+			} else {
+				prevStateX = event.getSceneX();
 			}
-			if (selectedRectangle.getY() + offsetY < 0
-					|| selectedRectangle.getY() + selectedRectangle.getHeight() + offsetY > editorSpace
+			if (selectedArea.getY() + offsetY < 0
+					|| selectedArea.getY() + selectedArea.getHeight() + offsetY > editorSpace
 							.getPrefHeight()) {
 				offsetY = 0;
+			} else {
+				prevStateY = event.getSceneY();
 			}
 			// move the rectangle
-			selectedRectangle.setX(selectedRectangle.getX() + offsetX);
-			selectedRectangle.setY(selectedRectangle.getY() + offsetY);
+			selectedArea.setX(selectedArea.getX() + offsetX);
+			selectedArea.setY(selectedArea.getY() + offsetY);
 			// move each state by the offsets
 			ArrayList<Transition> transitions = new ArrayList<Transition>();
 			for (State state : selectedStates) {
@@ -270,9 +298,6 @@ public class Editor {
 
 				state.getLabel().setX(newX - (state.getLabel().getLayoutBounds().getWidth() / 2));
 				state.getLabel().setY(newY + (state.getLabel().getLayoutBounds().getHeight() / 4));
-
-				prevStateX = event.getSceneX();
-				prevStateY = event.getSceneY();
 
 				// update the accept circle if needed
 				if (state.isAccept()) {
@@ -295,32 +320,33 @@ public class Editor {
 			redrawPaths(transitions);
 		});
 
-		selectedRectangle.setOnMouseReleased(event -> {
+		selectedArea.setOnMouseReleased(event -> {
 			// create the StateManyMove change
-			if (selectedRectangle.getX() != oldStateX || selectedRectangle.getY() != oldStateY) {
-				addChange(new StateManyMove(selectedRectangle, currentMachine, selectedStates,
-						selectedRectangle.getX() - oldStateX,
-						selectedRectangle.getY() - oldStateY, this));
+			if (selectedArea.getX() != oldStateX || selectedArea.getY() != oldStateY) {
+				addChange(new StateManyMove(selectedArea, currentMachine, selectedStates,
+						selectedArea.getX() - oldStateX,
+						selectedArea.getY() - oldStateY, this));
 			}
 			scrollPane.setPannable(true);
 		});
 
-		this.editorSpace.getChildren().add(selectedRectangle);
 		this.editorSpace.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 			if (!draggingMouse) {
-				if (!(event.getX() > selectedRectangle.getX()
-						&& event.getX() < selectedRectangle.getX() + selectedRectangle.getWidth()
-						&& event.getY() > selectedRectangle.getY()
-						&& event.getY() < selectedRectangle.getY() + selectedRectangle.getHeight())) {
+				if (!(event.getX() > selectedArea.getX()
+						&& event.getX() < selectedArea.getX() + selectedArea.getWidth()
+						&& event.getY() > selectedArea.getY()
+						&& event.getY() < selectedArea.getY() + selectedArea.getHeight())) {
 					unselectAllStates();
 				}
 			}
 			draggingMouse = false;
 		});
+
+		this.editorSpace.getChildren().add(selectedArea);
 	}
 
-	private void unselectAllStates() {
-		selectedRectangle.setWidth(-1);
+	public void unselectAllStates() {
+		selectedArea.setWidth(-1);
 		for (State state : selectedStates) {
 			state.setSelected(false);
 			this.editorSpace.getChildren().remove(state.getSelctedCircle());
@@ -578,6 +604,7 @@ public class Editor {
 			} else if (code == KeyCode.ESCAPE) {
 				if (toggleGroup.getSelectedToggle() == null) {
 					unselectAllStates();
+					editorSpace.getChildren().remove(choosingBox);
 				}
 				toggleGroup.selectToggle(null);
 			} else if (code == KeyCode.E) {
@@ -1023,6 +1050,7 @@ public class Editor {
 
 			editorSpace.removeEventFilter(MouseEvent.MOUSE_MOVED, MoveEvent);
 			editorSpace.setCursor(Cursor.DEFAULT);
+			editorSpace.getChildren().remove(choosingBox);
 			if (currentHandler != null)
 				editorSpace.removeEventHandler(MouseEvent.MOUSE_CLICKED, currentHandler);
 			if (pressHandler != null)
@@ -1057,16 +1085,16 @@ public class Editor {
 				// allow for holding shift and dragging to select multiple states at once for moving
 				// this will later be used for condensing a set of states into a unit
 				// drew much 'inspiration' from how comment boxes are done
-				// does not select a state unless the entire state is within the selected area
+				// does not select a state unless the middle of the state is within the selected area
 				pressHandler = event -> {
 					if (event.isShiftDown()) {
 						scrollPane.setPannable(false);
 						this.draggingMouse = true;
-						selectedRectangle.setX(event.getX());
-						selectedRectangle.setY(event.getY());
-						selectedRectangle.setWidth(0);
-						selectedRectangle.setHeight(0);
-						selectedRectangle.toFront();
+						selectedArea.setX(event.getX());
+						selectedArea.setY(event.getY());
+						selectedArea.setWidth(0);
+						selectedArea.setHeight(0);
+						selectedArea.toFront();
 						this.firstX = event.getX();
 						this.firstY = event.getY();
 					}
@@ -1074,16 +1102,17 @@ public class Editor {
 				dragHandler = event -> {
 					if (event.isShiftDown()) {
 						if (event.getX() < this.firstX) {
-							selectedRectangle.setX(event.getX());
-							selectedRectangle.setWidth(this.firstX - event.getX());
+							selectedArea.setX(Math.max(0, event.getX()));
+							selectedArea.setWidth(this.firstX - Math.max(0, event.getX()));
 						} else {
-							selectedRectangle.setWidth(event.getX() - this.firstX);
+							selectedArea.setWidth(
+									event.getX() - this.firstX);
 						}
 						if (event.getY() < this.firstY) {
-							selectedRectangle.setY(event.getY());
-							selectedRectangle.setHeight(this.firstY - event.getY());
+							selectedArea.setY(Math.max(0, event.getY()));
+							selectedArea.setHeight(this.firstY - Math.max(0, event.getY()));
 						} else {
-							selectedRectangle.setHeight(event.getY() - this.firstY);
+							selectedArea.setHeight(event.getY() - this.firstY);
 						}
 
 						Circle selectedCircle = null;
@@ -1092,12 +1121,12 @@ public class Editor {
 						for (State state : currentMachine.getStates()) {
 							if (this.selectedStates.contains(state)) {
 								// check if this state was now unselected
-								if (!(state.getX() - circleRadius > selectedRectangle.getX()
-										&& state.getX() + circleRadius < selectedRectangle.getX()
-												+ selectedRectangle.getWidth()
-										&& state.getY() - circleRadius > selectedRectangle.getY()
-										&& state.getY() + circleRadius < selectedRectangle.getY()
-												+ selectedRectangle.getHeight())) {
+								if (!(state.getX() > selectedArea.getX()
+										&& state.getX() < selectedArea.getX()
+												+ selectedArea.getWidth()
+										&& state.getY() > selectedArea.getY()
+										&& state.getY() < selectedArea.getY()
+												+ selectedArea.getHeight())) {
 									selectedStates.remove(state);
 									state.setSelected(false);
 									this.editorSpace.getChildren().remove(state.getSelctedCircle());
@@ -1107,12 +1136,12 @@ public class Editor {
 							}
 
 							// check if center of state is within the rectangle
-							if (state.getX() - circleRadius > selectedRectangle.getX()
-									&& state.getX() + circleRadius < selectedRectangle.getX()
-											+ selectedRectangle.getWidth()
-									&& state.getY() - circleRadius > selectedRectangle.getY()
-									&& state.getY() + circleRadius < selectedRectangle.getY()
-											+ selectedRectangle.getHeight()) {
+							if (state.getX() > selectedArea.getX()
+									&& state.getX() < selectedArea.getX()
+											+ selectedArea.getWidth()
+									&& state.getY() > selectedArea.getY()
+									&& state.getY() < selectedArea.getY()
+											+ selectedArea.getHeight()) {
 								selectedStates.add(state);
 								state.setSelected(true);
 								selectedCircle = new Circle(state.getX(), state.getY(), circleRadius * 1.5,
@@ -1127,6 +1156,21 @@ public class Editor {
 				};
 				releaseHandler = event -> {
 					scrollPane.setPannable(true);
+					selectedArea.toFront();
+
+					// enable/disable the delete option
+					if (selectedStates.size() > 0) {
+						selectedAreaMenu.getItems().get(1).setDisable(false);
+					} else {
+						selectedAreaMenu.getItems().get(1).setDisable(true);
+					}
+
+					// enable/disable the createUnit option
+					if (selectedStates.size() < 2) {
+						selectedAreaMenu.getItems().get(0).setDisable(true);
+					} else {
+						selectedAreaMenu.getItems().get(0).setDisable(false);
+					}
 				};
 
 				editorSpace.addEventHandler(MouseEvent.MOUSE_PRESSED, pressHandler);
@@ -1232,7 +1276,8 @@ public class Editor {
 				currentHandler = event -> {
 					if (event.getButton() == MouseButton.PRIMARY
 							&& (event.getTarget() instanceof Circle
-									|| event.getTarget() instanceof Rectangle)) {
+									|| event.getTarget() instanceof Rectangle
+									|| event.getTarget() instanceof Text)) {
 
 						Object Target = ((Node) event.getTarget()).getUserData();
 
@@ -1440,6 +1485,9 @@ public class Editor {
 				editorSpace.addEventHandler(MouseEvent.MOUSE_RELEASED, releaseHandler);
 			}
 		});
+
+		toggleGroup.selectToggle(toggleGroup.getToggles().get(0));
+		toggleGroup.selectToggle(null);
 	}
 
 	/* drawStartTriangle: draws the triangle indicating the start state
@@ -2168,7 +2216,6 @@ public class Editor {
 						}
 					}
 					redrawPaths(tl);
-
 				}
 			} else {
 				e.consume();
@@ -2229,10 +2276,10 @@ public class Editor {
 	public void redrawPath(Transition t) {
 		if (t.getPath() != null) {
 			currentMachine.getPaths().remove(t.getPath());
-			System.out.println("Delete" + t.getPath().toString());
+			// System.out.println("Delete" + t.getPath());
 			editorSpace.getChildren().removeAll(t.getPath().getAllNodes());
 
-			t.setPath(null);
+			t.getPath().getTransitions().forEach(transition -> transition.setPath(null));
 		}
 		Path path = null;
 		for (Path p : currentMachine.getPaths()) {
@@ -2256,42 +2303,15 @@ public class Editor {
 	}
 
 	public void redrawPaths(ArrayList<Transition> tl) {
-		for (Transition t : tl) {
-			redrawPath(t);
+		for (Transition transition : tl) {
+			redrawPath(transition);
 		}
 	}
 
 	private void redrawAllPaths() {
-		for (Path p : currentMachine.getPaths())
-			editorSpace.getChildren().removeAll(p.getAllNodes());
-
-		currentMachine.getPaths().clear();
-
 		for (Transition t : currentMachine.getTransitions()) {
-			Path path = null;
-			for (Path p : currentMachine.getPaths()) {
-				if (p.compareTo(t.getFromState(), t.getToState())) {
-					path = p;
-					System.out.println("Found Path");
-					break;
-				}
-			}
-
-			if (path == null) {
-				path = new Path(t.getFromState(), t.getToState());
-				System.out.println("New Path");
-				currentMachine.getPaths().add(path);
-			}
-
-			t.setPath(path);
-			ArrayList<Node> nodes = path.addTransition(t);
-			editorSpace.getChildren().addAll(nodes);
-
-			for (Node n : nodes)
-				if (n instanceof Line || n instanceof CubicCurve)
-					n.toBack();
+			redrawPath(t);
 		}
-
 	}
 
 	private void redrawAllComments() {
@@ -2397,6 +2417,18 @@ public class Editor {
 		return this.deletedValues;
 	}
 
+	public Rectangle getSelectedArea() {
+		return this.selectedArea;
+	}
+
+	public ArrayList<State> getSelectedStates() {
+		return this.selectedStates;
+	}
+
+	public Shape getChoosingBox() {
+		return this.choosingBox;
+	}
+
 	//     ____       _   _                
 	//   / ___|  ___| |_| |_ ___ _ __ ___ 
 	//  \___ \ / _ \ __| __/ _ \ '__/ __|
@@ -2409,6 +2441,10 @@ public class Editor {
 
 	void setCircleRadius(int size) {
 		circleRadius = size;
+	}
+
+	public void setChoosingBox(Shape value) {
+		choosingBox = value;
 	}
 
 }

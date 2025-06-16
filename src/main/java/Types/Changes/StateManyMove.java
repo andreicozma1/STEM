@@ -19,9 +19,6 @@ public class StateManyMove extends StateMove {
 
     public StateManyMove(Rectangle selectedRectangle, Machine machine, ArrayList<State> states, double offsetX,
             double offsetY, Editor editor) {
-        // I don't actually want a StateMove to exist here, so I just call an emtpy constructor
-        // I just do this so that I can just check for a StateMove change instead of both that and this
-        super();
         this.moves = new ArrayList<StateMove>();
         for (State state : states) {
             this.moves.add(new StateMove(machine, state, state.getX() - offsetX, state.getY() - offsetY, editor));

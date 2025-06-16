@@ -22,6 +22,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 
 public class ZoomableScrollPane extends ScrollPane {
     public double scaleValue = 0.7;
@@ -77,8 +78,22 @@ public class ZoomableScrollPane extends ScrollPane {
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
 
         // check if the scaleValue is within the min and max bounds
-        if (scaleValue * zoomFactor < maxScaleValue || scaleValue * zoomFactor > minScaleValue)
-            return;
+        // if not, set zoomFactor such that scaleValue will be equal to the bound that it would otherwise exceed
+        if (scaleValue * zoomFactor < maxScaleValue) {
+            zoomFactor = maxScaleValue / scaleValue;
+            // disable scrolling if zoomed all the way out
+            if (this.getWidth() == Screen.getPrimary().getBounds().getWidth()) {
+                this.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                this.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            }
+        } else {
+            // enable scrolling if not zoomed all the way out
+            this.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+            this.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        }
+        if (scaleValue * zoomFactor > minScaleValue) {
+            zoomFactor = minScaleValue / scaleValue;
+        }
 
         scaleValue = scaleValue * zoomFactor;
         updateScale();
@@ -96,5 +111,9 @@ public class ZoomableScrollPane extends ScrollPane {
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
         this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+    }
+
+    public double getMaxScaleValue() {
+        return this.maxScaleValue;
     }
 }

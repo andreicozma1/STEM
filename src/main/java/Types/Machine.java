@@ -123,8 +123,7 @@ public class Machine {
 	public String toString() {
 		// System.out.println("I'm in toString");
 		StringBuilder ret = new StringBuilder();
-		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.11)); // Bumped to v 1.11 for fixng :
-																						// in comments
+		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.11)); // Bumped to v 1.11 for fixng : in comments
 		ret.append("// State Format: name x y start accept\n");
 		ret.append("STATES:\n");
 

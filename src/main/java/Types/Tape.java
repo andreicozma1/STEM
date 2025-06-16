@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Tape{
+public class Tape {
     private GridPane tapeDisplay;
     private GridPane headDisplay;
     private final Lock l = new ReentrantLock();
@@ -48,7 +48,7 @@ public class Tape{
     @Override
     public String toString() {
         String s = new String();
-        for(char c : tape) {
+        for (char c : tape) {
             s += c;
         }
         return s;
@@ -58,6 +58,7 @@ public class Tape{
         System.out.println("in increment");
         tapeDisplayOffset++;
     }
+
     public void decrementDisplayOffset() {
         System.out.println("In decrement");
         tapeDisplayOffset--;
@@ -69,114 +70,110 @@ public class Tape{
 
     /*  refreshTapeDisplay_noCenter - works just like refreshTapeDisplay but will not center the tape
     */
-    public void refreshTapeDisplay_noCenter(){
-                int index = tapeDisplayOffset;
-                Character[] tapeChars = getTapeAsArray();
-                int size = tapeChars.length;
+    public void refreshTapeDisplay_noCenter() {
+        int index = tapeDisplayOffset;
+        Character[] tapeChars = getTapeAsArray();
+        int size = tapeChars.length;
 
-                System.out.println("tapeHead: " + tapeHead + "  tapeWidth: " + tapeWidth.get());
-                System.out.println("centerWidth: " + centerWidth + "   tapeIndeX: " + tapeIndex);
-                System.out.println("tapeDisplayoffset: " + tapeDisplayOffset);
-                
+        System.out.println("tapeHead: " + tapeHead + "  tapeWidth: " + tapeWidth.get());
+        System.out.println("centerWidth: " + centerWidth + "   tapeIndeX: " + tapeIndex);
+        System.out.println("tapeDisplayoffset: " + tapeDisplayOffset);
 
+        for (Node n : tapeDisplay.getChildren()) {
+            if (n instanceof StackPane) {
+                for (Node b : ((StackPane) n).getChildren()) {
 
-
-                for(Node n : tapeDisplay.getChildren()) {
-                    if (n instanceof StackPane) {
-                        for(Node b : ((StackPane) n).getChildren()) {
-                            
-                            if (b instanceof Label) {
-                                if(index < size && index >= 0) {
-                                    ((Label) b).setText(tapeChars[index].toString());
-                                    ((Label) b).setFont(Font.font(20));
-                                }
-                                else {
-                                    ((Label) b).setText(" ");
-                                }
-                            }
-                            
-                            if (b instanceof Rectangle) {
-                                if (index == tapeHead) ((Rectangle) b).setFill(Paint.valueOf("#CAE1F9"));
-                                else ((Rectangle) b).setFill(Color.TRANSPARENT);
-                            }
-                        }
-                        index++;
-                    }
-                }
-                
-                
-                index = tapeDisplayOffset;
-                for(Node n: headDisplay.getChildren()) {
-                    if (n instanceof StackPane) {
-                        for (Node b : ((StackPane) n).getChildren()) {
-                            if (b instanceof Label) {
-                                if (index == getTapeHead()) {
-                                    ((Label) b).setText("↓");
-                                    ((Label) b).setFont(Font.font(20));
-                                } else {
-                                    ((Label) b).setText(" ");
-                                }
-                            }
+                    if (b instanceof Label) {
+                        if (index < size && index >= 0) {
+                            ((Label) b).setText(tapeChars[index].toString());
+                            ((Label) b).setFont(Font.font(20));
+                        } else {
+                            ((Label) b).setText(" ");
                         }
                     }
-                    index++;
+
+                    if (b instanceof Rectangle) {
+                        if (index == tapeHead)
+                            ((Rectangle) b).setFill(Paint.valueOf("#CAE1F9"));
+                        else
+                            ((Rectangle) b).setFill(Color.TRANSPARENT);
+                    }
                 }
-                
+                index++;
+            }
+        }
+
+        index = tapeDisplayOffset;
+        for (Node n : headDisplay.getChildren()) {
+            if (n instanceof StackPane) {
+                for (Node b : ((StackPane) n).getChildren()) {
+                    if (b instanceof Label) {
+                        if (index == getTapeHead()) {
+                            ((Label) b).setText("↓");
+                            ((Label) b).setFont(Font.font(20));
+                        } else {
+                            ((Label) b).setText(" ");
+                        }
+                    }
+                }
+            }
+            index++;
+        }
     }
 
     public void refreshTapeDisplay() {
-                // center the tape if it reaches the edge
-                int headIndex;
-                headIndex = tapeHead % (tapeWidth.get() / 2);
-                if (headIndex >= (tapeWidth.get()/2)-1){
-                    centerTapeDisplay();
-                }
+        // center the tape if it reaches the edge
+        int headIndex;
+        headIndex = tapeHead % (tapeWidth.get() / 2);
+        if (headIndex >= (tapeWidth.get() / 2) - 1) {
+            centerTapeDisplay();
+        }
 
-                int index = tapeDisplayOffset;
-                Character[] tapeChars = getTapeAsArray();
-                int size = tapeChars.length;
+        int index = tapeDisplayOffset;
+        Character[] tapeChars = getTapeAsArray();
+        int size = tapeChars.length;
 
-                for(Node n : tapeDisplay.getChildren()) {
-                    if (n instanceof StackPane) {
-                        for(Node b : ((StackPane) n).getChildren()) {
-                            
-                            if (b instanceof Label) {
-                                if(index < size && index >= 0) {
-                                    ((Label) b).setText(tapeChars[index].toString());
-                                    ((Label) b).setFont(Font.font(20));
-                                }
-                                else {
-                                    ((Label) b).setText(" ");
-                                }
-                            }
-                            
-                            if (b instanceof Rectangle) {
-                                if (index == tapeHead) ((Rectangle) b).setFill(Paint.valueOf("#CAE1F9"));
-                                else ((Rectangle) b).setFill(Color.TRANSPARENT);
-                            }
-                        }
-                        index++;
-                    }
-                }
-                
-                
-                index = tapeDisplayOffset;
-                for(Node n: headDisplay.getChildren()) {
-                    if (n instanceof StackPane) {
-                        for (Node b : ((StackPane) n).getChildren()) {
-                            if (b instanceof Label) {
-                                if (index == getTapeHead()) {
-                                    ((Label) b).setText("↓");
-                                    ((Label) b).setFont(Font.font(20));
-                                } else {
-                                    ((Label) b).setText(" ");
-                                }
-                            }
+        for (Node n : tapeDisplay.getChildren()) {
+            if (n instanceof StackPane) {
+                for (Node b : ((StackPane) n).getChildren()) {
+
+                    if (b instanceof Label) {
+                        if (index < size && index >= 0) {
+                            ((Label) b).setText(tapeChars[index].toString());
+                            ((Label) b).setFont(Font.font(20));
+                        } else {
+                            ((Label) b).setText(" ");
                         }
                     }
-                    index++;
+
+                    if (b instanceof Rectangle) {
+                        if (index == tapeHead)
+                            ((Rectangle) b).setFill(Paint.valueOf("#CAE1F9"));
+                        else
+                            ((Rectangle) b).setFill(Color.TRANSPARENT);
+                    }
                 }
-                
+                index++;
+            }
+        }
+
+        index = tapeDisplayOffset;
+        for (Node n : headDisplay.getChildren()) {
+            if (n instanceof StackPane) {
+                for (Node b : ((StackPane) n).getChildren()) {
+                    if (b instanceof Label) {
+                        if (index == getTapeHead()) {
+                            ((Label) b).setText("↓");
+                            ((Label) b).setFont(Font.font(20));
+                        } else {
+                            ((Label) b).setText(" ");
+                        }
+                    }
+                }
+            }
+            index++;
+        }
+
     }
 
     public void setDisplay(GridPane tape, GridPane head, BorderPane tapeArea) {
@@ -187,8 +184,7 @@ public class Tape{
         Character[] initTapeChars;
         try {
             initTapeChars = getTapeAsArray();
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             initTapeChars = new Character[] {};
         }
         int initIndex = tapeDisplayOffset;
@@ -201,7 +197,7 @@ public class Tape{
         headDisplay.setAlignment(Pos.CENTER);
 
         // FIXME Add a right click listener to choose the head by right clicking the rectangle desired?
-        for (Integer i = 0; i < ((int)tapeArea.getWidth() - 130) / 31; i++) {
+        for (Integer i = 0; i < ((int) tapeArea.getWidth() - 130) / 31; i++) {
             StackPane box = new StackPane();
             StackPane headBox = new StackPane();
             Rectangle tapeBox = new Rectangle(30, 30, Color.TRANSPARENT);
@@ -214,19 +210,19 @@ public class Tape{
                 headTapeChar = new Label("↓");
                 headTapeChar.setFont(Font.font(20));
                 //tapeBox.setFill(Paint.valueOf("#CAE1F9"));
-            }
-            else {
+            } else {
                 headTapeChar = new Label(" ");
             }
             if (initIndex < initSize && initIndex >= 0) {
                 tapeChar = new Label(initTapeChars[initIndex].toString());
                 tapeChar.setFont(Font.font(20));
-            }
-            else {
+            } else {
                 tapeChar = new Label(" ");
             }
-            if (initIndex == tapeHead) tapeBox.setFill(Paint.valueOf("#CAE1F9"));
-            else tapeBox.setFill(Color.TRANSPARENT);
+            if (initIndex == tapeHead)
+                tapeBox.setFill(Paint.valueOf("#CAE1F9"));
+            else
+                tapeBox.setFill(Color.TRANSPARENT);
 
             tapeChar.setId(Integer.toString(i + tapeDisplayOffset));
 
@@ -256,17 +252,14 @@ public class Tape{
         tapeArea.setTop(headDisplay);
         tapeArea.setCenter(tapeDisplay);
 
-
-
         tapeWidth = Bindings.createIntegerBinding(
-                () -> ((int)(tapeArea.getWidth() - 130)) / 31, tapeArea.widthProperty());
+                () -> ((int) (tapeArea.getWidth() - 130)) / 31, tapeArea.widthProperty());
 
         tapeWidth.addListener((obs, oldCount, newCount) -> {
             Character[] tapeChars;
             try {
                 tapeChars = getTapeAsArray();
-            }
-            catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 tapeChars = new Character[] {};
             }
             int index = tapeDisplayOffset;
@@ -286,26 +279,25 @@ public class Tape{
                 Label tapeChar;
                 Label headTapeChar;
 
-
                 if (index == tapeHead) {
                     headTapeChar = new Label("↓");
                     headTapeChar.setFont(Font.font(20));
 
-                }
-                else {
+                } else {
                     headTapeChar = new Label(" ");
                 }
                 if (index < size && index >= 0) {
                     tapeChar = new Label(tapeChars[index].toString());
                     tapeChar.setFont(Font.font(20));
 
-                }
-                else {
+                } else {
                     tapeChar = new Label(" ");
 
                 }
-                if (index == tapeHead) tapeBox.setFill(Paint.valueOf("#CAE1F9"));
-                else tapeBox.setFill(Color.TRANSPARENT);
+                if (index == tapeHead)
+                    tapeBox.setFill(Paint.valueOf("#CAE1F9"));
+                else
+                    tapeBox.setFill(Color.TRANSPARENT);
 
                 tapeChar.setId(Integer.toString(i));
 
@@ -338,68 +330,69 @@ public class Tape{
         });
     }
 
-
     public boolean setTapeHead(int tapeHead) {
-        if(tapeHead > this.tape.size()-1 || tapeHead < 0)
+        if (tapeHead > this.tape.size() - 1 || tapeHead < 0)
             return false;
 
         this.tapeHead = tapeHead;
         return true;
     }
 
-    public int getTapeHead(){
+    public int getTapeHead() {
         return this.tapeHead;
     }
 
     // Initialize Tape to t and set Tapehead to the start
-    public void initTape(ArrayList<Character> t){
+    public void initTape(ArrayList<Character> t) {
         this.tape.clear();
         this.tape.addAll(t);
         this.tapeHead = 0;
         this.tapeDisplayOffset = 0;
     }
 
-    public int getSize(){ return tape.size(); }
+    public int getSize() {
+        return tape.size();
+    }
 
-    public void appendTape(Character c){
+    public void appendTape(Character c) {
         tape.addLast(c);
     }
 
-    public void prependTape(Character c){
+    public void prependTape(Character c) {
         tape.addFirst(c);
     }
 
-    public void setTape(Character c) throws Exception{
+    public void setTape(Character c) throws Exception {
         tape.set(tapeHead, c);
     }
 
-    public Character currentTapeVal(){
-        if(tape.isEmpty())
+    public Character currentTapeVal() {
+        if (tape.isEmpty())
             appendTape(' ');
         return tape.get(tapeHead);
     }
 
-    public Character left(){
+    public Character left() {
         tapeHead--;
 
-        if(tapeHead == -1){
+        if (tapeHead == -1) {
             prependTape(' ');
             tapeHead = 0;
         }
         return tape.get(tapeHead);
     }
 
-    public Character right(){
+    public Character right() {
         tapeHead++;
 
-        if(tapeHead > tape.size()-1){
+        if (tapeHead > tape.size() - 1) {
             appendTape(' ');
-            tapeHead = tape.size()-1;
+            tapeHead = tape.size() - 1;
         }
         return tape.get(tapeHead);
     }
 
-    public Character[] getTapeAsArray(){
+    public Character[] getTapeAsArray() {
         return tape.toArray(new Character[0]);
     }
 }

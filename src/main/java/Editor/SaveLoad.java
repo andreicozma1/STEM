@@ -333,6 +333,8 @@ public class SaveLoad {
                 // Setup state references by ID for transitions
                 totalStates.put(stateMatcher.group(1), newState);
 
+            } else {
+                System.out.println(curLine);
             }
         }
         // Read until beginning of transitions
@@ -425,7 +427,7 @@ public class SaveLoad {
                         curLine = br.readLine();
                     }
                     line = curLine.split(":");
-                    text = text.substring(0, text.length() - 2); // remove the last newline
+                    text = text.substring(0, text.length() - 1); // remove the last newline
                 } else { // read in with the old way
                     while (curLine.indexOf(":") == -1) {
                         text = text + curLine + "\n";
