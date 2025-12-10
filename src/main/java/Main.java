@@ -60,8 +60,8 @@ public class Main extends Application {
 		menuLayout.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, bSize)));
 
-		window.setWidth(1200);
-		window.setHeight(900);
+		window.setWidth(800);
+		window.setHeight(600);
 
 		window.setResizable(false);
 
