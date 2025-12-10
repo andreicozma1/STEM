@@ -94,6 +94,7 @@ public class Editor {
 	private final LinkedList<Change> undoStack = new LinkedList<Change>();
 	private final LinkedList<Change> redoStack = new LinkedList<Change>();
 	private boolean draggingMouse = false;
+	private boolean toggleSelected = false;
 	private ArrayList<State> selectedStates = new ArrayList<State>();
 	private final Rectangle selectedArea = new Rectangle(0, 0, 0, 0);
 	private final ContextMenu selectedAreaMenu = new ContextMenu();
@@ -130,11 +131,10 @@ public class Editor {
 		parentPane.setCenter(scrollPane);
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 
-        // make the editor space take up the entire screen when zoomed out all the way
+		// make the editor space take up the entire screen when zoomed out all the way
 		int uiHeight = 175;
 		editorSpace.setPrefSize((screenBounds.getWidth() - 2) / scrollPane.getMaxScaleValue(),
 				(screenBounds.getHeight() - uiHeight) / scrollPane.getMaxScaleValue());
-    
 
 		editor = new Scene(parentPane, screenBounds.getWidth() / 2, screenBounds.getHeight() / 2);
 		System.out.println(screenBounds.getWidth() / 2);
@@ -235,17 +235,12 @@ public class Editor {
 			}
 		});
 
-		MenuItem createUnit = new MenuItem("Create Unit");
-        createUnit.setOnAction(event -> {
-            System.out.println("Creating Unit");
-        });
-
 		MenuItem deleteArea = new MenuItem("Delete");
 		deleteArea.setOnAction(event -> {
 			selectedArea.setWidth(-1);
 			addChange(new StateManyDelete(selectedStates, currentMachine, this));
 		});
-		selectedAreaMenu.getItems().addAll(createUnit, deleteArea);
+		selectedAreaMenu.getItems().addAll(deleteArea);
 		selectedArea.setOnContextMenuRequested(
 				event -> selectedAreaMenu.show(selectedArea, event.getScreenX(), event.getScreenY()));
 
@@ -562,8 +557,9 @@ public class Editor {
 
 		Button redoButton = new Button("Redo");
 		redoButton.setOnAction(e -> {
-			if (redoStack.size() > 0)
+			if (redoStack.size() > 0) {
 				undoStack.push(redoStack.pop().apply());
+			}
 		});
 
 		Button helpButton = new Button("Help");
@@ -657,10 +653,10 @@ public class Editor {
 			undoStack.removeLast();
 		}
 		// print out change list
-		System.out.println("");
-		for (Change c : undoStack) {
-			System.out.println(c);
-		}
+		// System.out.println("");
+		// for (Change c : undoStack) {
+		// 	System.out.println(c);
+		// }
 	}
 
 	private void initContextMenu() {
@@ -1082,10 +1078,7 @@ public class Editor {
 			if (new_toggle == null) {
 				System.out.println("No toggle selected");
 
-				// allow for holding shift and dragging to select multiple states at once for moving
-				// this will later be used for condensing a set of states into a unit
-				// drew much 'inspiration' from how comment boxes are done
-				// does not select a state unless the middle of the state is within the selected area
+				// allow for holding shift and dragging to select multiple states at once
 				pressHandler = event -> {
 					if (event.isShiftDown()) {
 						scrollPane.setPannable(false);
@@ -1160,16 +1153,9 @@ public class Editor {
 
 					// enable/disable the delete option
 					if (selectedStates.size() > 0) {
-						selectedAreaMenu.getItems().get(1).setDisable(false);
-					} else {
-						selectedAreaMenu.getItems().get(1).setDisable(true);
-					}
-
-					// enable/disable the createUnit option
-					if (selectedStates.size() < 2) {
-						selectedAreaMenu.getItems().get(0).setDisable(true);
-					} else {
 						selectedAreaMenu.getItems().get(0).setDisable(false);
+					} else {
+						selectedAreaMenu.getItems().get(0).setDisable(true);
 					}
 				};
 

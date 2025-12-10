@@ -83,7 +83,7 @@
                     </TitledPane>
                     <TitledPane text="Hotkeys">
                         <VBox alignment="CENTER">
-                            <Label minHeight="-Infinity" text="${'Various hotkeys can be used. Each one is equivalent to clicking the specified button in the toolbar:\n\n1 - Add State\n2 - Add Transition\n3 - Delete\n4 - Edit Transition\n5 - Add Comment Box\nE - Edit Tape\nR - Reset Tape\nX - Run Machine\nCTRL+Z - Undo\nCTRL+Y - Redo\nCTRL+SHIFT+Z - Redo'}" wrapText="true" />
+                            <Label minHeight="-Infinity" text="${'Various hotkeys can be used. Each one is equivalent to clicking the specified button in the toolbar:\n\n1 - Add State\n2 - Add Transition\n3 - Delete\n4 - Edit Transition\n5 - Add Comment Box\nE - Edit Tape\nR - Reset Tape\nX - Run Machine\nCTRL+Z - Undo\nCTRL+Y - Redo\nCTRL+SHIFT+Z - Redo\nSHIFT+drag - Select multiple states by holding shift and dragging'}" wrapText="true" />
                         </VBox>
                     </TitledPane>
                 </panes>

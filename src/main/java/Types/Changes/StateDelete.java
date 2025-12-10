@@ -124,6 +124,7 @@ public class StateDelete implements Change {
 
         this.machine.deleteState(state);
         this.editor.getDeletedValues().add(Integer.parseInt(state.getName()));
+		this.editor.getSelectedStates().remove(state);
         return this;
     }
 
