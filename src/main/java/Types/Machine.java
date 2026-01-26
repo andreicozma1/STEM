@@ -123,7 +123,7 @@ public class Machine {
 	public String toString() {
 		// System.out.println("I'm in toString");
 		StringBuilder ret = new StringBuilder();
-		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.11)); // Bumped to v 1.11 for fixng : in comments
+		ret.append(String.format("// Save File for STEM\n// Version %.2f\n\n", 1.11)); //Bumped to v 1.11 for adding comments to SaveLoad
 		ret.append("// State Format: name x y start accept\n");
 		ret.append("STATES:\n");
 
@@ -160,9 +160,8 @@ public class Machine {
 
 		ret.append("// Comment format: text:x:y\n");
 		ret.append("COMMENTS:\n");
-		for (TextArea ta : comments) {
-			ret.append(
-					String.format("%s\n:%f:%f\n", ta.getText().replace(":", "\\:"), ta.getLayoutX(), ta.getLayoutY()));
+		for (TextArea ta: comments){
+			ret.append(String.format("%s\n:%f:%f\n", ta.getText().replace(":", "\\:"), ta.getLayoutX(), ta.getLayoutY()));
 		}
 		ret.append("// Comments End\n");
 

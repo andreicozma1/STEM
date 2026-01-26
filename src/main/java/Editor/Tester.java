@@ -127,7 +127,7 @@ public class Tester {
 
         // Main body
 
-        finalState = currentState;
+        finalState = currentState; 
         Transition next = this.nextTransition(currentState, m.getTape());
         while (next != null && cont != false) {
 

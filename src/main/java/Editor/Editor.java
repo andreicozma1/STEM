@@ -125,16 +125,11 @@ public class Editor {
 		parentPane = new BorderPane();
 
 		editorSpace = new Pane();
-		// editorSpace.setPrefSize(13000, 10000);
+		editorSpace.setPrefSize(10000, 10000);
 
 		scrollPane = new ZoomableScrollPane(editorSpace);
 		parentPane.setCenter(scrollPane);
 		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-
-		// make the editor space take up the entire screen when zoomed out all the way
-		int uiHeight = 175;
-		editorSpace.setPrefSize((screenBounds.getWidth() - 2) / scrollPane.getMaxScaleValue(),
-				(screenBounds.getHeight() - uiHeight) / scrollPane.getMaxScaleValue());
 
 		editor = new Scene(parentPane, screenBounds.getWidth() / 2, screenBounds.getHeight() / 2);
 		System.out.println(screenBounds.getWidth() / 2);
@@ -1046,8 +1041,7 @@ public class Editor {
 
 			editorSpace.removeEventFilter(MouseEvent.MOUSE_MOVED, MoveEvent);
 			editorSpace.setCursor(Cursor.DEFAULT);
-			editorSpace.getChildren().remove(choosingBox);
-			if (currentHandler != null)
+			if(currentHandler != null)
 				editorSpace.removeEventHandler(MouseEvent.MOUSE_CLICKED, currentHandler);
 			if (pressHandler != null)
 				editorSpace.removeEventHandler(MouseEvent.MOUSE_PRESSED, pressHandler);
@@ -1251,10 +1245,11 @@ public class Editor {
 				for (Path p : currentMachine.getPaths())
 					p.setTextFillColor(Color.DARKRED);
 
-				for (int i = 0; i < currentMachine.getComments().size(); i++) {
+				for (int i = 0; i < currentMachine.getComments().size(); i++){
 					TextArea ta = currentMachine.getComments().get(i);
-					if (ta.getLength() == 0) {
-						addChange(new CommentDelete(ta, currentMachine, this));
+					if(ta.getLength() == 0){
+						editorSpace.getChildren().remove(ta);
+						currentMachine.getComments().remove(ta);
 						i--;
 					}
 				}
