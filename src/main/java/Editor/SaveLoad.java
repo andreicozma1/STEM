@@ -475,7 +475,12 @@ public class SaveLoad {
         } else {
             // TODO: Update old file format to new one
             System.out.println("Your save file is outdated!");
-            System.exit(1);
+            Alert fileError = new Alert(Alert.AlertType.ERROR);
+            fileError.setResizable(true);
+            fileError.setTitle("File Error");
+            fileError.setHeaderText("Your save file is outdated! It cannot be loaded with this version of the emulator.");
+            fileError.initModality(Modality.APPLICATION_MODAL);
+            fileError.showAndWait();
         }
         curLine = br.readLine();
         // load in the start triangle rotation
