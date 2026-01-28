@@ -27,6 +27,6 @@ public class BreakpointDelete implements Change {
 
     @Override
     public String toString() {
-        return "Breakpoint Addition";
+        return "Breakpoint Delete";
     }
 }

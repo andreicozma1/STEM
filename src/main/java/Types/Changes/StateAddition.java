@@ -50,34 +50,6 @@ public class StateAddition implements Change {
 
     @Override
     public Change apply() {
-		// ????? what is this
-		// EventHandler<MouseEvent> controlClickHandler = event -> {
-		// 	System.out.println("entering");
-		// 	if(!this.editor.isToggleSelected() && event.isControlDown()){
-		// 		System.out.println("entering again");
-		// 		if(state.isSelected()){
-		// 			System.out.println("unselecting state");
-		// 			this.editor.getSelectedStates().remove(state);
-		// 			state.setSelected(false);
-		// 			this.editor.getEditorSpace().getChildren().remove(state.getSelctedCircle());
-		// 			state.setSelctedCircle(null);
-		// 		}
-		// 		else{
-		// 			System.out.println("selecting state");
-		// 			this.editor.getSelectedStates().add(state);
-		// 			state.setSelected(true);
-		// 			Circle selectedCircle = new Circle(state.getX(), state.getY(), this.editor.getCircleRadius() * 1.5,
-		// 					Color.TRANSPARENT);
-		// 			selectedCircle.setStrokeWidth(2);
-		// 			selectedCircle.setStroke(Color.BLUE);
-		// 			state.setSelctedCircle(selectedCircle);
-		// 			this.editor.getEditorSpace().getChildren().add(selectedCircle);
-		// 		}
-		// 	}
-		// };
-
-		// state.getCircle().addEventHandler(MouseEvent.MOUSE_CLICKED, controlClickHandler);
-		// state.getLabel().addEventHandler(MouseEvent.MOUSE_CLICKED, controlClickHandler);
         machine.addState(state);
         editor.getEditorSpace().getChildren().addAll(state.getCircle(), state.getLabel());
         // add the transitions

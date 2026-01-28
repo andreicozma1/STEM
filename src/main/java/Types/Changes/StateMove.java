@@ -32,7 +32,7 @@ public class StateMove implements Change {
 
     @Override
     public Change undo() {
-        // move the state to newX
+        // move the state back to oldX, oldY
         state.getCircle().setCenterX(oldX);
         state.getCircle().setCenterY(oldY);
         state.getLabel().setX(oldX - (state.getLabel().getLayoutBounds().getWidth() / 2));
@@ -52,8 +52,8 @@ public class StateMove implements Change {
         }
 
         if (state.isSelected()) {
-            this.state.getSelctedCircle().setCenterX(oldX);
-            this.state.getSelctedCircle().setCenterY(oldY);
+            this.state.getSelectedCircle().setCenterX(oldX);
+            this.state.getSelectedCircle().setCenterY(oldY);
         }
 
         // update all transitions that were affected
@@ -70,7 +70,7 @@ public class StateMove implements Change {
 
     @Override
     public Change apply() {
-        // move the state to newX
+        // move the state to newX, newY
         state.getCircle().setCenterX(newX);
         state.getCircle().setCenterY(newY);
         state.getLabel().setX(newX - (state.getLabel().getLayoutBounds().getWidth() / 2));
@@ -90,8 +90,8 @@ public class StateMove implements Change {
         }
 
         if (state.isSelected()) {
-            this.state.getSelctedCircle().setCenterX(newX);
-            this.state.getSelctedCircle().setCenterY(newY);
+            this.state.getSelectedCircle().setCenterX(newX);
+            this.state.getSelectedCircle().setCenterY(newY);
         }
 
         // update all transitions that were affected

@@ -139,7 +139,7 @@ public class State {
 		this.acceptCircle = acceptCircle;
 	}
 
-	public Circle getSelctedCircle() {
+	public Circle getSelectedCircle() {
 		return this.selectedCircle;
 	}
 

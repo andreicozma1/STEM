@@ -35,6 +35,7 @@ public class StartChange implements Change {
     public Change apply() {
         machine.setStartState(newStart);
         newStart.setStart(true);
+        this.editor.drawStartTriangle(this.newStart);
         return this;
     }
 

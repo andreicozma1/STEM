@@ -81,15 +81,6 @@ public class ZoomableScrollPane extends ScrollPane {
         // if not, set zoomFactor such that scaleValue will be equal to the bound that it would otherwise exceed
         if (scaleValue * zoomFactor < maxScaleValue) {
             zoomFactor = maxScaleValue / scaleValue;
-            // disable scrolling if zoomed all the way out
-            if (this.getWidth() == Screen.getPrimary().getBounds().getWidth()) {
-                this.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                this.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            }
-        } else {
-            // enable scrolling if not zoomed all the way out
-            this.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-            this.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         }
         if (scaleValue * zoomFactor > minScaleValue) {
             zoomFactor = minScaleValue / scaleValue;

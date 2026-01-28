@@ -280,8 +280,8 @@ public class Editor {
 				state.getCircle().setCenterX(newX);
 				state.getCircle().setCenterY(newY);
 
-				state.getSelctedCircle().setCenterX(newX);
-				state.getSelctedCircle().setCenterY(newY);
+				state.getSelectedCircle().setCenterX(newX);
+				state.getSelectedCircle().setCenterY(newY);
 
 				state.setX(newX);
 				state.setY(newY);
@@ -339,7 +339,7 @@ public class Editor {
 		selectedArea.setWidth(-1);
 		for (State state : selectedStates) {
 			state.setSelected(false);
-			this.editorSpace.getChildren().remove(state.getSelctedCircle());
+			this.editorSpace.getChildren().remove(state.getSelectedCircle());
 			state.setSelctedCircle(null);
 		}
 		selectedStates.clear();
@@ -747,7 +747,7 @@ public class Editor {
 						redrawPaths(tl);
 					}
 
-					if (s.getX() != initialX && s.getY() != initialY) {
+					if (s.getX() != initialX || s.getY() != initialY) {
 						addChange(new StateMove(currentMachine, s, initialX, initialY, thisEditor));
 					}
 
@@ -1116,7 +1116,7 @@ public class Editor {
 												+ selectedArea.getHeight())) {
 									selectedStates.remove(state);
 									state.setSelected(false);
-									this.editorSpace.getChildren().remove(state.getSelctedCircle());
+									this.editorSpace.getChildren().remove(state.getSelectedCircle());
 									state.setSelctedCircle(null);
 								}
 								continue;
@@ -2063,7 +2063,7 @@ public class Editor {
 				drawStartTriangle(state);
 			}
 
-			editorSpace.getChildren().remove(state.getSelctedCircle());
+			editorSpace.getChildren().remove(state.getSelectedCircle());
 			state.setSelctedCircle(null);
 			state.setSelected(false);
 			if (state.getX() != oldStateX && state.getY() != oldStateY) {
@@ -2148,7 +2148,7 @@ public class Editor {
 
 				c = s.getCircle();
 				l = s.getLabel();
-				selectCircle = s.getSelctedCircle();
+				selectCircle = s.getSelectedCircle();
 
 				double offsetX = e.getSceneX() - prevStateX;
 				double offsetY = e.getSceneY() - prevStateY;

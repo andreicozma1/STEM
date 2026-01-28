@@ -117,7 +117,7 @@ public class StateDelete implements Change {
         }
 
         if (state.isSelected()) {
-            this.editor.getEditorSpace().getChildren().remove(state.getSelctedCircle());
+            this.editor.getEditorSpace().getChildren().remove(state.getSelectedCircle());
             state.setSelected(false);
             state.setSelctedCircle(null);
         }

@@ -326,7 +326,6 @@ public class SaveLoad {
                             colGrabber.nextDouble());
                     newState.setColor(nucolor);
                     colGrabber.close();
-                    colGrabber.close();
                 }
 
                 // Add state to machine
