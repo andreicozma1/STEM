@@ -143,7 +143,7 @@ public class State {
 		return this.selectedCircle;
 	}
 
-	public void setSelctedCircle(Circle selectedCircle) {
+	public void setSelectedCircle(Circle selectedCircle) {
 		this.selectedCircle = selectedCircle;
 	}
 

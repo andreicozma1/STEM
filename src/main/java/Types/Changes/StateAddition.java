@@ -2,12 +2,6 @@ package Types.Changes;
 
 import Types.State;
 import Types.Transition;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 
 import Editor.Editor;

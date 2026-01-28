@@ -340,7 +340,7 @@ public class Editor {
 		for (State state : selectedStates) {
 			state.setSelected(false);
 			this.editorSpace.getChildren().remove(state.getSelectedCircle());
-			state.setSelctedCircle(null);
+			state.setSelectedCircle(null);
 		}
 		selectedStates.clear();
 	}
@@ -1117,7 +1117,7 @@ public class Editor {
 									selectedStates.remove(state);
 									state.setSelected(false);
 									this.editorSpace.getChildren().remove(state.getSelectedCircle());
-									state.setSelctedCircle(null);
+									state.setSelectedCircle(null);
 								}
 								continue;
 							}
@@ -1135,7 +1135,7 @@ public class Editor {
 										Color.TRANSPARENT);
 								selectedCircle.setStrokeWidth(2);
 								selectedCircle.setStroke(Color.BLUE);
-								state.setSelctedCircle(selectedCircle);
+								state.setSelectedCircle(selectedCircle);
 								this.editorSpace.getChildren().add(selectedCircle);
 							}
 						}
@@ -2064,7 +2064,7 @@ public class Editor {
 			}
 
 			editorSpace.getChildren().remove(state.getSelectedCircle());
-			state.setSelctedCircle(null);
+			state.setSelectedCircle(null);
 			state.setSelected(false);
 			if (state.getX() != oldStateX && state.getY() != oldStateY) {
 				addChange(new StateMove(currentMachine, state, oldStateX, oldStateY, thisEditor));
@@ -2110,7 +2110,7 @@ public class Editor {
 			selectedCircle.setStrokeWidth(2);
 			selectedCircle.setStroke(Color.BLUE);
 			state.setSelected(true);
-			state.setSelctedCircle(selectedCircle);
+			state.setSelectedCircle(selectedCircle);
 			editorSpace.getChildren().add(selectedCircle);
 		}
 	};

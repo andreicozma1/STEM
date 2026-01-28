@@ -22,7 +22,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 
 public class ZoomableScrollPane extends ScrollPane {
     public double scaleValue = 0.7;
