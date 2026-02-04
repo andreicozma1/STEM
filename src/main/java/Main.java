@@ -1,3 +1,4 @@
+
 /*
  *     Simple Turing machine EMulator (STEM)
  *     Copyright (C) 2018  Sam MacLean,  Joel Kovalcson, Dakota Sanders, Matt Matto, Andrei Cozma, Hunter Price
@@ -13,6 +14,9 @@
  *     GNU General Public License for more details.
  */
 
+import Editor.Editor;
+import Editor.HelpMenu;
+import Editor.Styles;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,14 +34,13 @@ public class Main extends Application {
 	private Scene menu;
 	private HelpMenu help;
 
-
 	/* Launch the app */
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	@Override
-	public void start(Stage primaryStage) throws Exception{
+	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
 
 		initMenu();
@@ -46,15 +49,16 @@ public class Main extends Application {
 		window.setTitle("STEM");
 		window.show();
 	}
-	
-	private void initMenu(){
 
-		BorderPane menuLayout = new BorderPane(); 				//outer Borderpane to hold menubar
+	private void initMenu() {
+
+		BorderPane menuLayout = new BorderPane(); //outer Borderpane to hold menubar
 		menu = new Scene(menuLayout);
 
 		Image background = new Image("background.png");
 		BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true);
-		menuLayout.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, bSize)));
+		menuLayout.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT,
+				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, bSize)));
 
 		window.setWidth(800);
 		window.setHeight(600);
@@ -62,7 +66,7 @@ public class Main extends Application {
 		window.setResizable(false);
 
 		/* Contents of page. */
-		VBox buttonLayout = new VBox(9); 				//inner VBox to hold buttons
+		VBox buttonLayout = new VBox(9); //inner VBox to hold buttons
 		buttonLayout.setAlignment(Pos.CENTER_LEFT);
 		buttonLayout.setPadding(new Insets(20, 50, 20, 50));
 		buttonLayout.prefWidthProperty().bind(menuLayout.widthProperty());
@@ -86,19 +90,19 @@ public class Main extends Application {
 		menuLayout.setCenter(buttonLayout);
 
 		/* After menu is set up, create other scenes. */
-		helpButton.setOnAction(e-> {
+		helpButton.setOnAction(e -> {
 			new HelpMenu();
 		});
 
-		newMachineButton.setOnAction(e-> {
+		newMachineButton.setOnAction(e -> {
 			new Editor(false);
 		});
 
-		loadMachineButton.setOnAction(e-> {
+		loadMachineButton.setOnAction(e -> {
 			new Editor(true);
 		});
 
-		quitButton.setOnAction(e-> {
+		quitButton.setOnAction(e -> {
 			window.close();
 		});
 	}
