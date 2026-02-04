@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import Types.Path;
 import Types.State;
 import Types.Transition;
+import Types.Changes.TransitionDirectionChange;
 import Types.Changes.TransitionReadChange;
 import Types.Changes.TransitionWriteChange;
 
@@ -256,7 +257,7 @@ public class TransitionEditor {
         ToS.setMaxWidth(100);
         ToS.setPrefWidth(100);
         ToS.setCellValueFactory(new PropertyValueFactory<Transition, String>("ToStateName"));
-        TableColumn read = new TableColumn("Read");
+		TableColumn read = new TableColumn("Read");
         read.setMaxWidth(100);
         read.setPrefWidth(100);
         read.setCellValueFactory(new PropertyValueFactory<Transition, String>("ReadString"));
@@ -324,8 +325,10 @@ public class TransitionEditor {
                         if (Character.toUpperCase(t.getNewValue().charAt(0)) == 'L' ||
                                 Character.toUpperCase(t.getNewValue().charAt(0)) == 'R'
                                 || Character.toUpperCase(t.getNewValue().charAt(0)) == 'S') {
-                            ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow()))
-                                    .setDirectionChar(Character.toUpperCase(t.getNewValue().charAt(0)));
+							Transition transition = ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow()));
+                            // ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                            //         .setDirectionChar(Character.toUpperCase(t.getNewValue().charAt(0)));
+							editor.addChange(new TransitionDirectionChange(transition, Character.toUpperCase(t.getNewValue().charAt(0)), transition.getDirectionChar().charAt(0), editor));
                             t.getTableView().refresh();
                         } else {
                             System.out.println("This is our value: " + t.getNewValue());
