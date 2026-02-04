@@ -142,6 +142,6 @@ public class Transition {
 	}
 
 	public String toString(){
-		return "from: " + fromState.getName() + " to: " + toState.getName() + " read: " + readChar + " write: " + writeChar + " move: " + moveDirection;
+		return fromState.getName() + " -> " + toState.getName() + " r: " + readChar + " w: " + writeChar + " m: " + moveDirection;
 	}
 }

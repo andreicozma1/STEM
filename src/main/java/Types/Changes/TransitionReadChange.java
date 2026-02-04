@@ -19,18 +19,14 @@ public class TransitionReadChange implements Change {
 
     @Override
     public Change undo() {
-		this.transition.getPath().removeTransition(this.transition);
         this.transition.setReadChar(this.oldChar);
-		this.transition.getPath().addTransition(this.transition);
         this.editor.redrawPath(this.transition);
         return this;
     }
 
     @Override
     public Change apply() {
-		this.transition.getPath().removeTransition(this.transition);
         this.transition.setReadChar(this.newChar);
-		this.transition.getPath().addTransition(this.transition);
         this.editor.redrawPath(this.transition);
         return this;
     }

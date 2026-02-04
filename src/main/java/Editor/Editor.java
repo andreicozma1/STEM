@@ -2254,46 +2254,59 @@ public class Editor {
 
 	// TODO: Create better redraw method in path class so we don't have to delete it
 	public void redrawPath(Transition t) {
-		if (t.getPath() != null) {
-			currentMachine.getPaths().remove(t.getPath());
-			// System.out.println("Delete" + t.getPath());
-			editorSpace.getChildren().removeAll(t.getPath().getAllNodes());
-
-			t.getPath().getTransitions().forEach(transition -> transition.setPath(null));
-		}
-		Path path = null;
-		for (Path p : currentMachine.getPaths()) {
-			if (p.compareTo(t.getFromState(), t.getToState())) {
-				path = p;
-				break;
-			}
-		}
-		if (path == null) {
-			path = new Path(t.getFromState(), t.getToState());
-			currentMachine.getPaths().add(path);
-		}
-
-		t.setPath(path);
-		ArrayList<Node> nodes = path.addTransition(t);
-		editorSpace.getChildren().addAll(nodes);
-
-		for (Node n : nodes) {
-			if (n instanceof Line || n instanceof CubicCurve) {
-				n.toBack();
-			}
-		}
+		ArrayList<Transition> transition = new ArrayList<Transition>();
+		transition.add(t);
+		redrawPaths(transition);
 	}
 
 	public void redrawPaths(ArrayList<Transition> tl) {
-		for (Transition transition : tl) {
-			redrawPath(transition);
+		for(Transition t : tl){
+	        if(t.getPath() == null)
+	        	continue;
+
+			currentMachine.getPaths().remove(t.getPath());
+			System.out.println("Delete" + t.getPath().toString());
+			editorSpace.getChildren().removeAll(t.getPath().getAllNodes());
+
+			for(Transition t2 : tl) {
+			    if(t2 == t) {
+			    	continue;
+				}
+				if(t2.getPath() == t.getPath()) {
+					t2.setPath(null);
+				}
+			}
+
+			t.setPath(null);
+		}
+
+	    for(Transition t : tl) {
+			Path path = null;
+			for(Path p : currentMachine.getPaths()) {
+				if(p.compareTo(t.getFromState(), t.getToState())) {
+					path = p;
+					break;
+				}
+			}
+			if(path == null) {
+				path = new Path(t.getFromState(), t.getToState());
+				currentMachine.getPaths().add(path);
+			}
+
+			t.setPath(path);
+			ArrayList<Node> nodes = path.addTransition(t);
+			editorSpace.getChildren().addAll(nodes);
+
+			for(Node n : nodes) {
+				if(n instanceof Line || n instanceof CubicCurve) {
+					n.toBack();
+				}
+			}
 		}
 	}
 
 	public void redrawAllPaths() {
-		for (Transition t : currentMachine.getTransitions()) {
-			redrawPath(t);
-		}
+		redrawPaths(currentMachine.getTransitions());
 	}
 
 	private void redrawAllComments() {
