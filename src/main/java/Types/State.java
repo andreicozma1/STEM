@@ -155,6 +155,10 @@ public class State {
 		this.transition.add(newTransition);
 	}
 
+	public void removeTransition(Transition transition){
+		this.transition.remove(transition);
+	}
+
 	public void setTransition(ArrayList<Transition> transition) {
 		this.transition = transition;
 	}

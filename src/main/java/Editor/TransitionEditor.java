@@ -390,7 +390,6 @@ public class TransitionEditor {
                                                 Transition trns = getTableView().getItems().get(getIndex());
                                                 deletedTransitions.add(trns);
                                                 list.remove(trns);
-
                                             } else if (type.getText() == "No") {
                                                 System.out.println("USER CLICKED NO");
                                             }

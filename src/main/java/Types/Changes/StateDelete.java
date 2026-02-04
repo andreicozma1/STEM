@@ -10,7 +10,6 @@ import Types.Transition;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import Types.Path;
 
 public class StateDelete implements Change {
 
@@ -63,51 +62,45 @@ public class StateDelete implements Change {
         }
 
         // make this state number invalid again
-        if (this.editor.getDeletedValues().contains(Integer.parseInt(this.state.getName()))) {
-            this.editor.getDeletedValues()
-                    .remove(this.editor.getDeletedValues().indexOf(Integer.parseInt(this.state.getName())));
+		int number = Integer.parseInt(this.state.getName());
+		int index = this.editor.getDeletedValues().indexOf(number);
+        if (index != -1) {
+            this.editor.getDeletedValues().remove(index);
         }
 
+		this.transitions.clear();
         return this;
     }
 
     @Override
     public Change apply() {
-        ArrayList<Transition> deleteTransitions = new ArrayList<>();
-        ArrayList<Path> deletePaths = new ArrayList<>();
+		ArrayList<Transition> transitionsToRemove = new ArrayList<Transition>();
+		for(int i = 0; i < this.machine.getTransitions().size(); i++){
+			Transition transition = this.machine.getTransitions().get(i);
+            if (transition.getToStateName().equals(this.state.getName()) || transition.getFromStateName().equals(this.state.getName())) {
+				// remove the transition's path
+				if(transition.getPath() != null){
+	                ArrayList<Node> nodes = transition.getPath().getAllNodes();
+	                if (!nodes.isEmpty())
+	                    this.editor.getEditorSpace().getChildren().removeAll(nodes);
+					this.machine.deletePath(transition.getPath());
+				}
+				// remove the transition from the states
+                transition.getFromState().removeTransition(transition);
+                transition.getToState().removeTransition(transition);
 
-        for (Transition t : this.machine.getTransitions()) {
-            if (t.getToState() == this.state) {
-
-                ArrayList<Node> nodes = t.getPath().getAllNodes();
-                if (!nodes.isEmpty())
-                    this.editor.getEditorSpace().getChildren().removeAll(t.getPath().getAllNodes());
-                t.getFromState().getTransition().remove(t);
-
-                deletePaths.add(t.getPath());
-                deleteTransitions.add(t);
-                transitions.add(t);
-            } else if (t.getFromState() == this.state) {
-                transitions.add(t);
+				// save the transition to add back on undo
+                this.transitions.add(transition);
+				transitionsToRemove.add(transition);
             }
         }
-        this.machine.getPaths().removeAll(deletePaths);
-        this.machine.getTransitions().removeAll(deleteTransitions);
+		// delete the transitions from the machine
+		transitionsToRemove.forEach(transition -> this.machine.deleteTransition(transition));
 
         this.editor.getEditorSpace().getChildren().removeAll(state.getCircle(), state.getLabel());
 
-        this.machine.getTransitions().removeAll(state.getTransition());
-
-        for (Transition t : state.getTransition()) {
-            this.editor.getEditorSpace().getChildren().removeAll(t.getPath().getAllNodes());
-            this.machine.getPaths().remove(t.getPath());
-            t.setPath(null);
-        }
-        this.state.getTransition().clear();
-
         if (this.machine.getStartState() == state) {
             wasStart = true;
-            System.out.printf("State %s is start removing...", state.getName());
             this.machine.setStartState(null);
             this.editor.getEditorSpace().getChildren().remove(this.editor.getStartTriangle());
         }
@@ -125,6 +118,7 @@ public class StateDelete implements Change {
         this.machine.deleteState(state);
         this.editor.getDeletedValues().add(Integer.parseInt(state.getName()));
 		this.editor.getSelectedStates().remove(state);
+
         return this;
     }
 

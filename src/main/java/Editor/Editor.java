@@ -94,7 +94,6 @@ public class Editor {
 	private final LinkedList<Change> undoStack = new LinkedList<Change>();
 	private final LinkedList<Change> redoStack = new LinkedList<Change>();
 	private boolean draggingMouse = false;
-	private boolean toggleSelected = false;
 	private ArrayList<State> selectedStates = new ArrayList<State>();
 	private final Rectangle selectedArea = new Rectangle(0, 0, 0, 0);
 	private final ContextMenu selectedAreaMenu = new ContextMenu();
@@ -2278,9 +2277,11 @@ public class Editor {
 		ArrayList<Node> nodes = path.addTransition(t);
 		editorSpace.getChildren().addAll(nodes);
 
-		for (Node n : nodes)
-			if (n instanceof Line || n instanceof CubicCurve)
+		for (Node n : nodes) {
+			if (n instanceof Line || n instanceof CubicCurve) {
 				n.toBack();
+			}
+		}
 	}
 
 	public void redrawPaths(ArrayList<Transition> tl) {
@@ -2289,7 +2290,7 @@ public class Editor {
 		}
 	}
 
-	private void redrawAllPaths() {
+	public void redrawAllPaths() {
 		for (Transition t : currentMachine.getTransitions()) {
 			redrawPath(t);
 		}

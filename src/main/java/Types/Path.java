@@ -195,19 +195,17 @@ public class Path {
         transitions.remove(t);
 
         if (toState == fromState) {
-            char readChar = (t.getReadChar() == ' ') ? '☐' : t.getReadChar();
-            char writeChar = (t.getWriteChar() == ' ') ? '☐' : t.getWriteChar();
-
             text = String.format("%c ; %c ; %c",
                     t.getReadChar(), t.getWriteChar(), t.getMoveDirection().toString().charAt(0));
 
-            for (Text curText : aboveTexts) {
+			for(int i = 0; i < aboveTexts.size(); i++){
+				Text curText = aboveTexts.get(i);
                 if (curText.getText().compareTo(text) == 0) {
                     ret.add(curText);
                     aboveTexts.remove(curText);
                     break;
                 }
-            }
+			}
         }
         if ((fromState.getX() != toState.getX() && fromState.getX() < toState.getX())
                 || (fromState.getX() == toState.getX() && fromState.getY() < toState.getY())) {

@@ -30,13 +30,10 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Tape {
     private GridPane tapeDisplay;
     private GridPane headDisplay;
-    private final Lock l = new ReentrantLock();
     private Integer tapeDisplayOffset = 0;
     private Integer tapeHead = 0;
     private Integer centerWidth;

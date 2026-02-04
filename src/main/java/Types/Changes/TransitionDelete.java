@@ -55,18 +55,21 @@ public class TransitionDelete implements Change {
 
     @Override
     public Change apply() {
-        ArrayList<Node> nodes = this.transition.getPath().removeTransition(this.transition);
+		if(this.transition.getPath() != null){
+	        ArrayList<Node> nodes = this.transition.getPath().removeTransition(this.transition);
 
-        if (!nodes.isEmpty()) {
-            this.editor.getEditorSpace().getChildren().removeAll(nodes);
-        }
+	        if (!nodes.isEmpty()) {
+	            this.editor.getEditorSpace().getChildren().removeAll(nodes);
+	        }
 
-        if (this.transition.getPath().getAllNodes().isEmpty()) {
-            this.machine.getPaths().remove(this.transition.getPath());
-        }
+	        if (this.transition.getPath().getAllNodes().isEmpty()) {
+	            this.machine.getPaths().remove(this.transition.getPath());
+	        }
+		}
 
         this.transition.getFromState().getTransition().remove(this.transition);
         this.machine.getTransitions().remove(this.transition);
+		this.editor.redrawAllPaths();
         return this;
     }
 

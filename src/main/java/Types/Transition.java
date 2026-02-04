@@ -140,4 +140,8 @@ public class Transition {
 				&& (t.writeChar == writeChar)
 				&& (t.moveDirection == moveDirection);
 	}
+
+	public String toString(){
+		return "from: " + fromState.getName() + " to: " + toState.getName() + " read: " + readChar + " write: " + writeChar + " move: " + moveDirection;
+	}
 }

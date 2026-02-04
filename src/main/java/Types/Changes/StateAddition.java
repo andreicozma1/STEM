@@ -31,11 +31,9 @@ public class StateAddition implements Change {
         }
         if (transitions != null) {
             for (Transition transition : transitions) {
-                this.machine.getTransitions().remove(transition);
-                if (transition.getFromState() != this.state) {
-                    transition.getFromState().getTransition().remove(transition);
-                }
-                this.machine.getPaths().remove(transition.getPath());
+                transition.getFromState().getTransition().remove(transition);
+                this.machine.deleteTransition(transition);
+                this.machine.deletePath(transition.getPath());
                 this.editor.getEditorSpace().getChildren().removeAll(transition.getPath().getAllNodes());
             }
         }

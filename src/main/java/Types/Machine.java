@@ -86,12 +86,20 @@ public class Machine {
 		states.remove(state);
 	}
 
+	public void deleteTransition(Transition transition){
+		transitions.remove(transition);
+	}
+
 	public ArrayList<Transition> getTransitions() {
 		return transitions;
 	}
 
 	public void setTransitions(ArrayList<Transition> transitions) {
 		this.transitions = transitions;
+	}
+
+	public void deletePath(Path path){
+		this.paths.remove(path);
 	}
 
 	public ArrayList<Path> getPaths() {
