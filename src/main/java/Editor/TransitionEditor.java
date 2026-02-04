@@ -322,9 +322,9 @@ public class TransitionEditor {
                 new EventHandler<CellEditEvent<Transition, String>>() {
                     @Override
                     public void handle(CellEditEvent<Transition, String> t) {
-                        if (Character.toUpperCase(t.getNewValue().charAt(0)) == 'L' ||
+                        if (t.getNewValue().length() == 1 && (Character.toUpperCase(t.getNewValue().charAt(0)) == 'L' ||
                                 Character.toUpperCase(t.getNewValue().charAt(0)) == 'R'
-                                || Character.toUpperCase(t.getNewValue().charAt(0)) == 'S') {
+                                || Character.toUpperCase(t.getNewValue().charAt(0)) == 'S')) {
 							Transition transition = ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow()));
                             // ((Transition) t.getTableView().getItems().get(t.getTablePosition().getRow()))
                             //         .setDirectionChar(Character.toUpperCase(t.getNewValue().charAt(0)));
